@@ -3,6 +3,10 @@
 
 ROOT_DIR=$(shell pwd)
 
+run:
+	./virtual/bin/python src/main.py
+test:
+	./virtual/bin/python src/ping_test.py
 build-dep:
 	virtualenv virtual
 	./virtual/bin/pip install tornado

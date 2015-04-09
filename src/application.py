@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 import os.path
 
 
@@ -5,6 +6,7 @@ import tornado.web
 from tornado.options import  options
 from logger import *
 
+import ping
 
 from tornado.ioloop import IOLoop
 
@@ -18,7 +20,7 @@ class Application(tornado.web.Application):
 
         handlers = [
             # (r'/', PingHandler),
-            (r'/ping', PingHandler),
+            (r'/ping', ping.PingHandler),
         ]
 
         settings = dict(
@@ -49,9 +51,3 @@ class Application(tornado.web.Application):
         # close_logger(self.channel_logger)
 
 
-class PingHandler(tornado.web.RequestHandler):
-    """ handler """
-    def get(self):
-        self.write('pong')
-    def post(self):
-        self.write("Hello, world")
