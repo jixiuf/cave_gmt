@@ -1,2 +1,4 @@
 *.so
 /virtual
+/data
+*.pyc
