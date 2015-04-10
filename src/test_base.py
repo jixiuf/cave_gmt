@@ -1,4 +1,5 @@
-#  -*- coding:utf-8-unix -*-
+
+#  -*- coding:utf-8 -*-
 # from tornado.options import options
 from tornado.testing import AsyncHTTPTestCase
 from init import get_test_app
