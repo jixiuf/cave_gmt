@@ -33,6 +33,10 @@ class PermissionsDB:
                 "unique key `account` (`account`))"\
                 "ENGINE = InnoDB CHARACTER SET = utf8"
         yield self.dbtemplate.execDDL(query)
+    @gen.coroutine
+    def truncate_table(self):
+        query="truncate table permissions "
+        yield self.dbtemplate.execDDL(query)
 
     @gen.coroutine
     def select(self,account):
@@ -50,9 +54,11 @@ class PermissionsDB:
     @gen.coroutine
     def add(self,account,password):
         query="insert ignore into permissions(account,password) values('%s','%s')"%(account,password)
-        yield self.dbtemplate.execSql(None,query)
+        result=yield self.dbtemplate.execSql(None,query)
+        raise gen.Return(result)
 
     @gen.coroutine
     def update_level(self,account,level):
         query="update permissions set level=%s where account='%s'"%(level,account)
-        yield self.dbtemplate.execSql(None,query)
+        result=yield self.dbtemplate.execSql(None,query)
+        raise gen.Return(result)

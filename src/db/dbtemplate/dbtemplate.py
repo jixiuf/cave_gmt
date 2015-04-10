@@ -81,15 +81,14 @@ class DatabaseTemplateSingle(IDatabaseTemplate):
         yield self._dbPool.execute(sql)
     @gen.coroutine
     def execSql(self,sum ,sql):           # err
-        yield self._dbPool.execute(sql)
+        cur = yield self._dbPool.execute(sql)
+        raise gen.Return(cur)
     @gen.coroutine
     def query(self,sum , sql,mapRow): #  (self,[], error)
         cur=yield self._dbPool.execute(sql)
-        res=cur.fetchall()
         if mapRow!=None:
             raise gen.Return(map(mapRow,res))
         raise gen.Return(res)
-
 
 
 
@@ -124,10 +123,14 @@ class DatabaseTemplateSharding(IDatabaseTemplate):
     def execSql(self,sum ,sql):           # err
         if sum==None:
             for dt in self._databaseTemplateList:
-                yield dt.execSql(sum,sql)
+                cur=yield dt.execSql(sum,sql)
+            if len(self._databaseTemplateList)==0:
+                raise gen.Return(None)
+            raise gen.Return(cur) # useless ,
         elif sum.sum_len()==1:
             sumDt=self.getDatabaseTemplateShardingBySum(sum)
-            yield sumDt.execSql(None,sql)
+            cur=yield sumDt.execSql(None,sql)
+            raise gen.Return(cur) # useless ,
         else:
             idxMap ={}
             for subSumIdx in range(sum.sum_len()):
@@ -137,7 +140,11 @@ class DatabaseTemplateSharding(IDatabaseTemplate):
                 idxMap[subSumDtIdx]=subSumDt
             for subSumDtIdx in idxMap:
                 # subSum=sum.get_sum_by_idx(subSumIdx)
-                yield idxMap[subSumDtIdx].execSql(None,sql)
+                curosr=yield idxMap[subSumDtIdx].execSql(None,sql)
+            if len(idMap)==0:
+                raise gen.Return(None)
+            raise gen.Return(cur) # useless ,
+
 
     @gen.coroutine
     def query(self,sum , sql,callback ): #  (self,[], error)

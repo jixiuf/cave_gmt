@@ -12,6 +12,10 @@ class PermissionsTestCase(tornado.testing.AsyncTestCase):
     @tornado.testing.gen_test
     def test_create(self):
         yield self.permissionDB.create_table()
-        yield self.permissionDB.add("hello","world")
+        yield self.permissionDB.truncate_table()
+        cursor=yield self.permissionDB.add("hello","world")
+        self.assertNotEqual (cursor.lastrowid,0)
+        cursor=yield self.permissionDB.update_level("hello",3)
+        self.assertEqual (1,cursor.rowcount)
         # Test contents of response
         # self.assertIn("FriendFeed", response.body)
