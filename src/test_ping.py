@@ -3,7 +3,6 @@ from tornado.test.util import unittest
 from test_base import BaseTest
 from ping import PingHandler
 from tornado_mysql import pools
-import db.conn
 # from db.conn import *
 #TestHandler就是被测试的模块
 
