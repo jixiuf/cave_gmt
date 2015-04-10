@@ -53,16 +53,21 @@ class DBMgr:
     def __init__(self,mode):
         self.mode=mode
     def load(self):
-        self.designDB=self._getDesignConfig().getDatabaseTemplate()
-        self.profileDB=self._getProfileConfig().getDatabaseTemplate()
-        self.gamedb=self._getGameDBConfig().getDatabaseTemplate()
+        self._designDB=self._getDesignConfig().getDatabaseTemplate()
+        self._profileDB=self._getProfileConfig().getDatabaseTemplate()
+        self._gamedb=self._getGameDBConfig().getDatabaseTemplate()
+        self._gmtooldb=self._getGMToolConfig().getDatabaseTemplate()
 
     def getGameDB(self):
-        return self.gamedb
+        return self._gamedb
     def getDesignDB(self):
-        return self.designDB
+        return self._designDB
     def getProfileDB(self):
-        return self.profileDB
+        return self._profileDB
+    def getProfileDB(self):
+        return self._profileDB
+    def getGMToolDB(self):
+        return self._gmtooldb
     def _getDBConfigMaster(self,jsonData):
         user=jsonData["master"]['user']
         passwd=jsonData["master"]['passwd']
@@ -86,6 +91,11 @@ class DBMgr:
         value=utils.getIniValueFromFile("/data/tapalliance/config/%s_1_1.ini"%(self.mode,),"profile_db_config","mysql")
         value=utils.getJson(value)
         return self._getDBConfigMaster(value)
+    def _getGMToolConfig(self):
+        value=utils.getIniValueFromFile("/data/tapalliance/config/%s_1_1.ini"%(self.mode,),"gmtool_db_config","mysql")
+        value=utils.getJson(value)
+        return self._getDBConfigMaster(value)
+
 
     def _getGameDBConfig(self):
         value=utils.getIniValueFromFile("/data/tapalliance/config/%s_1_1.ini"%(self.mode,),"db_config","mysql")
@@ -102,6 +112,9 @@ def test_dbmgr_main():
     print designConfig
     profileConfig=mgr._getProfileConfig()
     print profileConfig
+    gmToolConfig=mgr._getGMToolConfig()
+    print gmToolConfig
+
     print "db config start"
     dbConfigObjList=mgr._getGameDBConfig()
     for var in dbConfigObjList.getDBConfigList():
