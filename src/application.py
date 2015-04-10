@@ -7,6 +7,7 @@ from tornado.options import  options
 from logger import *
 
 import ping
+from  login_handler import *
 
 from tornado.ioloop import IOLoop
 
@@ -19,16 +20,16 @@ class Application(tornado.web.Application):
     def __init__(self):
 
         handlers = [
-            # (r'/', PingHandler),
+            (r'/', LoginHandler),
             (r'/ping', ping.PingHandler),
         ]
 
         settings = dict(
-            # gzip = True,
-            # template_path = os.path.join(os.path.split(__file__)[0], '../template'),
-            # static_path = os.path.join(os.path.split(__file__)[0], '../template', '../static'),
-            # cookie_secret = 'S6Bp2cVjSAGFXDZqyOh+hfn/fpBnaEzFh22IVmCsVJQ=',
-            # login_url = '/',
+            gzip = True,
+            template_path = os.path.join(os.path.split(__file__)[0], '../template'),
+            static_path = os.path.join(os.path.split(__file__)[0], '../template', '../static'),
+            cookie_secret = 'S6Bp2cVjSAGFXDZqyOh+hfn/fpBnaEzFh22IVmCsVJQ=',
+            login_url = '/',
         )
 
         tornado.web.Application.__init__(self, handlers, **settings)

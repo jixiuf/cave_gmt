@@ -7,7 +7,7 @@ ROOT_DIR=$(shell pwd)
 run:
 	./virtual/bin/python src/main.py
 test:
-	./virtual/bin/python src/dbtemplate/test_sum.py
+	./virtual/bin/python src/db/dbtemplate/test_sum.py
 # ./virtual/bin/python src/db/databasetemplate/conn_test.py
 	./virtual/bin/python src/test_ping.py
 build-dep:
