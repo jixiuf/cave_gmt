@@ -35,7 +35,7 @@ class Application(tornado.web.Application):
         tornado.web.Application.__init__(self, handlers, **settings)
         self.logger = get_logger('server', os.path.join(options.data_dir, 'server.log'))
         # self.channel_logger = get_logger('channel',os.path.join(options.data_dir,'channel.log'))
-        # self.gm_logger = get_logger('gminfo',os.path.join(options.data_dir,'gminfo.log'))
+        self.gm_logger = get_logger('gminfo',os.path.join(options.data_dir,'gminfo.log'))
 
         # self.dbpool = get_db_pool(conf.db_setting(mode), 10)
         # self.streamdbpool = get_db_pool(conf.stream_setting(mode), 10)
