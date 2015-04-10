@@ -9,12 +9,13 @@ class PresentPackDB:
         query = "create table if not exists present_pack ("\
                 "id BIGINT(20) NOT NULL AUTO_INCREMENT, " \
                 "`name` varchar(255) NOT NULL DEFAULT '' COMMENT 'title'," \
-                "`Content` varchar(255) NOT NULL DEFAULT '' COMMENT 'content'" \
+                "`Content` varchar(255) NOT NULL DEFAULT '' COMMENT 'content'," \
                 "`icon` varchar(255) NOT NULL DEFAULT '' COMMENT 'picture Url',"\
                 "`version` bigint(20) NOT NULL," \
                 "`created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP," \
-                "`extra` varchar(255) DEFAULT NULL,"\
-                "`status` int(11) NOT NULL,"\
+                "`extra` varchar(255) DEFAULT '',"\
+                "`status` int(11) NOT NULL default 0,"\
+                "`hide` tinyint NOT NULL default 0,"\
                 "primary key(id))"\
                 "ENGINE = InnoDB CHARACTER SET = utf8"
         yield self.dbtemplate.execDDL(query)
@@ -47,13 +48,13 @@ class PresentPackDB:
 
     @gen.coroutine
     def select_by_status(self,status):
-        query="select id,name,content,icon,version,extra,status,hide from present_pack where status = 0 or status = %s order by id desc"%(action,)
+        query="select id,name,content,icon,version,extra,status,hide from present_pack where status = 0 or status = %s order by id desc"%(status,)
         res=yield self.dbtemplate.query(None,query,self.mapRow)
         raise gen.Return(res)
 
     @gen.coroutine
-    def get(self,id):
-        cursor.execute("select id,name,content,icon,version,extra,status,hide from present_pack where id=%s"%(id,))
+    def select_by_id(self,id):
+        query="select id,name,content,icon,version,extra,status,hide from present_pack where id=%s"%(id,)
         res=yield self.dbtemplate.query(None,query,self.mapRow)
         raise gen.Return(res)
 
