@@ -15,30 +15,30 @@ class PresentPackTestCase(tornado.testing.AsyncTestCase):
         yield self.presentPackDB.truncate_table()
         yield self.presentPackDB.add("name","content",1,0)
         data=yield self.presentPackDB.select_all()
-        id=data[0]['id']
+        id=data[0].id
         self.assertEqual (1,len(data))
-        self.assertEqual ("name",data[0]['name'] )
-        self.assertEqual ("content",data[0]['content'] )
+        self.assertEqual ("name",data[0].name )
+        self.assertEqual ("content",data[0].content )
 
 
         data=yield self.presentPackDB.select_by_status(0)
         self.assertEqual (1,len(data))
-        self.assertEqual ("name",data[0]['name'] )
-        self.assertEqual ("content",data[0]['content'] )
+        self.assertEqual ("name",data[0].name )
+        self.assertEqual ("content",data[0].content )
 
         data=yield self.presentPackDB.select_by_status(0)
         self.assertEqual (1,len(data))
-        self.assertEqual ("name",data[0]['name'] )
-        self.assertEqual ("content",data[0]['content'] )
+        self.assertEqual ("name",data[0].name )
+        self.assertEqual ("content",data[0].content )
 
 
         yield self.presentPackDB.update_hide(id,1)
 
         data=yield self.presentPackDB.select_by_id(id)
         self.assertEqual (1,len(data))
-        self.assertEqual ("name",data[0]['name'] )
-        self.assertEqual ("content",data[0]['content'] )
-        self.assertEqual (1,data[0]['hide'] )
+        self.assertEqual ("name",data[0].name )
+        self.assertEqual ("content",data[0].content )
+        self.assertEqual (1,data[0].hide )
 
 
         # Test contents of response

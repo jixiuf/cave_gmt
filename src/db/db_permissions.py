@@ -7,14 +7,6 @@ class GmToolAccount:
         self.level = 0
         self.levelDesc = ""
         self.urls=[]
-    # def getAccount(self):
-    #     return self.account
-    # def getPasswd(self):
-    #     return self.passwd
-    # def getLevel(self):
-    #     return self.level
-    # def getUrls(self):
-    #     return self.urls
 
 class PermissionDB:
     def __init__(self,dbtemplate):
@@ -38,17 +30,18 @@ class PermissionDB:
         query="truncate table permission "
         yield self.dbtemplate.execDDL(query)
 
+    def mapRow(self,row):
+        account=GmToolAccount()
+        account.account=row[0]
+        account.passwd=row[1]
+        account.level=row[2]
+        account.urls=row[3]
+        return account
+
     @gen.coroutine
     def select(self,account):
         query="select p.account,p.password,p.level,g.urls from permission as p, permission_level as g where account = '%s' and p.level = g.level"%(account,)
-        def mapRow(row):
-            account=GmToolAccount()
-            account.account=row[0]
-            account.passwd=row[1]
-            account.level=row[2]
-            account.urls=row[3]
-            return account
-        res=yield self.dbtemplate.query(None,query,mapRow)
+        res=yield self.dbtemplate.query(None,query,self.mapRow)
         raise gen.Return(res)
 
     @gen.coroutine
@@ -83,18 +76,16 @@ class PermissionLevelDB:
     def truncate_table(self):
         query="truncate table permission_level"
         yield self.dbtemplate.execDDL(query)
-
+    def mapRow(self,row):
+        account=GmToolAccount()
+        account.level=row[0]
+        account.levelDesc=row[1]
+        account.urls=row[2]
+        return account
     @gen.coroutine
     def select(self,callback):
         query="select level,levelDesc,urls from permission_level order by level"
-        def mapRow(row):
-            account=GmToolAccount()
-            account.level=row[0]
-            account.levelDesc=row[1]
-            account.urls=row[2]
-            return account
-
-        res=yield self.dbtemplate.query(None,query,mapRow)
+        res=yield self.dbtemplate.query(None,query,self.mapRow)
         raise gen.Return(res)
     @gen.coroutine
     def add(self,level,levelDesc,urls):

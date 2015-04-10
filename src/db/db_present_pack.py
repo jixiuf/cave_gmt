@@ -1,5 +1,16 @@
 #  -*- coding:utf-8 -*-
 from tornado import ioloop, gen
+class PresentPack:
+    def __init__(self):
+        self.id=0
+        self.name=""
+        self.content  = ""
+        self.icon = ""
+        self.version=0
+        self.extra=''
+        self.status=0
+        self.hide=0
+
 class PresentPackDB:
     def __init__(self,dbtemplate):
         self.dbtemplate=dbtemplate
@@ -20,15 +31,15 @@ class PresentPackDB:
                 "ENGINE = InnoDB CHARACTER SET = utf8"
         yield self.dbtemplate.execDDL(query)
     def mapRow(self,row):
-        d={}
-        d['id']=row[0]
-        d['name']=row[1]
-        d['content']=row[2]
-        d['icon']=row[3]
-        d['version']=row[4]
-        d['extra']=row[5]
-        d['status']=row[6]
-        d['hide']=row[7]
+        d=PresentPack()
+        d.id      = row[0]
+        d.name    = row[1]
+        d.content = row[2]
+        d.icon    = row[3]
+        d.version = row[4]
+        d.extra   = row[5]
+        d.status  = row[6]
+        d.hide    = row[7]
         return d
     @gen.coroutine
     def truncate_table(self):
