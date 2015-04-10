@@ -89,8 +89,8 @@ class DatabaseTemplateSingle(IDatabaseTemplate):
     def query(self,sum , sql,mapRow): #  (self,[], error)
         cur=yield self._dbPool.execute(sql)
         if mapRow!=None:
-            raise gen.Return(map(mapRow,res))
-        raise gen.Return(res)
+            raise gen.Return(map(mapRow,cur))
+        raise gen.Return(cur)
 
 
 
