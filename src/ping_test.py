@@ -14,5 +14,3 @@ class PingHandlerTest(BaseTest):
         self.assertEqual(response.code, 200)
         self.assertEqual(response.body, "pong")
         self.assertEqual(response.body, "pong")
-if __name__ == '__main__':
-    unittest.main()
