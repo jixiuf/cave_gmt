@@ -6,5 +6,5 @@ class StringSumTestCase(unittest.TestCase):
         strSum=dbtemplate.StringSum("ab")
         assert strSum.to_sum()==ord('a')+ord('b'), 'string dbtemplate assert false'
         assert strSum.sum_len()==1
-if __name__ == "__main__":
-    unittest.main()
+# if __name__ == "__main__":
+#     unittest.main()
