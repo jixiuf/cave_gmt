@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 from tornado.test.util import unittest
-from test_base import BaseTest
+from base_test import BaseTest
 from ping import PingHandler
 from tornado_mysql import pools
 # from db.conn import *

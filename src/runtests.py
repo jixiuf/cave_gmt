@@ -4,8 +4,8 @@ import unittest
 from tornado.test.util import unittest
 
 TEST_MODULES = [
-    'db.test_db_permissions',
-    'db.dbtemplate.test_sum',
+    'db.db_permissions_test',
+    'db.dbtemplate.sum_test',
     'test_ping',
 ]
 
