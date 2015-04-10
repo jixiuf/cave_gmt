@@ -82,6 +82,8 @@ class DatabaseTemplateSingle(IDatabaseTemplate):
     @gen.coroutine
     def execSql(self,sum ,sql):           # err
         cur = yield self._dbPool.execute(sql)
+        # cursor.lastrowid 如果有auto_increment 列， 此值返回新生成的id
+        # cursor.rowcount 返回 影响的行数
         raise gen.Return(cur)
     @gen.coroutine
     def query(self,sum , sql,mapRow): #  (self,[], error)
