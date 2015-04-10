@@ -4,6 +4,8 @@ modulepath = os.getcwd()+'/..'
 sys.path.append(modulepath)
 
 from tornado_mysql import pools
+from tornado import ioloop, gen
+
 import dbtemplate.dbtemplate
 import utils
 
@@ -93,6 +95,7 @@ class DBMgr:
             masterConfigList.append(self._getDBConfigMaster(masterSlaveJson))
         return DBConfigList(masterConfigList)
 
+@gen.coroutine
 def test_dbmgr_main():
     mgr=DBMgr("dev")
     designConfig=mgr._getDesignConfig()
@@ -105,8 +108,12 @@ def test_dbmgr_main():
         print var
     print "db config end"
     mgr.load()
+    testSelect=yield mgr.getProfileDB().query(None,"select 1",None)
+    print "test dbmgr.query",testSelect
 
 
 
 if __name__ == '__main__':
     test_dbmgr_main()
+    ioloop.IOLoop.instance().start()
+
