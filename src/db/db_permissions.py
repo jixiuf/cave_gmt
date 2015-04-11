@@ -36,6 +36,7 @@ class PermissionDB:
         defaultAccount=yield self.select('snowcatAdmin')
         if defaultAccount==None:
             yield self.add('snowcatAdmin',hashlib.sha1('snowcatPassword').hexdigest())
+            yield self.update_level('snowcatAdmin',1)
 
 
     def mapRow(self,row):

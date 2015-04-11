@@ -8,6 +8,7 @@ from logger import *
 import db.dbmgr
 import ping
 from  login_handler import *
+from account_handler import *
 
 from tornado.ioloop import IOLoop
 
@@ -20,8 +21,16 @@ class Application(tornado.web.Application):
     def __init__(self):
 
         handlers = [
-            (r'/', LoginHandler),
             (r'/ping', ping.PingHandler),
+            (r'/', LoginHandler),
+            (r'/gmt/register', RegistrationRenderHandler),
+            (r'/gmt/manage', ManageRenderHandler),
+            (r'/api/account/create', AccountCreateHandler),
+            (r'/api/account/level', AccountLevelHandler),
+            (r'/api/level/info', LevelInfoHandler),
+
+
+
         ]
 
         settings = dict(

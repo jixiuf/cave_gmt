@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
+		 Remove this if you use the .htaccess -->
+	<title>{{ title }}</title>
+	<meta name="description" content="Weico+ Account Info" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+	<!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
+    <!--
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    -->
+	<!-- css stylesheet -->
+	<!-- javascript script -->
+    <!-- 最新 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+
+    <!-- 可选的Bootstrap主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="../static/css/bootstrap-theme.min.css">   
+
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="../static/javascript/lib/jquery/jquery-2.1.1.min.js"></script>
+
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="../static/javascript/lib/bootstrap/bootstrap.min.js"></script>
+
+    <link href="../static/dist/base.css" rel="stylesheet" type="text/css"/>
+      {% block css %}{% end %}
+  </head>
+  <body class="container">
+    <nav class="navbar navbar-default" role="navigation">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <!-- <a class="navbar-brand" href="javascript:;">运营系统</a> -->
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+            <li class="dropdown">
+                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">权限管理<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/gmt/register">账号开通</a></li>
+                  <li><a href="/gmt/manage">账号管理</a></li>
+                  <!--
+                  <li><a href="/gmt/competence">权限管理</a></li>
+                  -->
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">发奖<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/reward/single">个人发奖</a></li>
+                  <li><a href="/reward/csv.html">批量导入发奖</a></li>
+                  <li><a href="/reward/mail_timing">定时邮件</a></li>
+                  <li><a href="/reward/mail">已发邮件</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">公告<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/ann/add">公告添加</a></li>
+                  <li><a href="/ann/manage">公告管理</a></li>
+                  <li><a href="/ann/option">公告列表</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">礼包<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/pack/edit">礼包打包</a></li>
+                  <li><a href="/pack/option">礼包列表</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">兑换码<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/cdk/create">兑换码生成</a></li>
+                  <li><a href="/cdk/info">兑换码信息</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">跑马灯<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/marquee/create">跑马灯生成</a></li>
+                  <li><a href="/marquee/info">跑马灯管理</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">用户信息<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/player/search">用户信息</a></li>
+                  <li><a href="/search/info">信息查询</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">封停信息<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/ban/info">封停信息列表</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">游戏版本<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/game/update">上传</a></li>
+                  <li><a href="/game/dynamic">动态更新</a></li>
+                  <li><a href="/game/address">下载地址</a></li>
+                  <li><a href="/game/server_version_update">服务器版本</a></li>
+                  <li><a href="/game/server_version_update_notice">大版本更新公告变更</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="javascript:;" class="dropdown-toggle"
+                   data-toggle="dropdown">server管理<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/game/server_mgr_reload_config?platformId=&serverId=">服务器配置reload</a></li>
+                  <li><a href="/game/server_mgr_reload_design?platformId=&serverId=&reloadType="> 重新加载策划数据</a></li>
+                  <li><a href="/game/server_mgr_add_auth_white?platformId=&serverId=&myAccountId=&targetAccountId=&targetAccountName=&channel=&myUuid=">临时加认正白名单</a></li>
+                  <li><a href="/game/server_mgr_kick_player?platformId=&serverId=&suin=">踢人下线(清缓存)</a></li>
+                  <li><a href="/game/server_mgr_reload_server_version?platformId=">reload server version</a></li>
+                  <li><a href="/game/server_mgr_print_status?platformId=&serverId=">打印服务器状态信息</a></li>
+                  <li><a href="/game/server_mgr_system_switch?platformId=&serverId=&system=&systemStatus=">游戏系统功能开闭控制</a></li>
+                </ul>
+            </li>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </nav>
+    {% block body %}{% end %}
+  </body>
+</html>

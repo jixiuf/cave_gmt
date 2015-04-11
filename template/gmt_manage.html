@@ -1,0 +1,93 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/gmt_manage.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-manage-form">
+    <h2 class="form-signin-heading ui-manage-title">账号管理</h2>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">GM账号</label>
+            <div class="col-sm-10">
+                <input type="email" class="form-control op-level-account" id="inputEmail3" placeholder="账号">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">GM权限</label>
+            <div class="col-sm-10">
+                <select class="form-control ui-select op-level-select">
+                    <option>下拉选择权限等级</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default op-level-submit">修改</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    var selectEl = $('.op-level-select'),
+        accountEl = $('.op-level-account'),
+        submitEl = $('.op-level-submit'),
+        ajaxing = false,
+        data = {},
+        selectFun;
+
+    selectFun = function() {
+        $.ajax({
+            url: '/api/level/info',
+            type: 'post'
+        })
+        .done(function(data) {
+            ajaxing = false;
+            if(data == 'wrong permissions') {
+                location.href = '/';
+            } else {
+                data = JSON.parse(data);
+            }
+
+            if(data.action == 'success') {
+                var optionData = JSON.parse(data.result);
+                    optionStr = '<option>下拉选择权限等级</option>';
+                for(var i in optionData) {
+                    optionStr += '<option value="' + optionData[i]['level'] + '">' + optionData[i]['name'] + '</option>';
+                }
+                selectEl.html(optionStr);
+            }
+        });
+    };
+
+    submitEl.on('click', function() {
+        if(ajaxing || selectEl.val().length != 1) return false;
+        ajaxing = true;
+        data['account'] = accountEl.val();
+        data['level'] = selectEl.val();
+        $.ajax({
+            url: '/api/account/level',
+            type: 'post',
+            data: data
+        })
+        .done(function(data) {
+            ajaxing = false;
+            if(data == 'wrong permissions') {
+                location.href = '/';
+            } else {
+                data = JSON.parse(data);
+            }
+
+            if(data.action == 'success') {
+                alert('账号权限修改成功！');
+            } else if(data.action == 'no account') {
+                alert('该账号不存在！');
+            }
+        });
+        return false;
+    });
+
+    $(document).ready(
+        selectFun()
+    );
+</script>
+{% end %}
