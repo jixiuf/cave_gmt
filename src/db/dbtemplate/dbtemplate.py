@@ -33,35 +33,7 @@ class StringSum(Sum):
     def get_sum_by_idx(self,idx):
         return self
 
-
-class IDatabaseTemplate(object):
-    """base class"""
-    def	getDatabaseTemplateShardingBySum(self,sum ) :#(self,DatabaseTemplate, int, error):
-        block
-    def	getDatabaseTemplateShardingIdxBySum(self,sum ) :#(self,DatabaseTemplate, int, error):
-        block
-    def	getDatabaseTemplateByShardingIdx(self,idx ) :#(self,DatabaseTemplate, error):
-        block
-    def	isSharding(self) :
-        block
-    def	getWriteDatabaseTemplate(self) :
-        block
-    def	getReadDatabaseTemplate(self) :
-        block
-    @gen.coroutine
-    def execDDL(self,sql):            # err
-        block
-    @gen.coroutine
-    def execSql(self,sum ,sql):           # err
-        block
-    # def execSqlForResult(self,sum , sql,callback): #  (self,sql.Result, error)
-    @gen.coroutine
-    def query(self,sum , sql ): #  (self,[], error)
-        block
-    # def close(self): #  (self,obj, error)
-
-
-class DatabaseTemplateSingle(IDatabaseTemplate):
+class DatabaseTemplateSingle():
     def __init__(self,dbPool ):
         self._dbPool=dbPool
     def	getDatabaseTemplateShardingBySum(self,sum ) :#(self,DatabaseTemplate, int, error):
@@ -80,21 +52,36 @@ class DatabaseTemplateSingle(IDatabaseTemplate):
     def execDDL(self,sql):
         yield self._dbPool.execute(sql)
     @gen.coroutine
-    def execSql(self,sum ,sql):           # err
+    def execSql(self,sql,sum=None):           # err
         cur = yield self._dbPool.execute(sql)
         # cursor.lastrowid 如果有auto_increment 列， 此值返回新生成的id
         # cursor.rowcount 返回 影响的行数
         raise gen.Return(cur)
     @gen.coroutine
-    def query(self,sum , sql,mapRow): #  (self,[], error)
+    def query(self,sql,mapRow=None,sum=None): #  (self,[], error)
         cur=yield self._dbPool.execute(sql)
+        result=cur.fetchall()
         if mapRow!=None:
-            raise gen.Return(map(mapRow,cur))
-        raise gen.Return(cur)
+            raise gen.Return(map(mapRow,result))
+        raise gen.Return(result)
+    @gen.coroutine
+    def queryObject(self,sql,mapRow=None,sum=None): #  (self,[], error)
+        cur=yield self._dbPool.execute(sql)
+        result=cur.fetchall()
+        if mapRow!=None:
+            result=map(mapRow,result)
+            if len(result):
+                raise gen.Return(result[0])
+            else:
+                raise gen.Return(None)
+        if len(result)==0:
+            raise gen.Return(None)
+        else:
+            raise gen.Return(result[0])
 
 
 
-class DatabaseTemplateSharding(IDatabaseTemplate):
+class DatabaseTemplateSharding():
     def __init__(self,databaseTemplateList):
         self._databaseTemplateList=databaseTemplateList
     def	getDatabaseTemplateShardingBySum(self,sum) : # return sharding databasetemplate
@@ -122,16 +109,16 @@ class DatabaseTemplateSharding(IDatabaseTemplate):
         for dt in self._databaseTemplateList:
             yield dt.execDDL(sql)
     @gen.coroutine
-    def execSql(self,sum ,sql):           # err
+    def execSql(self,sql,sum=None):           # err
         if sum==None:
             for dt in self._databaseTemplateList:
-                cur=yield dt.execSql(sum,sql)
+                cur=yield dt.execSql(sql,sum)
             if len(self._databaseTemplateList)==0:
                 raise gen.Return(None)
             raise gen.Return(cur) # useless ,
         elif sum.sum_len()==1:
             sumDt=self.getDatabaseTemplateShardingBySum(sum)
-            cur=yield sumDt.execSql(None,sql)
+            cur=yield sumDt.execSql(sql,None)
             raise gen.Return(cur) # useless ,
         else:
             idxMap ={}
@@ -142,16 +129,28 @@ class DatabaseTemplateSharding(IDatabaseTemplate):
                 idxMap[subSumDtIdx]=subSumDt
             for subSumDtIdx in idxMap:
                 # subSum=sum.get_sum_by_idx(subSumIdx)
-                curosr=yield idxMap[subSumDtIdx].execSql(None,sql)
+                curosr=yield idxMap[subSumDtIdx].execSql(sql,None)
             if len(idMap)==0:
                 raise gen.Return(None)
             raise gen.Return(cur) # useless ,
 
 
     @gen.coroutine
-    def query(self,sum , sql,callback ): #  (self,[], error)
-        if sum == None :
-            block
-        elif sum.sum_len()==1:
-            result=yield self.getDatabaseTemplateShardingBySum(sum).query(sum,sql,callback)
+    def query(self, sql,mapRow=None,sum=None ): #  (self,[], error)
+        if sum == None :                        # 暂不支持在所有分库上支持查询，
+            raise gen.Return(None)
+        elif sum.sum_len()==1:  # 暂只支持根据sum 在某个特定的分库上执行查询
+            result=yield self.getDatabaseTemplateShardingBySum(sum).query(sql,mapRow,sum)
             raise gen.Return(result)
+        else:                   # 暂不支持 in(1,2,3) 之类的查询
+            raise gen.Return(None)
+
+    @gen.coroutine
+    def queryObject(self,sql,mapRow=None,sum=None): #  (self,[], error)
+        if sum == None :                        # 暂不支持在所有分库上支持查询，
+            raise gen.Return(None)
+        elif sum.sum_len()==1:  # 暂只支持根据sum 在某个特定的分库上执行查询
+            result=yield self.getDatabaseTemplateShardingBySum(sum).queryObject(sql,mapRow,sum)
+            raise gen.Return(result)
+        else:                   # 暂不支持 in(1,2,3) 之类的查询
+            raise gen.Return(None)
