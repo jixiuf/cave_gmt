@@ -49,27 +49,27 @@ class PresentPackDB:
     @gen.coroutine
     def add(self,name,content,version,status):
         query="insert into present_pack(name,content,icon,version,extra,status) values('"+name+"','"+content+"','%s',%s,'%s',%s)"%('',version,'',status)
-        yield self.dbtemplate.execSql(None,query)
+        yield self.dbtemplate.execSql(query)
 
     @gen.coroutine
     def select_all(self):
         query="select id,name,content,icon,version,extra,status,hide from present_pack order by id desc"
-        res=yield self.dbtemplate.query(None,query,self.mapRow)
+        res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)
 
     @gen.coroutine
     def select_by_status(self,status):
         query="select id,name,content,icon,version,extra,status,hide from present_pack where status = 0 or status = %s order by id desc"%(status,)
-        res=yield self.dbtemplate.query(None,query,self.mapRow)
+        res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)
 
     @gen.coroutine
     def select_by_id(self,id):
         query="select id,name,content,icon,version,extra,status,hide from present_pack where id=%s"%(id,)
-        res=yield self.dbtemplate.query(None,query,self.mapRow)
+        res=yield self.dbtemplate.queryObject(query,self.mapRow)
         raise gen.Return(res)
 
     @gen.coroutine
     def update_hide(self,id,hide):
         query="update present_pack set hide=%s where id=%s"%(hide,id)
-        yield self.dbtemplate.execSql(None,query)
+        yield self.dbtemplate.execSql(query)

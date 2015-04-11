@@ -67,17 +67,14 @@ class DatabaseTemplateSingle():
     @gen.coroutine
     def queryObject(self,sql,mapRow=None,sum=None): #  (self,[], error)
         cur=yield self._dbPool.execute(sql)
-        result=cur.fetchall()
+        result=cur.fetchone()
         if mapRow!=None:
-            result=map(mapRow,result)
-            if len(result):
-                raise gen.Return(result[0])
-            else:
+            if result==None:
                 raise gen.Return(None)
-        if len(result)==0:
-            raise gen.Return(None)
-        else:
-            raise gen.Return(result[0])
+            else:
+                result=mapRow(result)
+                raise gen.Return(result)
+        raise gen.Return(result)
 
 
 

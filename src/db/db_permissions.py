@@ -41,19 +41,19 @@ class PermissionDB:
     @gen.coroutine
     def select(self,account):
         query="select p.account,p.password,p.level,g.urls from permission as p, permission_level as g where account = '%s' and p.level = g.level"%(account,)
-        res=yield self.dbtemplate.query(None,query,self.mapRow)
+        res=yield self.dbtemplate.queryObject(query,self.mapRow)
         raise gen.Return(res)
 
     @gen.coroutine
     def add(self,account,password):
         query="insert ignore into permission(account,password) values('%s','%s')"%(account,password)
-        result=yield self.dbtemplate.execSql(None,query)
+        result=yield self.dbtemplate.execSql(query)
         raise gen.Return(result)
 
     @gen.coroutine
     def update_level(self,account,level):
         query="update permission set level=%s where account='%s'"%(level,account)
-        result=yield self.dbtemplate.execSql(None,query)
+        result=yield self.dbtemplate.execSql(query)
         raise gen.Return(result)
 
 class PermissionLevelDB:
@@ -83,13 +83,13 @@ class PermissionLevelDB:
         account.urls=row[2]
         return account
     @gen.coroutine
-    def select(self,callback):
+    def select(self):
         query="select level,levelDesc,urls from permission_level order by level"
-        res=yield self.dbtemplate.query(None,query,self.mapRow)
+        res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)
     @gen.coroutine
     def add(self,level,levelDesc,urls):
         query="insert ignore into permission_level(level,levelDesc,urls) values(%d,'%s','%s')"%(level,levelDesc,urls)
-        result=yield self.dbtemplate.execSql(None,query)
+        result=yield self.dbtemplate.execSql(query)
         raise gen.Return(result)
 
