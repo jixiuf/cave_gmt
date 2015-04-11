@@ -9,6 +9,10 @@ from tornado import ioloop, gen
 import dbtemplate.dbtemplate
 import utils
 
+from db_present_pack import PresentPackDB
+from db_permissions import PermissionDB
+from db_permissions import PermissionLevelDB
+
 class DBConfigList:
     def __init__(self,dbConfigObjList):
         self.dbConfigObjList=dbConfigObjList
@@ -41,7 +45,13 @@ class DBConfig:
         return self.port
     def conn(self):
         return pools.Pool(
-            dict(host=self.getHost(), port=self.getPort(), user=self.getUser(), passwd=self.getPasswd(), db=self.getDatabase()),
+            dict(host=self.getHost(),
+                 port=self.getPort(),
+                 user=self.getUser(),
+                 passwd=self.getPasswd(),
+                 db=self.getDatabase(),
+                 charset='utf8',
+            ),
             max_idle_connections=1,
             max_recycle_sec=3)
     def getDatabaseTemplate(self) :
@@ -52,11 +62,29 @@ class DBConfig:
 class DBMgr:
     def __init__(self,mode):
         self.mode=mode
+    @gen.coroutine
     def load(self):
         self._designDB=self._getDesignConfig().getDatabaseTemplate()
         self._profileDB=self._getProfileConfig().getDatabaseTemplate()
         self._gamedb=self._getGameDBConfig().getDatabaseTemplate()
         self._gmtooldb=self._getGMToolConfig().getDatabaseTemplate()
+
+
+        self.permissionDB=PermissionDB(self.getGMToolDB())
+        yield self.permissionDB.create_table()
+
+        self.permissionLevelDB=PermissionLevelDB(self.getGMToolDB())
+        yield self.permissionLevelDB.create_table()
+
+        yield self.permissionDB.init_data()
+        yield self.permissionLevelDB.init_data()
+
+
+        self.presentPackDB=PresentPackDB(self.getGMToolDB())
+        yield self.presentPackDB.create_table()
+        print "after load application"
+
+
 
     def getGameDB(self):
         return self._gamedb

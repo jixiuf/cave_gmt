@@ -5,7 +5,7 @@ import os.path
 import tornado.web
 from tornado.options import  options
 from logger import *
-
+import db.dbmgr
 import ping
 from  login_handler import *
 
@@ -37,18 +37,17 @@ class Application(tornado.web.Application):
         # self.channel_logger = get_logger('channel',os.path.join(options.data_dir,'channel.log'))
         self.gm_logger = get_logger('gminfo',os.path.join(options.data_dir,'gminfo.log'))
 
-        # self.dbpool = get_db_pool(conf.db_setting(mode), 10)
-        # self.streamdbpool = get_db_pool(conf.stream_setting(mode), 10)
 
         # redis_host = redis_config().split(':')[0]
         # redis_port = redis_config().split(':')[1]
         # self.redis = redis.Redis(host=redis_host, port=redis_port, db=0)
-
+        self.dbmgr=db.dbmgr.DBMgr(options.mode)
+        self.dbmgr.load()
 
 
 
     def close(self):
         close_logger(self.logger)
-        # close_logger(self.channel_logger)
+        close_logger(self.gm_logger)
 
 

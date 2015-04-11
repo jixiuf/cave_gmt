@@ -1,5 +1,6 @@
 #  -*- coding:utf-8 -*-
 from tornado import ioloop, gen
+import hashlib
 class GmToolAccount:
     def __init__(self):
         self.account=""
@@ -29,6 +30,13 @@ class PermissionDB:
     def truncate_table(self):
         query="truncate table permission "
         yield self.dbtemplate.execDDL(query)
+
+    @gen.coroutine
+    def init_data(self):
+        defaultAccount=yield self.select('snowcatAdmin')
+        if defaultAccount==None:
+            yield self.add('snowcatAdmin',hashlib.sha1('snowcatPassword').hexdigest())
+
 
     def mapRow(self,row):
         account=GmToolAccount()
@@ -76,6 +84,13 @@ class PermissionLevelDB:
     def truncate_table(self):
         query="truncate table permission_level"
         yield self.dbtemplate.execDDL(query)
+
+    @gen.coroutine
+    def init_data(self):
+        levelRows=yield self.select()
+        if len(levelRows)==0:
+            yield self.add(0,'取消权限','')
+            yield self.add(1,'一级账号','')
     def mapRow(self,row):
         account=GmToolAccount()
         account.level=row[0]
