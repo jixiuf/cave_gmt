@@ -1,6 +1,5 @@
 #coding=utf-8
-
-__author__ = 'zhangjunkai'
+__author__ = 'jixiufeng'
 
 from base_handler import *
 from tornado.web import asynchronous
@@ -35,7 +34,7 @@ class AccountCreateHandler(BaseHandler):
             yield self.application.dbmgr.permissionDB.add(account,hpassword)
             self.write(json.dumps({ 'action': 'success'}))
 
-class LevelInfoHandler(BaseHandler):
+class PerssionLevelHandler(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_post(self):

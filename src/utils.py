@@ -1,5 +1,8 @@
 #  -*- coding:utf-8 -*-
+__author__ = 'zhangjunkai'
+
 import ConfigParser
+
 import json
 
 QINIU_ACCESS_KEY = '4V9Hf9mJb-4oXbM5H_kqXEuV_5aI4v6S1_LaVLKY'

@@ -1,4 +1,6 @@
 # -*- coding:utf-8 -*-
+__author__ = 'jixiufeng'
+
 import os.path
 
 
@@ -27,7 +29,7 @@ class Application(tornado.web.Application):
             (r'/gmt/manage', ManageRenderHandler),
             (r'/api/account/create', AccountCreateHandler),
             (r'/api/account/level', AccountLevelHandler),
-            (r'/api/level/info', LevelInfoHandler),
+            (r'/api/level/info', PerssionLevelHandler),
 
 
 

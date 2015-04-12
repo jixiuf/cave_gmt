@@ -1,5 +1,7 @@
-#! ../virtual/bin/python
 # -*- coding:utf-8 -*-
+
+__author__ = 'jixiufeng'
+
 from init import get_app
 import os
 import os.path

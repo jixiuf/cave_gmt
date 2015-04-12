@@ -1,4 +1,7 @@
 # -*- coding:utf-8 -*-
+
+__author__ = 'jixiufeng'
+
 from tornado.test.util import unittest
 from base_test import BaseTest
 from ping import PingHandler

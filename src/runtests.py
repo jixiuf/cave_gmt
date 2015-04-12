@@ -1,5 +1,6 @@
-#! ../virtual/bin/python
 #  -*- coding:utf-8 -*-
+__author__ = 'jixiufeng'
+
 import unittest
 from tornado.test.util import unittest
 
