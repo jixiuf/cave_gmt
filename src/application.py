@@ -29,7 +29,6 @@ class Application(tornado.web.Application):
             (r'/gmt/manage', ManageRenderHandler),
             (r'/api/account/create', AccountCreateHandler),
             (r'/api/account/update_level', AccountLevelHandler),
-            (r'/api/account/get_permission_level', PerssionLevelHandler),
 
 
 
