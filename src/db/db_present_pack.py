@@ -25,7 +25,7 @@ class PresentPackDB:
                 "`version` bigint(20) NOT NULL," \
                 "`created_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP," \
                 "`extra` varchar(255) DEFAULT '',"\
-                "`status` int(11) NOT NULL default 0,"\
+                "`status` varchar(16)  NOT NULL default '',"\
                 "`hide` tinyint NOT NULL default 0,"\
                 "primary key(id))"\
                 "ENGINE = InnoDB CHARACTER SET = utf8"
@@ -58,8 +58,14 @@ class PresentPackDB:
         raise gen.Return(res)
 
     @gen.coroutine
+    def select_no_hidden(self):
+        query="select id,name,content,icon,version,extra,status,hide from present_pack where hide=0 order by id desc"
+        res=yield self.dbtemplate.query(query,self.mapRow)
+        raise gen.Return(res)
+
+    @gen.coroutine
     def select_by_status(self,status):
-        query="select id,name,content,icon,version,extra,status,hide from present_pack where status = 0 or status = %s order by id desc"%(status,)
+        query="select id,name,content,icon,version,extra,status,hide from present_pack where status = '' or status = %s order by id desc"%(status,)
         res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)
 

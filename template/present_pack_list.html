@@ -1,0 +1,103 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/present_pack_list.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-package-option">
+    <h2 class="form-signin-heading ui-package-title">礼包列表</h2>
+    <ul class="ui-package-list op-package-list">
+        <li class="ui-package-item clearfix">
+            <div class="ui-package-cell">
+                礼包id
+            </div>
+            <div class="ui-package-cell">
+                礼包名
+            </div>
+            <div class="ui-package-cell ui-package-content">
+                礼包内容(奖品类型ID，奖品ID，数量)
+            </div>
+            <div class="ui-package-cell">
+                操作
+            </div>
+        </li>
+        {% for pack in packs %}
+        <li class="ui-package-item clearfix">
+            <div class="ui-package-cell op-package-id">
+                {{ pack.id}}
+            </div>
+            <div class="ui-package-cell">
+                {{ pack.name}}
+            </div>
+            <div class="ui-package-cell ui-package-content">
+                {{ pack.content}}
+            </div>
+            <div class="ui-package-cell">
+                {% if pack.hide==0 %}
+                  <button  value='{{pack.id}}' class="btn btn-default ui-item-btn op-package-show disabled">显示</button>
+                  <button value='{{pack.id}}'  class="btn btn-default ui-item-btn op-package-hide">不显示</button>
+                {% else %}
+                  <button value='{{pack.id}}'  class="btn btn-default ui-item-btn op-package-show">显示</button>
+                  <button value='{{pack.id}}' class="btn btn-default ui-item-btn op-package-hide disabled">不显示</button>
+                {% end %}
+            </div>
+        </li>
+        {% end %}
+        
+    </ul>
+</div>
+
+<script type="text/javascript">
+    var listEl = $('.op-package-list'),
+        ajaxing = false,
+        htmlStr = '',
+        data = {};
+
+    listEl.delegate('.op-package-show', 'click', function(e) {
+        var el = $(e.currentTarget),
+            id=el.val();
+        data['id'] = id;
+        data['hide'] = 0;
+        ajaxing = true;
+        $.ajax({
+            url: '/present_pack/show_or_hide',
+            type: 'post',
+            data: data,
+            el: el
+        })
+        .done(function(data) {
+            ajaxing = false;
+            if(data == 'success') {
+                el.addClass('disabled');
+                el.siblings('.op-package-hide').removeClass('disabled');
+            }else if(data == 'wrong permissions') {
+                location.href = '/';
+            } 
+        });
+    });
+
+    listEl.delegate('.op-package-hide', 'click', function(e) {
+        var el = $(e.currentTarget),
+            id=el.val();
+            /*             id = el.parent().siblings('.op-package-id').html(); */
+        data['id'] = id;
+        data['hide'] = 1;
+        ajaxing = true;
+        $.ajax({
+            url: '/present_pack/show_or_hide',
+            type: 'post',
+            data: data,
+            el: el
+        })
+        .done(function(data) {
+            ajaxing = false;
+            if(data == 'success') {
+                el.addClass('disabled');
+                el.siblings('.op-package-show').removeClass('disabled');
+            }
+            else if(data == 'wrong permissions') {
+                location.href = '/';
+            }
+        });
+    });
+</script>
+{% end %}

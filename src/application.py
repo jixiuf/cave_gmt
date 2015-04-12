@@ -9,8 +9,10 @@ from tornado.options import  options
 from logger import *
 import db.dbmgr
 import ping
+
 from  login_handler import *
 from account_handler import *
+from present_pack import *
 
 from tornado.ioloop import IOLoop
 
@@ -29,6 +31,10 @@ class Application(tornado.web.Application):
             (r'/gmt/manage', ManageRenderHandler),
             (r'/api/account/create', AccountCreateHandler),
             (r'/api/account/update_level', AccountLevelHandler),
+
+            (r'/present_pack/list', PresentPackList),
+            (r'/present_pack/show_or_hide', PresentPackHideShow),
+
 
 
 
