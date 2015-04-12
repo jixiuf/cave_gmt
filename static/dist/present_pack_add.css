@@ -1,0 +1,41 @@
+.ui-pack-add h2 {
+  margin-left: 195px;
+}
+.ui-pack-add .ui-pack-name {
+  max-width: 200px;
+}
+.ui-pack-add .ui-goods {
+  max-width: 200px;
+  float: left;
+  margin-right: 15px;
+}
+.ui-pack-add .ui-list-wrap {
+  float: right;
+}
+.ui-pack-add .ui-list-wrap .ui-pack-content {
+  margin: 15px 0 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ui-pack-add .ui-list-wrap .ui-pack-content .ui-pack-item {
+  margin-bottom: 10px;
+}
+.ui-pack-add .ui-list-wrap .ui-pack-content .ui-pack-item .ui-item-delete {
+  float: right;
+}
+.ui-pack-add .ui-model-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ui-pack-add .ui-model-list .ui-modal-item {
+  padding: 5px 0;
+  border-bottom: 1px solid #d5d5d5;
+}
+.ui-pack-add .ui-model-list .ui-modal-item .ui-cell-wrap {
+  color: black;
+  text-decoration: none;
+}
+.ui-pack-add .ui-model-list .ui-modal-item .ui-cell-wrap .ui-modal-cell {
+  margin-right: 10px;
+}

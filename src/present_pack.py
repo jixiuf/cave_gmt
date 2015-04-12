@@ -20,26 +20,8 @@ class PresentPackHideShow(BaseHandler):
         self.application.dbmgr.presentPackDB.update_hide(id,hide)
         self.write('success')
 
-
-# class PresentPackInfoHandler(BaseHandler):
-#     @asynchronous
-#     @gen.coroutine
-#     def self_post(self):
-#         if self.request.arguments.has_key('status'):
-#             # status = self.request.arguments['status'][0]
-#             status = self.request.arguments['status'][0]
-#         else:
-#             status = ''
-#         packs=yield self.application.dbmgr.presentPackDB.select_by_status( status)
-#         result=[]
-#         for item in packs:
-#             if item.hide == 1:
-#                 continue
-#             result.append([
-#                 item.id,
-#                 '礼包名称：' + str(item.name),
-#                 item.content
-#             ])
-#         self.write(json.dumps(result))
-#         self.finish()
-
+class PresentPackAdd(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_get(self):
+        self.render("present_pack_add.html",title="礼包打包")

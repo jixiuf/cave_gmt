@@ -1,0 +1,320 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/present_pack_add.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-pack-add">
+    <h2 class="form-signin-heading">礼包打包</h2>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">礼包名称</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control ui-pack-name op-pack-name" id="inputEmail3" placeholder="礼包名称">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">礼包类型</label>
+            <div class="col-sm-10">
+                <div class="radio col-sm-2">
+                    <label>
+                        <input class="op-pack-type" type="radio" name="packType" value="" checked>全部
+                    </label>
+                </div>
+                <div class="radio col-sm-2">
+                    <label>
+                        <input class="op-pack-type" type="radio" name="packType" value="mail">邮件
+                    </label>
+                </div>
+                <div class="radio col-sm-2">
+                    <label>
+                        <input class="op-pack-type" type="radio" name="packType" value="cdk">兑换码
+                    </label>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="form-group">
+        <label class="col-sm-2 control-label">版本</label>
+        <div class="col-sm-10">
+        <input type="text" class="form-control ui-pack-name op-pack-version" id="inputEmail3" placeholder="输入版本">
+        </div>
+        </div> -->
+        <div class="form-group">
+            <label class="col-sm-2 control-label">礼包内容</label>
+            <div class="col-sm-10">
+                <select class="form-control ui-goods op-goods-type">
+                    <option value="0">请选择奖品类型</option>
+                    <option value="1">金币</option>
+                    <option value="2">友情点</option>
+                    <!--
+                    <option value="3">FP</option>
+                    -->
+                    <option value="4">Exp</option>
+                    <option value="5">钻石</option>
+                    <option value="6">道具</option>
+                    <option value="7">装备</option>
+                    <!--
+                    <option value="8">卡片</option>
+                    -->
+                    <option value="9">RMB</option>
+                    <option value="10">体力</option>
+                    <!--
+                    <option value="11">卡片栏</option>
+                    <option value="12">装备栏</option>
+                    <option value="13">掉落组</option>
+                    -->
+                    <option value="14">荣誉</option>
+                    <option value="16">碎片</option>
+                    <option value="17">竞技场积分，功勋</option>
+                </select>
+                <input type="text" class="form-control ui-goods op-goods-id hide" placeholder="选择物品id">
+                <input type="text" class="form-control ui-goods op-goods-num" placeholder="物品数量">
+                <button type="button" class="btn btn-default ui-goods op-goods-add">添加</button>
+            </div>
+            <div class="col-sm-10 ui-list-wrap">
+                <ul class="col-sm-6 ui-pack-content op-content-list">
+                </ul>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default op-submit-btn">生成</button>
+            </div>
+        </div>
+    </form>
+    <!-- Modal -->
+    <div class="modal fade op-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title op-modal-title"></h4>
+          </div>
+          <div class="modal-body">
+            <ul class="ui-model-list op-modal-list">
+            </ul>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>
+
+<script type="text/javascript">
+    var goodsAddEl = $('.op-goods-add'),
+        modalEl = $('.op-modal'),
+        modalTitleEl = $('.op-modal-title'),
+        modalListEl = $('.op-modal-list'),
+        listEl = $('.op-content-list'),
+        typeEl = $('.op-goods-type'),
+        numEl = $('.op-goods-num'),
+        goodsIdEl = $('.op-goods-id'),
+        nameEl = $('.op-pack-name'),
+        statusEl = $('.op-pack-type'),
+        versionEl = $('.op-pack-version'),
+        submitEl = $('.op-submit-btn'),
+        ajaxing = false,
+        getIdFun,
+        addPieceIdDomFun,
+        addEquipIdDomFun,
+        addPropIdDomFun;
+
+        goodsAddEl.on('click', function() {
+            var typeName = '',
+                typeId = '',
+                goodsId = '',
+                count = '',
+                htmlStr = '';
+
+            typeId = typeEl.val();
+            goodsId = goodsIdEl.val();
+            count = numEl.val();
+            if(typeId != '0' && count != '') {
+                typeName = typeEl.find("option:selected").text();
+                htmlStr += '<li class="ui-pack-item clearfix op-goods-item" data-id="' + typeId + '" data-goodsid="' + goodsId + '" data-count="' + count + '">' +
+                               '<span>' + typeName + 'x' + count + '</span>' +
+                               '<button class="btn btn-default ui-item-delete op-delete">删除</button>' +
+                           '</li>';
+                listEl.append(htmlStr);
+                typeEl.children().eq(0).attr('selected', 'true');
+                goodsIdEl.val('');
+                goodsIdEl.addClass('hide');
+                numEl.val('');
+            } else {
+                return false;
+            }
+        });
+
+        listEl.delegate('.op-delete', 'click', function(e) {
+            $(e.currentTarget).parent().remove();
+            return false;
+        });
+
+        getIdFun = function(type) {
+            var url,
+                infoType = type;
+            switch(type) {
+                case '6':
+                    url = '/api/prop/ids';
+                    break;
+                case '7':
+                    url = '/api/equip/ids';
+                    break;
+                case '16':
+                    url = '/api/piece/ids';
+                    break;
+            }
+            ajaxing = true;
+            $.ajax({
+                url: url,
+                type: 'post',
+                infoType: infoType
+            })
+            .done(function(data) {
+                if(data['action'] == 'success') {
+                    ajaxing = false;
+                    var info = JSON.parse(data['result']);
+                    if(infoType == '6') {
+                        addPropIdDomFun(info);
+                    }
+                    if(infoType == '7') {
+                        addEquipIdDomFun(info);
+                    }
+                    if(infoType == '16') {
+                        addPieceIdDomFun(info);
+                    }
+                }
+            });
+        }
+
+        addPieceIdDomFun = function(info) {
+            var htmlStr = '';
+            for(var i = 0, len = info.length; i < len; i++) {
+                htmlStr += '<li class="ui-modal-item op-modal-item" data-id="' + info[i]['pieceId'] + '">' +
+                               '<a href="javascript:;" class="ui-cell-wrap">' +
+                                   '<span class="ui-modal-cell">' +
+                                       '碎片id：' +
+                                       info[i]['pieceId'] +
+                                   '</span>' +
+                                   '<span class="ui-modal-cell">' +
+                                       '碎片名称：' +
+                                       info[i]['pieceName'] +
+                                   '</span>' +
+                               '</a>' +
+                           '</li>';
+            }
+            modalTitleEl.text('选择碎片种类');
+            modalListEl.html(htmlStr);
+            modalEl.modal();
+        }
+
+        addEquipIdDomFun = function(info) {
+            var htmlStr = '';
+            for(var i = 0, len = info.length; i < len; i++) {
+                htmlStr += '<li class="ui-modal-item op-modal-item" data-id="' + info[i]['equId'] + '">' +
+                               '<a href="javascript:;" class="ui-cell-wrap">' +
+                                   '<span class="ui-modal-cell">' +
+                                       '装备id：' +
+                                       info[i]['equId'] +
+                                   '</span>' +
+                                   '<span class="ui-modal-cell">' +
+                                       '装备名称：' +
+                                       info[i]['equName'] +
+                                   '</span>' +
+                               '</a>' +
+                           '</li>';
+            }
+            modalTitleEl.text('选择装备种类');
+            modalListEl.html(htmlStr);
+            modalEl.modal();
+        }
+
+        addPropIdDomFun = function(info) {
+            var htmlStr = '';
+            for(var i = 0, len = info.length; i < len; i++) {
+                htmlStr += '<li class="ui-modal-item op-modal-item" data-id="' + info[i]['propId'] + '">' +
+                               '<a href="javascript:;" class="ui-cell-wrap">' +
+                                   '<span class="ui-modal-cell">' +
+                                       '道具id：' +
+                                       info[i]['propId'] +
+                                   '</span>' +
+                                   '<span class="ui-modal-cell">' +
+                                       '道具名称：' +
+                                       info[i]['propName'] +
+                                   '</span>' +
+                               '</a>' +
+                           '</li>';
+            }
+            modalTitleEl.text('选择道具种类');
+            modalListEl.html(htmlStr);
+            modalEl.modal();
+        }
+
+        modalListEl.delegate('.op-modal-item', 'click', function(e) {
+            var id = e.currentTarget.dataset['id'];
+            goodsIdEl.val(id);
+            modalEl.modal('hide');
+        });
+
+        typeEl.on('change', function(e) {
+            var val = e.currentTarget.value;
+            goodsIdEl.val('');
+            if(val == '6' || val == '7' || val == '16') {
+                goodsIdEl.removeClass('hide');
+            } else {
+                goodsIdEl.addClass('hide');
+            }
+        });
+
+        goodsIdEl.on('click', function() {
+            var type = typeEl.val(),
+                data;
+            if(ajaxing) return false;
+            if(type == '6' || type == '7' || type == '16') {
+                getIdFun(type);
+            } else {
+                    return false;
+            }
+        });
+
+        submitEl.on('click', function() {
+            var data = {},
+                rewards = [],
+                goods = $('.op-goods-item'),
+                id,count,
+                name = nameEl.val(),
+                version = '1';
+            if(goods.length == 0 || name == '') {
+                return false;
+            }
+            if(versionEl.val() != '') {
+                version = versionEl.val();
+            }
+            goods = $('.op-goods-item');
+            for(var i = 0, len = goods.length; i < len; i++ ) {
+                var info = {};
+                id = goods.eq(i).data('id');
+                goodsId = goods.eq(i).data('goodsid');
+                count = goods.eq(i).data('count');
+                info['reward_type_id'] = id;
+                info['reward_sub_id'] = goodsId;
+                info['reward_count'] = count;
+                rewards.push(info);
+            }
+            data['rewards'] = JSON.stringify(rewards);
+            data['reward_name'] = nameEl.val();
+            data['version'] = version;
+            data['reward_icon'] = '';
+            data['status'] = statusEl.filter(":checked").val();
+            ajaxing = true;
+            $.ajax({
+                url: '/pack/query',
+                type: 'post',
+                data: data
+            })
+            .done(function(data) {
+                ajaxing = false;
+                location.href = '/pack/query'
+            });
+            return false;
+        });
+</script>
+{% end %}
