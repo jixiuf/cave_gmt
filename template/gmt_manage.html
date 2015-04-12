@@ -37,7 +37,7 @@
 
     selectFun = function() {
         $.ajax({
-            url: '/api/level/info',
+            url: '/api/account/get_permission_level',
             type: 'post'
         })
         .done(function(data) {
@@ -65,7 +65,7 @@
         data['account'] = accountEl.val();
         data['level'] = selectEl.val();
         $.ajax({
-            url: '/api/account/level',
+            url: '/api/account/update_level',
             type: 'post',
             data: data
         })

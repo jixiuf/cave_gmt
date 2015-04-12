@@ -28,8 +28,8 @@ class Application(tornado.web.Application):
             (r'/gmt/register', RegistrationRenderHandler),
             (r'/gmt/manage', ManageRenderHandler),
             (r'/api/account/create', AccountCreateHandler),
-            (r'/api/account/level', AccountLevelHandler),
-            (r'/api/level/info', PerssionLevelHandler),
+            (r'/api/account/update_level', AccountLevelHandler),
+            (r'/api/account/get_permission_level', PerssionLevelHandler),
 
 
 
