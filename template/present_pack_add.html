@@ -25,46 +25,19 @@
                         <input class="op-pack-type" type="radio" name="packType" value="mail">邮件
                     </label>
                 </div>
-                <div class="radio col-sm-2">
-                    <label>
-                        <input class="op-pack-type" type="radio" name="packType" value="cdk">兑换码
-                    </label>
-                </div>
             </div>
         </div>
-        <!-- <div class="form-group">
-        <label class="col-sm-2 control-label">版本</label>
-        <div class="col-sm-10">
-        <input type="text" class="form-control ui-pack-name op-pack-version" id="inputEmail3" placeholder="输入版本">
-        </div>
-        </div> -->
         <div class="form-group">
             <label class="col-sm-2 control-label">礼包内容</label>
             <div class="col-sm-10">
                 <select class="form-control ui-goods op-goods-type">
                     <option value="0">请选择奖品类型</option>
-                    <option value="1">金币</option>
-                    <option value="2">友情点</option>
-                    <!--
-                    <option value="3">FP</option>
-                    -->
-                    <option value="4">Exp</option>
-                    <option value="5">钻石</option>
-                    <option value="6">道具</option>
-                    <option value="7">装备</option>
-                    <!--
-                    <option value="8">卡片</option>
-                    -->
-                    <option value="9">RMB</option>
-                    <option value="10">体力</option>
-                    <!--
-                    <option value="11">卡片栏</option>
-                    <option value="12">装备栏</option>
-                    <option value="13">掉落组</option>
-                    -->
-                    <option value="14">荣誉</option>
-                    <option value="16">碎片</option>
-                    <option value="17">竞技场积分，功勋</option>
+                    <option value="1">钻石(gem)</option>
+                    <option value="2">金币(gold)</option>
+                    <option value="3">舍利(relics)</option>
+                    <option value="4">RMB</option>
+                    <option value="5">主角(leader)</option>
+                    <option value="6">英雄(hero)</option>
                 </select>
                 <input type="text" class="form-control ui-goods op-goods-id hide" placeholder="选择物品id">
                 <input type="text" class="form-control ui-goods op-goods-num" placeholder="物品数量">
@@ -81,21 +54,6 @@
             </div>
         </div>
     </form>
-    <!-- Modal -->
-    <div class="modal fade op-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <h4 class="modal-title op-modal-title"></h4>
-          </div>
-          <div class="modal-body">
-            <ul class="ui-model-list op-modal-list">
-            </ul>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
 </div>
 
 <script type="text/javascript">
@@ -114,8 +72,8 @@
         ajaxing = false,
         getIdFun,
         addPieceIdDomFun,
-        addEquipIdDomFun,
-        addPropIdDomFun;
+        addHeroIdDomFun,
+        addLeaderIdDomFun;
 
         goodsAddEl.on('click', function() {
             var typeName = '',
@@ -152,16 +110,17 @@
             var url,
                 infoType = type;
             switch(type) {
+                case '5':
+                    url = '/present_pack/id_list';
+                    break;
                 case '6':
-                    url = '/api/prop/ids';
-                    break;
-                case '7':
-                    url = '/api/equip/ids';
-                    break;
-                case '16':
-                    url = '/api/piece/ids';
+                    url = '/present_pack/id_list';
                     break;
             }
+            if(url==""){
+                return
+            }
+
             ajaxing = true;
             $.ajax({
                 url: url,
@@ -172,41 +131,16 @@
                 if(data['action'] == 'success') {
                     ajaxing = false;
                     var info = JSON.parse(data['result']);
+                    if(infoType == '5') {
+                        addLeaderIdDomFun(info);
+                    }
                     if(infoType == '6') {
-                        addPropIdDomFun(info);
-                    }
-                    if(infoType == '7') {
-                        addEquipIdDomFun(info);
-                    }
-                    if(infoType == '16') {
-                        addPieceIdDomFun(info);
+                        addHeroIdDomFun(info);
                     }
                 }
             });
         }
-
-        addPieceIdDomFun = function(info) {
-            var htmlStr = '';
-            for(var i = 0, len = info.length; i < len; i++) {
-                htmlStr += '<li class="ui-modal-item op-modal-item" data-id="' + info[i]['pieceId'] + '">' +
-                               '<a href="javascript:;" class="ui-cell-wrap">' +
-                                   '<span class="ui-modal-cell">' +
-                                       '碎片id：' +
-                                       info[i]['pieceId'] +
-                                   '</span>' +
-                                   '<span class="ui-modal-cell">' +
-                                       '碎片名称：' +
-                                       info[i]['pieceName'] +
-                                   '</span>' +
-                               '</a>' +
-                           '</li>';
-            }
-            modalTitleEl.text('选择碎片种类');
-            modalListEl.html(htmlStr);
-            modalEl.modal();
-        }
-
-        addEquipIdDomFun = function(info) {
+        addHeroIdDomFun = function(info) {
             var htmlStr = '';
             for(var i = 0, len = info.length; i < len; i++) {
                 htmlStr += '<li class="ui-modal-item op-modal-item" data-id="' + info[i]['equId'] + '">' +
@@ -227,7 +161,7 @@
             modalEl.modal();
         }
 
-        addPropIdDomFun = function(info) {
+        addLeaderIdDomFun = function(info) {
             var htmlStr = '';
             for(var i = 0, len = info.length; i < len; i++) {
                 htmlStr += '<li class="ui-modal-item op-modal-item" data-id="' + info[i]['propId'] + '">' +
@@ -248,16 +182,10 @@
             modalEl.modal();
         }
 
-        modalListEl.delegate('.op-modal-item', 'click', function(e) {
-            var id = e.currentTarget.dataset['id'];
-            goodsIdEl.val(id);
-            modalEl.modal('hide');
-        });
-
         typeEl.on('change', function(e) {
             var val = e.currentTarget.value;
             goodsIdEl.val('');
-            if(val == '6' || val == '7' || val == '16') {
+            if(val == '5' || val == '6' ) {
                 goodsIdEl.removeClass('hide');
             } else {
                 goodsIdEl.addClass('hide');
@@ -268,7 +196,7 @@
             var type = typeEl.val(),
                 data;
             if(ajaxing) return false;
-            if(type == '6' || type == '7' || type == '16') {
+            if(type == '5' || type == '6') {
                 getIdFun(type);
             } else {
                     return false;
@@ -285,9 +213,9 @@
             if(goods.length == 0 || name == '') {
                 return false;
             }
-            if(versionEl.val() != '') {
-                version = versionEl.val();
-            }
+            /* if(versionEl.val() != '') {
+               version = versionEl.val();
+               } */
             goods = $('.op-goods-item');
             for(var i = 0, len = goods.length; i < len; i++ ) {
                 var info = {};
@@ -306,13 +234,13 @@
             data['status'] = statusEl.filter(":checked").val();
             ajaxing = true;
             $.ajax({
-                url: '/pack/query',
+                url: '/present_pack/add',
                 type: 'post',
                 data: data
             })
             .done(function(data) {
                 ajaxing = false;
-                location.href = '/pack/query'
+                location.href = '/present_pack/list'
             });
             return false;
         });

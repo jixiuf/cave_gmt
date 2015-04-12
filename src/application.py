@@ -35,6 +35,7 @@ class Application(tornado.web.Application):
             (r'/present_pack/list', PresentPackList),
             (r'/present_pack/show_or_hide', PresentPackHideShow),
             (r'/present_pack/add', PresentPackAdd),
+            (r'/present_pack/id_list', PresentPackIdList),
 
 
 

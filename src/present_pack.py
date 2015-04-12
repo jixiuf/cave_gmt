@@ -25,3 +25,10 @@ class PresentPackAdd(BaseHandler):
     @gen.coroutine
     def self_get(self):
         self.render("present_pack_add.html",title="礼包打包")
+
+class PresentPackIdList(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_get(self):
+        self.render("present_pack_add.html",title="礼包打包")
+
