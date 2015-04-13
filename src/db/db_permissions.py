@@ -1,5 +1,5 @@
 #  -*- coding:utf-8 -*-
-from tornado import ioloop, gen
+from tornado import  gen
 import hashlib
 class GmToolAccount:
     def __init__(self):

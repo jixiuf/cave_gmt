@@ -59,7 +59,7 @@ class Application(tornado.web.Application):
         # redis_host = redis_config().split(':')[0]
         # redis_port = redis_config().split(':')[1]
         # self.redis = redis.Redis(host=redis_host, port=redis_port, db=0)
-        self.dbmgr=db.dbmgr.DBMgr(options.mode)
+        self.dbmgr=db.dbmgr.DBMgr(options.mode,options.locale)
         self.dbmgr.load()
 
 

@@ -1,5 +1,5 @@
 #  -*- coding:utf-8 -*-
-from tornado import ioloop, gen
+from tornado import  gen
 class PresentPack:
     def __init__(self):
         self.id=0

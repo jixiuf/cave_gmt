@@ -12,6 +12,8 @@ import utils
 from db_present_pack import PresentPackDB
 from db_permissions import PermissionDB
 from db_permissions import PermissionLevelDB
+from db_design_leader import DesignBLeaderDB
+from db_design_hero import DesignBHeroDB
 
 class DBConfigList:
     def __init__(self,dbConfigObjList):
@@ -60,8 +62,9 @@ class DBConfig:
 
 
 class DBMgr:
-    def __init__(self,mode):
+    def __init__(self,mode,locale):
         self.mode=mode
+        self.locale=locale
     @gen.coroutine
     def load(self):
         self._designDB=self._getDesignConfig().getDatabaseTemplate()
@@ -78,6 +81,10 @@ class DBMgr:
 
         yield self.permissionDB.init_data()
         yield self.permissionLevelDB.init_data()
+
+        self.designLeaderDB=DesignBLeaderDB(self.getDesignDB(),self.locale)
+        self.designHeroDB=DesignBHeroDB(self.getDesignDB(),self.locale)
+
 
 
         self.presentPackDB=PresentPackDB(self.getGMToolDB())

@@ -44,7 +44,7 @@ class PresentPackAdd(BaseHandler):
             else:
                 self.application.logger.warning('present_pack_award_count_not_number,%s',awardCount)
                 continue
-            content= content+str(award["award_type_id"])+":"+awardSubId+":"+str(awardCount)+"|"
+            content= content+str(award["award_type_id"])+":"+str(awardSubId)+":"+str(awardCount)+"|"
         if len(content)!=0:
             content=content[:-1]
 
@@ -61,7 +61,47 @@ class PresentPackAdd(BaseHandler):
 
 class PresentPackIdList(BaseHandler):
     @asynchronous
+    def self_post(self):
+        awardType=self.get_argument('id')
+        if awardType=='5':        # leader
+            self.id_list_leader()
+        elif awardType=='6':
+            self.id_list_hero()
+
+
+    @asynchronous
     @gen.coroutine
-    def self_get(self):
-        self.render("present_pack_add.html",title="礼包打包")
+    def id_list_leader(self):
+        bLeaderList=yield self.application.dbmgr.designLeaderDB.select_all()
+        info = {}
+        result = []
+        for leader in bLeaderList:
+            data={}
+            data['label']=str(leader.id)+":"+leader.name
+            data['value']=leader.id
+            result.append(data)
+
+        print result
+        info['action'] = 'success'
+        # info['award_type'] = 5
+        info['result'] = json.dumps(result)
+        self.write(info)
+
+
+    @asynchronous
+    @gen.coroutine
+    def id_list_hero(self):
+        bLeaderList=yield self.application.dbmgr.designHeroDB.select_all()
+        info = {}
+        result = []
+        for hero in bLeaderList:
+            data={}
+            data['label']=str(hero.id)+":"+hero.name
+            data['value']=hero.id
+            result.append(data)
+
+        info['action'] = 'success'
+        info['result'] = json.dumps(result)
+        self.write(info)
+
 

@@ -40,8 +40,10 @@
                     <option value="6">英雄(hero)</option>
                 </select>
                 <input type="text" class="form-control ui-goods op-goods-id hide" placeholder="选择物品id">
-                <input type="text" class="form-control ui-goods op-goods-num" placeholder="物品数量">
+                <input type="hidden" id='goods_id_name' >
+                <input type="text"  class="form-control ui-goods op-goods-num" placeholder="物品数量">
                 <button type="button" class="btn btn-default ui-goods op-goods-add">添加</button>
+                
             </div>
             <div class="col-sm-10 ui-list-wrap">
                 <ul class="col-sm-6 ui-pack-content op-content-list">
@@ -58,23 +60,21 @@
 
 <script type="text/javascript">
     var goodsAddEl = $('.op-goods-add'),
-        modalEl = $('.op-modal'),
-        modalTitleEl = $('.op-modal-title'),
-        modalListEl = $('.op-modal-list'),
         listEl = $('.op-content-list'),
         typeEl = $('.op-goods-type'),
         numEl = $('.op-goods-num'),
         goodsIdEl = $('.op-goods-id'),
+        goodsIdNameEl = $('#goods_id_name'),
         nameEl = $('.op-pack-name'),
         statusEl = $('.op-pack-type'),
         versionEl = $('.op-pack-version'),
         submitEl = $('.op-submit-btn'),
         ajaxing = false,
-        getIdFun,
-        addPieceIdDomFun,
-        addHeroIdDomFun,
-        addLeaderIdDomFun;
+        leaderIdData,
+        heroIdData,
+        getIdFun;
 
+ 
         goodsAddEl.on('click', function() {
             var typeName = '',
                 typeId = '',
@@ -84,13 +84,21 @@
 
             typeId = typeEl.val();
             goodsId = goodsIdEl.val();
+            goodsIdName=goodsIdNameEl.val();
             count = numEl.val();
             if(typeId != '0' && count != '') {
                 typeName = typeEl.find("option:selected").text();
-                htmlStr += '<li class="ui-pack-item clearfix op-goods-item" data-id="' + typeId + '" data-goodsid="' + goodsId + '" data-count="' + count + '">' +
+                if(goodsId==""){
+                    htmlStr += '<li class="ui-pack-item clearfix op-goods-item" data-id="' + typeId + '" data-goodsid="' + goodsId + '" data-count="' + count + '">' +
                                '<span>' + typeName + 'x' + count + '</span>' +
                                '<button class="btn btn-default ui-item-delete op-delete">删除</button>' +
-                           '</li>';
+                               '</li>';
+                }else{
+                    htmlStr += '<li class="ui-pack-item clearfix op-goods-item" data-id="' + typeId + '" data-goodsid="' + goodsId + '" data-count="' + count + '">' +
+                               '<span>[' + typeName +" "+goodsIdName+ ']x' + count + '</span>' +
+                               '<button class="btn btn-default ui-item-delete op-delete">删除</button>' +
+                               '</li>';
+                }
                 listEl.append(htmlStr);
                 typeEl.children().eq(0).attr('selected', 'true');
                 goodsIdEl.val('');
@@ -125,62 +133,29 @@
             $.ajax({
                 url: url,
                 type: 'post',
-                infoType: infoType
+                infoType: infoType,
+                data:{"id":type}
             })
             .done(function(data) {
                 if(data['action'] == 'success') {
                     ajaxing = false;
-                    var info = JSON.parse(data['result']);
                     if(infoType == '5') {
-                        addLeaderIdDomFun(info);
+                        leaderIdData=JSON.parse(data['result']);
+                        goodsIdEl.autocomplete({source: leaderIdData, minLength:0,
+                                                select: function( event, ui ) {goodsIdNameEl.val(ui.item.label);}});
+                        goodsIdEl.autocomplete( "search", goodsIdEl.val());
                     }
                     if(infoType == '6') {
-                        addHeroIdDomFun(info);
+                        heroIdData=JSON.parse(data['result']);
+                        goodsIdEl.autocomplete({source: heroIdData, minLength:0,
+                            select: function( event, ui ) {goodsIdNameEl.val(ui.item.label);}
+                        });
+                        goodsIdEl.autocomplete( "search", goodsIdEl.val());
                     }
                 }
             });
         }
-        addHeroIdDomFun = function(info) {
-            var htmlStr = '';
-            for(var i = 0, len = info.length; i < len; i++) {
-                htmlStr += '<li class="ui-modal-item op-modal-item" data-id="' + info[i]['equId'] + '">' +
-                               '<a href="javascript:;" class="ui-cell-wrap">' +
-                                   '<span class="ui-modal-cell">' +
-                                       '装备id：' +
-                                       info[i]['equId'] +
-                                   '</span>' +
-                                   '<span class="ui-modal-cell">' +
-                                       '装备名称：' +
-                                       info[i]['equName'] +
-                                   '</span>' +
-                               '</a>' +
-                           '</li>';
-            }
-            modalTitleEl.text('选择装备种类');
-            modalListEl.html(htmlStr);
-            modalEl.modal();
-        }
 
-        addLeaderIdDomFun = function(info) {
-            var htmlStr = '';
-            for(var i = 0, len = info.length; i < len; i++) {
-                htmlStr += '<li class="ui-modal-item op-modal-item" data-id="' + info[i]['propId'] + '">' +
-                               '<a href="javascript:;" class="ui-cell-wrap">' +
-                                   '<span class="ui-modal-cell">' +
-                                       '道具id：' +
-                                       info[i]['propId'] +
-                                   '</span>' +
-                                   '<span class="ui-modal-cell">' +
-                                       '道具名称：' +
-                                       info[i]['propName'] +
-                                   '</span>' +
-                               '</a>' +
-                           '</li>';
-            }
-            modalTitleEl.text('选择道具种类');
-            modalListEl.html(htmlStr);
-            modalEl.modal();
-        }
 
         typeEl.on('change', function(e) {
             var val = e.currentTarget.value;
@@ -196,10 +171,23 @@
             var type = typeEl.val(),
                 data;
             if(ajaxing) return false;
-            if(type == '5' || type == '6') {
-                getIdFun(type);
+            if(type == '5' ) {
+                if( leaderIdData){
+                    goodsIdEl.autocomplete("option","source",leaderIdData);
+                    goodsIdEl.autocomplete( "search", goodsIdEl.val());
+                }else{
+                    getIdFun(type);
+                }
+            }else if(type == '6' ) {
+                if(heroIdData){
+                    goodsIdEl.autocomplete("option","source",heroIdData);
+                    /*                     goodsIdEl.autocomplete({source: heroIdData, minLength:0}); */
+                    goodsIdEl.autocomplete( "search", goodsIdEl.val());
+                }else{
+                    getIdFun(type);
+                }
             } else {
-                    return false;
+                return false;
             }
         });
 
@@ -210,13 +198,14 @@
                 id,count,
                 name = nameEl.val(),
                 version = '1';
+            goods = $('.op-goods-item');
             if(goods.length == 0 || name == '') {
+                alert("礼包名为空 或未添加任何奖品");
                 return false;
             }
             /* if(versionEl.val() != '') {
                version = versionEl.val();
                } */
-            goods = $('.op-goods-item');
             for(var i = 0, len = goods.length; i < len; i++ ) {
                 var info = {};
                 id = goods.eq(i).data('id');
