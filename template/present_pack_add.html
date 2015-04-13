@@ -205,7 +205,7 @@
 
         submitEl.on('click', function() {
             var data = {},
-                rewards = [],
+                awards = [],
                 goods = $('.op-goods-item'),
                 id,count,
                 name = nameEl.val(),
@@ -222,15 +222,15 @@
                 id = goods.eq(i).data('id');
                 goodsId = goods.eq(i).data('goodsid');
                 count = goods.eq(i).data('count');
-                info['reward_type_id'] = id;
-                info['reward_sub_id'] = goodsId;
-                info['reward_count'] = count;
-                rewards.push(info);
+                info['award_type_id'] = id;
+                info['award_sub_id'] = goodsId;
+                info['award_count'] = count;
+                awards.push(info);
             }
-            data['rewards'] = JSON.stringify(rewards);
-            data['reward_name'] = nameEl.val();
+            data['awards'] = JSON.stringify(awards);
+            data['pack_name'] = nameEl.val();
             data['version'] = version;
-            data['reward_icon'] = '';
+            data['pack_icon'] = '';
             data['status'] = statusEl.filter(":checked").val();
             ajaxing = true;
             $.ajax({

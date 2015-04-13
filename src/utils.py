@@ -25,3 +25,10 @@ def getIniValueFromFile(fileName,header,key):
 
 def getJson(jsonStr):
     return json.loads(jsonStr)
+
+def is_float(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
