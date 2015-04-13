@@ -49,7 +49,6 @@ class PresentPackDB:
     @gen.coroutine
     def add(self,name,content,version,status):
         query="insert into present_pack(name,content,icon,version,extra,status) values('%s','%s','%s',%s,'%s','%s')"%(name,content,'',version,'',status)
-        print query
         yield self.dbtemplate.execSql(query)
 
     @gen.coroutine

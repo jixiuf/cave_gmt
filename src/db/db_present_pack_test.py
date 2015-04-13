@@ -13,7 +13,7 @@ class PresentPackTestCase(tornado.testing.AsyncTestCase):
     def test_create(self):
         yield self.presentPackDB.create_table()
         yield self.presentPackDB.truncate_table()
-        yield self.presentPackDB.add("name","content",1,0)
+        yield self.presentPackDB.add("name","content",1,"mail")
         data=yield self.presentPackDB.select_all()
         id=data[0].id
         self.assertEqual (1,len(data))
