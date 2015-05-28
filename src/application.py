@@ -13,6 +13,7 @@ import ping
 from  login_handler import *
 from account_handler import *
 from present_pack import *
+from maintain import *
 
 from tornado.ioloop import IOLoop
 
@@ -37,6 +38,7 @@ class Application(tornado.web.Application):
             (r'/present_pack/add', PresentPackAdd),
             (r'/present_pack/id_list', PresentPackIdList),
 
+            (r'/maintain/mgr', Maintain),
 
 
 
