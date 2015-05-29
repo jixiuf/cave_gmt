@@ -1,0 +1,30 @@
+.ui-package-option {
+  max-width: 1024px;
+  margin: 0 auto;
+}
+.ui-package-option .ui-package-list {
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 20px;
+}
+.ui-package-option .ui-package-list .ui-package-item {
+  border-bottom: 1px solid #e5e5e5;
+  padding: 5px 0;
+}
+.ui-package-option .ui-package-list .ui-package-item .ui-package-cell {
+  width: 20%;
+  float: left;
+  word-wrap: break-word;
+}
+.ui-package-option .ui-package-list .ui-package-item .ui-package-cell .ui-item-btn {
+  float: left;
+  margin-right: 5px;
+}
+.ui-package-option .ui-package-list .ui-package-item .ui-package-cell.ui-package-content {
+  width: 40%;
+}
+.ui-package-option .ui-modal-body {
+  background: #9c9c9c;
+}

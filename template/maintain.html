@@ -1,70 +1,138 @@
 {% extends base.html %}
 {% block css%}
-<!-- <link href="../static/dist/present_pack_add.css" rel="stylesheet" type="text/css"/> -->
+<link href="../static/dist/maintain.css" rel="stylesheet" type="text/css"/>
 {% end %}
 {% block body %}
-    <body class="container">
-        <div class="ui-login-form">
-            <h2 class="form-signin-heading ui-login-title">维护公告</h2>
-            <form class="form-horizontal" role="form">
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">服务器编号</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control op-serverid" placeholder="服务器编号，默认1服">
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="col-sm-2 control-label">维护公告内容:</label>
-                    <div class="col-sm-10">
-                        <div id="sample">
-                            <div>
-                                <textarea id="editor_id" name="content" style="width:700px;height:300px;"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-default op-login-submit">提交</button>
-                    </div>
-                </div>
-            </form>
+<div class="ui-login-form">
+    <h2 class="form-signin-heading ui-login-title">维护公告</h2>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">服务器编号</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control op-serverid" placeholder="服务器编号，默认1服">
+            </div>
         </div>
-    </body>
-    <script type="text/javascript">
-        var ajaxing = false,
-            serverIdEl = $('.op-serverid'),
-            contentEl = $('#editor_id'),
-            submitEl = $('.op-login-submit'),
-            data = {};
+        
+        <div class="form-group">
+            <label class="col-sm-2 control-label">维护公告内容:</label>
+            <div class="col-sm-10">
+                <div id="sample">
+                    <div>
+                        <textarea id="editor_id" name="content" style="width:700px;height:300px;"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default op-login-submit">提交</button>
+            </div>
+        </div>
+    </form>
+</div>
 
-        submitEl.on('click', function() {
-            if(ajaxing) return false;
-            var serverId = serverIdEl.val().replace(/(^\s*)|(\s*$)/g, ""),
-                content = contentEl.val().replace(/(^\s*)|(\s*$)/g, "");
-            if(serverId == '' ) {
-                serverId="1";
-            }
-            data['serverId'] = serverId;
-            data['content'] = content;
-            ajaxing = true;
-            $.ajax({
-                url: '/maintain/mgr',
-                type: 'post',
-                data: data
-            })
-            .done(function(data) {
-                data = JSON.parse(data);
-                ajaxing = false;
-                if(data['action'] == 'success') {
-                    location.href = '/maintain/mgr';
-                } else {
-                    alert('账号密码错误！');
-                }
-            });
-            return false;
-        });
-    </script>
-    
+<div class="ui-package-option">
+    <h2 class="form-signin-heading ui-package-title">维护公告列表</h2>
+    <ul class="ui-package-list op-package-list">
+        <li class="ui-package-item clearfix">
+            <div class="ui-package-cell">
+                serverId
+            </div>
+            <div class="ui-package-cell">
+                内容
+            </div>
+            <div class="ui-package-cell ">
+                开始时间
+            </div>
+            <div class="ui-package-cell">
+                结束时间
+            </div>
+            <div class="ui-package-cell">
+                删除
+            </div>
+        </li>
+        {% for m in maintainList %}
+        <li class="ui-package-item clearfix">
+            <div class="ui-package-cell op-serverId">
+                {{ m.serverId}}
+            </div>
+            <div class="ui-package-cell ">
+                {{ m.content}}
+            </div>
+            <div class="ui-package-cell" >
+                {{ m.startTime}}
+            </div>
+            <div class="ui-package-cell" >
+                {{ m.endTime}}
+            </div>
+            <div class="ui-package-cell">
+                <button  value='{{m.serverId}}' class="btn btn-default ui-item-btn op-btn-delete">删除</button>
+            </div>
+        </li>
+        {% end %}
+        
+    </ul>
+</div>
+
+<script type="text/javascript">
+ var ajaxing = false,
+     serverIdEl = $('.op-serverid'),
+     btnDeleteEl = $('.op-btn-delete'),
+     contentEl = $('#editor_id'),
+     submitEl = $('.op-login-submit'),
+     data = {};
+
+ submitEl.on('click', function() {
+     if(ajaxing) return false;
+     var serverId = serverIdEl.val().replace(/(^\s*)|(\s*$)/g, ""),
+         content = contentEl.val().replace(/(^\s*)|(\s*$)/g, "");
+     if(serverId == '' ) {
+         serverId="1";
+     }
+     data['serverId'] = serverId;
+     data['content'] = content;
+     ajaxing = true;
+     $.ajax({
+         url: '/maintain/mgr',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          if(data == 'success') {
+              location.href = '/maintain/mgr';
+          } else {
+              alert('账号密码错误！');
+          }
+      });
+     return false;
+ });
+btnDeleteEl.on('click', function() {
+     if(ajaxing) return false;
+     var serverId = btnDeleteEl.val().replace(/(^\s*)|(\s*$)/g, "");
+     if(serverId == '' ) {
+         alert("serveris is empty")
+             return
+     }
+
+     data['serverId'] = serverId;
+     ajaxing = true;
+     $.ajax({
+         url: '/maintain/delete',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          if(data == 'success') {
+              location.href = '/maintain/mgr';
+          } else {
+              alert('账号密码错误！');
+          }
+      });
+     return true;
+ });
+ 
+</script>
+
 {% end %}

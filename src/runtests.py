@@ -9,6 +9,7 @@ TEST_MODULES = [
     'db.dbtemplate.sum_test',
     'db.db_permissions_test',
     'db.db_present_pack_test',
+    'db.db_maintain_test',
     'ping_test',
 ]
 

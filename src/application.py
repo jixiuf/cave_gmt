@@ -39,6 +39,8 @@ class Application(tornado.web.Application):
             (r'/present_pack/id_list', PresentPackIdList),
 
             (r'/maintain/mgr', Maintain),
+            (r'/maintain/delete', MaintainDelete),
+
 
 
 

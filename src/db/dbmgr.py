@@ -9,6 +9,7 @@ from tornado import ioloop, gen
 import dbtemplate.dbtemplate
 import utils
 
+from db_maintain import MaintainDB
 from db_present_pack import PresentPackDB
 from db_permissions import PermissionDB
 from db_permissions import PermissionLevelDB
@@ -89,6 +90,10 @@ class DBMgr:
 
         self.presentPackDB=PresentPackDB(self.getGMToolDB())
         yield self.presentPackDB.create_table()
+
+        self.maintainDB=MaintainDB(self.getProfileDB())
+        yield self.maintainDB.create_table()
+
         print "after load application"
 
 

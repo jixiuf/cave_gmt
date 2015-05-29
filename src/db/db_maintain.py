@@ -7,7 +7,7 @@ class Maintain:
         # self.startTime
         # self.endTime
 
-class PresentPackDB:
+class MaintainDB:
     def __init__(self,dbtemplate):
         self.dbtemplate=dbtemplate
 
@@ -35,12 +35,16 @@ class PresentPackDB:
 
     @gen.coroutine
     def add(self,serverId,content,startTime,endTime):
-        query="insert into maintain(serverId,content,startTime,endTime) values('%s','%s','%s',%s,'%s','%s')"%(serverId,content,'',endTime,'',status)
+        query="insert into maintain(serverId,content,startTime,endTime) values('%s','%s','%s','%s') on duplicate key update content='%s',startTime='%s',endTime='%s'"%(serverId,content,startTime,endTime,content,startTime,endTime)
         yield self.dbtemplate.execSql(query)
 
     @gen.coroutine
+    def delete(self,serverId):
+        query="delete from maintain where serverId=%s"%(serverId)
+        yield self.dbtemplate.execSql(query)
+    @gen.coroutine
     def select_all(self):
-        query="select id,serverId,content,startTime,endTime,extra,status,hide from maintain order by id desc"
+        query="select serverId,content,startTime,endTime from maintain order by serverId asc,startTime asc"
         res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)
 
