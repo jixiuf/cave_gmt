@@ -16,6 +16,7 @@ from db_permissions import PermissionLevelDB
 from db_design_leader import DesignBLeaderDB
 from db_design_hero import DesignBHeroDB
 from db_player import PlayerDB
+from db_gamedb_user_attr import UserAttrDB
 
 class DBConfigList:
     def __init__(self,dbConfigObjList):
@@ -103,6 +104,8 @@ class DBMgr:
         print "after load application"
 
 
+    def getUserAttrDB(self,server=1):
+        return UserAttrDB(self.getGameDB(server))
     def getPlayerDB(self):
         return PlayerDB(self.getProfileDB(),self.mode)
 
@@ -112,8 +115,8 @@ class DBMgr:
     def getDesignLeaderDB(self,server=1):
         return DesignBHeroDB(self.getDesignDB(server),self.locale)
 
-    def getGameDB(self):
-        return self._gamedbDict
+    def getGameDB(self,server):
+        return self._gamedbDict[server]
     def getDesignDB(self,server):
         return self._designDBDict[server]
     def getProfileDB(self):

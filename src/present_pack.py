@@ -92,6 +92,8 @@ class PresentPackIdList(BaseHandler):
     @gen.coroutine
     def id_list_hero(self):
         # playerInfo=yield self.application.dbmgr.getPlayerDB().select_by_uin(144150423530676224)
+        # playerInfo=yield self.application.dbmgr.getUserAttrDB(1).select_by_uin(144150423530676224)
+        # print playerInfo
         bLeaderList=yield self.application.dbmgr.getDesignHeroDB().select_all()
         info = {}
         result = []
