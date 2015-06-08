@@ -11,8 +11,9 @@ class Maintain(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
+        serverIdList= self.application.dbmgr.get_all_server_id()
         maintainList=yield self.application.dbmgr.maintainDB.select_all()
-        self.render("maintain.html",title="维护公告",maintainList=maintainList)
+        self.render("maintain.html",title="维护公告",maintainList=maintainList,serverIdList=serverIdList)
     @asynchronous
     @gen.coroutine
     def self_post(self):
