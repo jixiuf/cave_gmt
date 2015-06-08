@@ -19,7 +19,9 @@ def get_all_urls(handlers):
 
 def getIniValueFromFile(fileName,header,key):
     cf = ConfigParser.ConfigParser()
-    cf.read(fileName)
+    readedFile=cf.read(fileName)
+    if readedFile==[]:
+        return None
     value=cf.get(header,key)
     return value
 

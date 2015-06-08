@@ -72,7 +72,7 @@ class PresentPackIdList(BaseHandler):
     @asynchronous
     @gen.coroutine
     def id_list_leader(self):
-        bLeaderList=yield self.application.dbmgr.designLeaderDB.select_all()
+        bLeaderList=yield self.application.dbmgr.getDesignLeaderDB().select_all()
         info = {}
         result = []
         for leader in bLeaderList:
@@ -91,7 +91,7 @@ class PresentPackIdList(BaseHandler):
     @asynchronous
     @gen.coroutine
     def id_list_hero(self):
-        bLeaderList=yield self.application.dbmgr.designHeroDB.select_all()
+        bLeaderList=yield self.application.dbmgr.getDesignHeroDB().select_all()
         info = {}
         result = []
         for hero in bLeaderList:

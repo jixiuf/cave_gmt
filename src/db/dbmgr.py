@@ -68,9 +68,17 @@ class DBMgr:
         self.locale=locale
     @gen.coroutine
     def load(self):
-        self._designDB=self._getDesignConfig().getDatabaseTemplate()
+        self._designDBDict={}
+        self._gamedbDict={}
+        for i in range(1,10000): #应该不会开到10000多个服，
+            designConfig=self._getDesignConfig(i)
+            if designConfig!=None:
+                self._designDBDict[i]=designConfig.getDatabaseTemplate()
+            gameDBConfig=self._getGameDBConfig(i)
+            if gameDBConfig!=None:
+                self._gamedbDict[i]=gameDBConfig.getDatabaseTemplate()
+
         self._profileDB=self._getProfileConfig().getDatabaseTemplate()
-        self._gamedb=self._getGameDBConfig().getDatabaseTemplate()
         self._gmtooldb=self._getGMToolConfig().getDatabaseTemplate()
 
 
@@ -83,9 +91,6 @@ class DBMgr:
         yield self.permissionDB.init_data()
         yield self.permissionLevelDB.init_data()
 
-        self.designLeaderDB=DesignBLeaderDB(self.getDesignDB(),self.locale)
-        self.designHeroDB=DesignBHeroDB(self.getDesignDB(),self.locale)
-
 
 
         self.presentPackDB=PresentPackDB(self.getGMToolDB())
@@ -97,11 +102,16 @@ class DBMgr:
         print "after load application"
 
 
+    def getDesignHeroDB(self,server=1):
+        return DesignBLeaderDB(self.getDesignDB(server),self.locale)
+
+    def getDesignLeaderDB(self,server=1):
+        return DesignBHeroDB(self.getDesignDB(server),self.locale)
 
     def getGameDB(self):
-        return self._gamedb
-    def getDesignDB(self):
-        return self._designDB
+        return self._gamedbDict
+    def getDesignDB(self,server):
+        return self._designDBDict[server]
     def getProfileDB(self):
         return self._profileDB
     def getProfileDB(self):
@@ -121,8 +131,10 @@ class DBMgr:
         return DBConfig(user,passwd,host,database,port)
 
 
-    def _getDesignConfig(self):
-        value=utils.getIniValueFromFile("/data/tapalliance/config/%s_0_1.ini"%(self.mode,),"design_db_config","mysql")
+    def _getDesignConfig(self,server):
+        value=utils.getIniValueFromFile("/data/tapalliance/config/%s_0_%d.ini"%(self.mode,server),"design_db_config","mysql")
+        if value==None:
+            return None
         value=utils.getJson(value)
         return self._getDBConfigMaster(value)
 
@@ -137,8 +149,11 @@ class DBMgr:
         return self._getDBConfigMaster(value)
 
 
-    def _getGameDBConfig(self):
-        value=utils.getIniValueFromFile("/data/tapalliance/config/%s_0_1.ini"%(self.mode,),"db_config","mysql")
+    def _getGameDBConfig(self,server):
+        value=utils.getIniValueFromFile("/data/tapalliance/config/%s_0_%d.ini"%(self.mode,server),"db_config","mysql")
+        if value==None:
+            return None
+
         value=utils.getJson(value)
         masterConfigList=[]
         for masterSlaveJson in value['sharding']:
@@ -148,7 +163,7 @@ class DBMgr:
 @gen.coroutine
 def test_dbmgr_main():
     mgr=DBMgr("dev")
-    designConfig=mgr._getDesignConfig()
+    designConfig=mgr._getDesignConfig(1)
     print designConfig
     profileConfig=mgr._getProfileConfig()
     print profileConfig
@@ -156,7 +171,7 @@ def test_dbmgr_main():
     print gmToolConfig
 
     print "db config start"
-    dbConfigObjList=mgr._getGameDBConfig()
+    dbConfigObjList=mgr._getGameDBConfig(1)
     for var in dbConfigObjList.getDBConfigList():
         print var
     print "db config end"
