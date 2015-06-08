@@ -10,6 +10,9 @@ class PresentPackList(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
+        # playerInfo=yield self.application.dbmgr.getPlayerDB().select_by_uin(144150423530676224)
+        # playerInfo=yield self.application.dbmgr.getUserAttrDB(1).select_by_uin(144150423530676224)
+        # print playerInfo
         packs=yield self.application.dbmgr.presentPackDB.select_all()
         self.render("present_pack_list.html",title="礼包列表",packs=packs)
 class PresentPackHideShow(BaseHandler):
@@ -91,9 +94,6 @@ class PresentPackIdList(BaseHandler):
     @asynchronous
     @gen.coroutine
     def id_list_hero(self):
-        # playerInfo=yield self.application.dbmgr.getPlayerDB().select_by_uin(144150423530676224)
-        # playerInfo=yield self.application.dbmgr.getUserAttrDB(1).select_by_uin(144150423530676224)
-        # print playerInfo
         bLeaderList=yield self.application.dbmgr.getDesignHeroDB().select_all()
         info = {}
         result = []

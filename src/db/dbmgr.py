@@ -1,5 +1,5 @@
 #  -*- coding:utf-8 -*-
-import os,sys
+import os,sys,re
 modulepath = os.getcwd()+'/..'
 sys.path.append(modulepath)
 
@@ -68,11 +68,22 @@ class DBMgr:
     def __init__(self,mode,locale):
         self.mode=mode
         self.locale=locale
+    def get_all_server_id(self):
+        list=[]
+        reC=re.compile(r'.*%s_0_([0-9]+)\.ini'%(self.mode))
+        for f in os.listdir('/data/tapalliance/config/'):
+            matched=reC.match( f)
+            if matched:
+                list.append(int(matched.group(1)))
+        return list
+
+
+
     @gen.coroutine
     def load(self):
         self._designDBDict={}
         self._gamedbDict={}
-        for i in range(1,10000): #应该不会开到10000多个服，
+        for i in self.get_all_server_id(): #
             designConfig=self._getDesignConfig(i)
             if designConfig!=None:
                 self._designDBDict[i]=designConfig.getDatabaseTemplate()
