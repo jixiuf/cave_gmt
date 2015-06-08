@@ -122,23 +122,23 @@ class DBMgr:
 
 
     def _getDesignConfig(self):
-        value=utils.getIniValueFromFile("/data/tapalliance/config/%s_1_1.ini"%(self.mode,),"design_db_config","mysql")
+        value=utils.getIniValueFromFile("/data/tapalliance/config/%s_0_1.ini"%(self.mode,),"design_db_config","mysql")
         value=utils.getJson(value)
         return self._getDBConfigMaster(value)
 
 
     def _getProfileConfig(self):
-        value=utils.getIniValueFromFile("/data/tapalliance/config/%s_1_1.ini"%(self.mode,),"profile_db_config","mysql")
+        value=utils.getIniValueFromFile("/data/tapalliance/config/%s_0_1.ini"%(self.mode,),"profile_db_config","mysql")
         value=utils.getJson(value)
         return self._getDBConfigMaster(value)
     def _getGMToolConfig(self):
-        value=utils.getIniValueFromFile("/data/tapalliance/config/%s_1_1.ini"%(self.mode,),"gmtool_db_config","mysql")
+        value=utils.getIniValueFromFile("/data/tapalliance/config/%s_0_1.ini"%(self.mode,),"gmtool_db_config","mysql")
         value=utils.getJson(value)
         return self._getDBConfigMaster(value)
 
 
     def _getGameDBConfig(self):
-        value=utils.getIniValueFromFile("/data/tapalliance/config/%s_1_1.ini"%(self.mode,),"db_config","mysql")
+        value=utils.getIniValueFromFile("/data/tapalliance/config/%s_0_1.ini"%(self.mode,),"db_config","mysql")
         value=utils.getJson(value)
         masterConfigList=[]
         for masterSlaveJson in value['sharding']:
