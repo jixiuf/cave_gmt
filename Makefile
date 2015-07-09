@@ -6,6 +6,9 @@ ROOT_DIR=$(shell pwd)
 
 run:
 	./virtual/bin/python src/main.py
+run-stage:
+	./virtual/bin/python src/main.py -host=0.0.0.0
+
 test:
 	cd src;../virtual/bin/python -m runtests
 build-dep:
