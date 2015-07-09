@@ -144,9 +144,8 @@ class DBMgr:
         port=jsonData["master"].get('port','')
         if port=="":
             port=3306
-        if type(port)==str:
+        if type(port)==str or type(port)==unicode :
             port=int(port)
-        print user,passwd,host,database,port
         return DBConfig(user,passwd,host,database,port)
 
 
