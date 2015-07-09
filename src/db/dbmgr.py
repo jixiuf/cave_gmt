@@ -1,5 +1,5 @@
 #  -*- coding:utf-8 -*-
-import os,sys,re
+import os,sys,re,json
 modulepath = os.getcwd()+'/..'
 sys.path.append(modulepath)
 
@@ -70,7 +70,7 @@ class DBMgr:
         self.locale=locale
     def get_all_server_id(self):
         list=[]
-        reC=re.compile(r'.*%s_0_([0-9]+)\.ini'%(self.mode))
+        reC=re.compile(r'.*%s_0_([0-9]+)\.json'%(self.mode))
         for f in os.listdir('/data/tapalliance/config/'):
             matched=reC.match( f)
             if matched:
@@ -146,37 +146,40 @@ class DBMgr:
             port=3306
         if type(port)==str:
             port=int(port)
+        print user,passwd,host,database,port
         return DBConfig(user,passwd,host,database,port)
 
 
     def _getDesignConfig(self,server):
-        value=utils.getIniValueFromFile("/data/tapalliance/config/%s_0_%d.ini"%(self.mode,server),"design_db_config","mysql")
-        if value==None:
-            return None
-        value=utils.getJson(value)
-        return self._getDBConfigMaster(value)
+        with open("/data/tapalliance/config/%s_0_%d.json"%(self.mode,server)) as data_file:
+            value = json.load(data_file)
+            if value==None:
+                return None
+            return self._getDBConfigMaster(value["design_db_config"])
 
 
     def _getProfileConfig(self):
-        value=utils.getIniValueFromFile("/data/tapalliance/config/%s_0_1.ini"%(self.mode,),"profile_db_config","mysql")
-        value=utils.getJson(value)
-        return self._getDBConfigMaster(value)
+        with open("/data/tapalliance/config/%s_0_1.json"%(self.mode)) as data_file:
+            value = json.load(data_file)
+            if value==None:
+                return None
+            return self._getDBConfigMaster(value["profile_db_config"])
     def _getGMToolConfig(self):
-        value=utils.getIniValueFromFile("/data/tapalliance/config/%s_0_1.ini"%(self.mode,),"gmtool_db_config","mysql")
-        value=utils.getJson(value)
-        return self._getDBConfigMaster(value)
-
+        with open("/data/tapalliance/config/%s_0_1.json"%(self.mode)) as data_file:
+            value = json.load(data_file)
+            if value==None:
+                return None
+            return self._getDBConfigMaster(value["gmtool_db_config"])
 
     def _getGameDBConfig(self,server):
-        value=utils.getIniValueFromFile("/data/tapalliance/config/%s_0_%d.ini"%(self.mode,server),"db_config","mysql")
-        if value==None:
-            return None
-
-        value=utils.getJson(value)
-        masterConfigList=[]
-        for masterSlaveJson in value['sharding']:
-            masterConfigList.append(self._getDBConfigMaster(masterSlaveJson))
-        return DBConfigList(masterConfigList)
+        with open("/data/tapalliance/config/%s_0_%d.json"%(self.mode,server)) as data_file:
+            value = json.load(data_file)
+            if value==None:
+                return None
+            masterConfigList=[]
+            for masterSlaveJson in value["game_db_config"]['sharding']:
+                masterConfigList.append(self._getDBConfigMaster(masterSlaveJson))
+            return DBConfigList(masterConfigList)
 
 @gen.coroutine
 def test_dbmgr_main():
@@ -202,4 +205,3 @@ def test_dbmgr_main():
 if __name__ == '__main__':
     test_dbmgr_main()
     ioloop.IOLoop.instance().start()
-
