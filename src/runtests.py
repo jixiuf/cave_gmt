@@ -10,6 +10,9 @@ TEST_MODULES = [
     'db.db_permissions_test',
     'db.db_present_pack_test',
     'db.db_maintain_test',
+    'db.db_server_version_test',
+    "db.db_version_update_test",
+    "db.db_dynamic_version_update_test",
     'ping_test',
 ]
 
