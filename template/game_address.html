@@ -1,0 +1,118 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/game_address.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-game-address">
+    <h2 class="form-signin-heading">渠道包下载地址</h2>
+    <div class="ui-url-field clearfix">
+        <select class="form-control ui-channel-select op-channel-select">
+            <option value="0">请选择渠道</option>
+        </select>
+        <input class="form-control ui-package-url op-package-url" type="text" placeholder="请填写安装包下载地址">
+        <input class="form-control ui-package-url op-package-comment" type="text" placeholder="备注">
+        <button class="btn btn-default ui-submit-btn op-submit-btn">确定</button>
+    </div>
+    <div class="ui-url-explain">如果安装包下载地址未指定，大版本更新时将无法获取更新包！</div>
+    <ul class="ui-url-list op-channel-list">
+        <li class="ui-url-item clearfix">
+            <div class="ui-channel-name">渠道名称</div>
+            <div class="ui-channel-url">安装包地址</div>
+            <div class="ui-channel-comment">备注</div>
+        </li>
+    </ul>
+</div>
+
+<script src="../static/javascript/base/base.js"></script>
+<script type="text/javascript">
+    var info = {% raw result['info'] %},
+        channels = {% raw result['channels'] %},
+        channelEl = $('.op-channel-select'),
+        listEl = $('.op-channel-list'),
+        submitEl = $('.op-submit-btn'),
+        urlEl = $('.op-package-url'),
+        commentEl = $('.op-package-comment'),
+        ajaxing = false,
+        channelFun,
+        infoFun,
+        run;
+
+    channelFun = function() {
+        var channelStr = '';
+        for(var i = 0, len = channels.length; i < len; i++) {
+            channelStr += '<option value="' + channels[i] + '">' + defaultChannelName[channels[i]] + '</option>';
+        }
+        channelEl.append(channelStr);
+    }
+
+    infoFun = function() {
+        var infoStr = '';
+        for(var i = 0, len = channels.length; i < len; i++) {
+            var url = '',
+                comment = '';
+            if(info[channels[i]]) {
+                urlStr = info[channels[i]].url;
+                commentStr = info[channels[i]].comment;
+                if(urlStr != '') {
+                    url = urlStr;
+                } else {
+                    url = '<span style="color: red">未指定</span>';
+                }
+                if(commentStr != '') {
+                    comment = commentStr;
+                }
+            } else {
+                url = '<span style="color: red">未指定</span>';
+            }
+            infoStr += '<li class="ui-url-item clearfix">' +
+                           '<div class="ui-channel-name">' + defaultChannelName[channels[i]] + '</div>' +
+                           '<div class="ui-channel-url">' + url + '</div>' +
+                           '<div class="ui-channel-comment">' + comment + '</div>' +
+                       '</li>';
+        }
+        listEl.append(infoStr);
+    }
+
+    submitEl.on('click', function() {
+        var channel = channelEl.val(),
+            gameUrl = urlEl.val(),
+            comment = commentEl.val(),
+            data = {};
+        if(channel == '0' || gameUrl == '')  {
+            alert('需选择渠道并填写下载地址！');
+            return false;
+        };
+        data['channel'] = channel;
+        data['gameUrl'] = gameUrl;
+        data['comment'] = comment;
+        if(ajaxing) return false;
+        ajaxing = true;
+        $.ajax({
+            url: '/api/game/address',
+            type: 'post',
+            data: data
+        })
+        .done(function(data) {
+            if(data == 'wrong permissions') {
+                location.href = '/';
+            } else {
+                data = JSON.parse(data);
+            }
+
+            if(data['action'] == 'success') {
+                ajaxing = false;
+                location.href = '/game/address';
+            }
+        });
+    });
+
+    run = function() {
+        channelFun();
+        infoFun();
+    }
+
+    $(document).ready(
+        run()
+    );
+</script>
+{% end %}

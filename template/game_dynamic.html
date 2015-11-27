@@ -1,0 +1,146 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/game_dynamic.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-game-dynamic">
+    <h2 class="form-signin-heading">动态更新</h2>
+    <input class="op-file" type="file" multiple>
+    <ul class="ui-upload-log op-upload-log">
+        <li class="ui-upload-title">上传进度</li>
+    </ul>
+</div>
+
+<script src="../static/javascript/base/base.js"></script>
+<script type="text/javascript">
+    var channelMap = {% raw channel %},
+        fileEl = $('.op-file'),
+        logEl = $('.op-upload-log'),
+        ajaxing = false,
+        checkFun,
+        jsonObj,
+        checkJsonFun,
+        checkZipFun,
+        channelMapFun,
+        uploadFun,
+        jPacks,
+        packs,
+        uploadedCbk,
+        uploadingCbk,
+        getFileFun;
+
+    uploadedCbk = function(file, url) {
+        var cbkFileName = file.name;
+        logEl.append('<li>package ' + cbkFileName + ' uploaded</li>')
+        logEl.append('<li>' + cbkFileName + ' url: ' + url + '</li>')
+        if(jPacks.length <= 0) {
+            logEl.append('<li>all packages uploaded</li>')
+        } else {
+            uploadFun();
+        }
+    }
+
+    uploadingCbk = function(percent, uploadingName) {
+        var upName = uploadingName.split('.')[0];
+        if($('.' + upName).length) {
+            $('.' + upName).html('uploading: ' + percent + '%');
+        } else {
+            logEl.append('<li class="' + upName + '">uploading: ' + percent + '%</li>')
+        }
+    }
+
+    getFileFun = function(packName) {
+        var file;
+        for(var i in packs) {
+            if(packs[i].name == packName) {
+                file = packs[i];
+            }
+        }
+        return file;
+    }
+
+    uploadFun = function() {
+        var packName = jPacks.pop(0);
+        logEl.append('<li>uploading: ' + packName + '</li>')
+        uploadQiniu.upload(getFileFun(packName), uploadedCbk, uploadingCbk, true, true);
+    }
+
+    channelMapFun = function(platform) {
+        var sChannels = [];
+        for(var i in channelMap) {
+            if(i == '112') continue;
+            if(channelMap[i] == platform) {
+                sChannels.push(i);
+            }
+        }
+        return sChannels;
+    }
+
+    checkJsonFun = function(platform, jChannels) {
+        if(channelMapFun(platform).sort().toString() == jChannels.sort().toString()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    checkZipFun = function(packsName) {
+        if(jPacks.sort().toString() == packsName.sort().toString()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    checkFun = function(jsonFile, packsName) {
+        var reader = new FileReader(),
+            jChannels = [],
+            jsonJudge,
+            zipJudge;
+
+        jPacks = [];
+        reader.onload = function(e) {   
+            jsonObj = JSON.parse(e.target.result);
+            for(var i in jsonObj.content) {
+                jChannels.push(jsonObj.content[i]['channel']);
+                jPacks.push(jsonObj.content[i]['pack']);
+            }
+            jsonJudge = checkJsonFun(jsonObj.platform, jChannels);
+            if(jsonJudge) {
+                logEl.append('<li>json all ready...</li>')
+                zipJudge = checkZipFun(packsName);
+                if(zipJudge) {
+                    logEl.append('<li>packs all ready...</li>')
+                    uploadFun();
+                } else {
+                    alert('wrong channels! need channels:' + sChannels.toString());
+                }
+            } else {
+                alert('wrong channels! need channels:' + sChannels.toString());
+            }
+        }
+        reader.readAsText(jsonFile);
+    }
+
+    fileEl.on('change', function(e) {
+        fileEl.attr('disabled', 'true');
+        var files = e.currentTarget.files,
+            packsName = [],
+            fileName,
+            jsonFile;
+
+        packs = [];
+        for(var i = 0, len = files.length; i < len; i++) {
+            fileName = files[i].name;
+            if(fileName.split('.')[1] == 'text') {
+                jsonFile = files[i];
+            } else if(fileName.split('.')[1] == 'zip') {
+                packs.push(files[i]);
+                packsName.push(fileName);
+            }
+        }
+
+        checkFun(jsonFile, packsName);
+    });
+</script>
+{% end %}

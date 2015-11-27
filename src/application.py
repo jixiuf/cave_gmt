@@ -14,6 +14,7 @@ from  login_handler import *
 from account_handler import *
 from present_pack import *
 from maintain import *
+from version_handle import *
 
 from tornado.ioloop import IOLoop
 
@@ -41,6 +42,11 @@ class Application(tornado.web.Application):
             (r'/maintain/mgr', Maintain),
             (r'/maintain/delete', MaintainDelete),
 
+            (r'/game/update', GameUpdateRenderHandler),
+            # (r'/game/dynamic', GameDynamicRenderHandler),
+            # (r'/game/address', GameAddressRenderHandler),
+            # (r'/game/server_version_update', GameServerVersionRenderHandler),
+            # (r'/game/server_version_update_notice', ServerMgrUpdateServerVerionNoticeRenderHandler),
 
 
 
