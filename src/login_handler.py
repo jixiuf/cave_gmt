@@ -17,7 +17,6 @@ class LoginHandler(BaseHandler):
             self.application.logger.warning('errortrace\t%s' % (str(traceback.format_exc()),))
 
     @gen.coroutine
-    @asynchronous
     def post(self):
         try:
             account = self.get_argument('account')
@@ -37,7 +36,6 @@ class LoginHandler(BaseHandler):
 
             self.write(json.dumps(result))
             self.finish()
-            print result
 
         except Exception, error:
             self.application.logger.warning('errorarg\t%s\t%s\t%s' % (self.request.headers.get('channel','xxx'),self.request.headers.get('User-Agent','xxx'),str(self.request.arguments)))
