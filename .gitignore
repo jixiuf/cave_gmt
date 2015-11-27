@@ -2,3 +2,7 @@
 /virtual
 /data
 *.pyc
+/TAGS
+/GRTAGS
+/GTAGS
+/GPATH
