@@ -189,7 +189,8 @@ class GameServerVersionRenderHandler(BaseHandler):
         data = {}
         for i in channels:
             dynamicRec=yield self.application.dbmgr.dynamicVersionUpdateDB.select_max_version(i)
-            data[dynamicRec.channel]=dynamicRec.toJsonObj()
+            if dynamicRec!= None:
+                data[dynamicRec.channel]=dynamicRec.toJsonObj()
 
         versionData={}
         versionRecs= yield self.application.dbmgr.serverVersionDB.select_all()
