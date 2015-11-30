@@ -7,11 +7,75 @@ from tornado.web import asynchronous
 import sys
 import time
 from conf import *
+from db.db_dynamic_version_update import DynamicVersionUpdate
 
 class GameUpdateRenderHandler(BaseHandler):
     @asynchronous
     def self_get(self):
         self.render("game_update.html",title="动态更新",result=json.dumps(PLATFORM_SERVER_LIST))
+
+class DynamicHandler(tornado.web.RequestHandler):
+
+    def post(self):
+        self.permission_verify()
+
+    def permission_verify(self):
+        user = self.get_argument('user', None)
+        password = self.get_argument('password', None)
+
+        channel = self.get_argument('channel', None)
+        version = self.get_argument('version', None)
+        url = self.get_argument('url', None)
+        size = self.get_argument('size', None)
+        if size=="":
+            size="0"
+        comment = self.get_argument('comment', None)
+        note = self.get_argument('note', None)
+        svnVersion = self.get_argument('svnVersion', None)
+        if svnVersion=="":
+            svnVersion="0"
+
+
+        if user == DYNAMIC_USER and password == DYNAMIC_PASSWORD:
+            if channel == None or version == None or  url == None or size == None or comment == None or note == None or svnVersion == None:
+                self.failed('need 8 arguments')
+            else:
+                self.success(channel,version,url,size,comment,note,svnVersion)
+        else:
+            self.failed('verification dose note pass')
+
+    @asynchronous
+    @gen.coroutine
+    def success(self,channel,version,url,size,comment,note,svnVersion):
+        info=yield self.application.dbmgr.dynamicVersionUpdateDB.select(int(channel),int(version))
+        if info==None:
+            info=DynamicVersionUpdate()
+            info.channel=int(channel)
+            info.version=int(version)
+            info.url=url
+            info.size=int(size)
+            info.comment=comment
+            info.note=note
+            info.svnVersion=int(svnVersion)
+            yield self.application.dbmgr.dynamicVersionUpdateDB.add(info)
+        else:
+            info.url=url
+            info.size=int(size)
+            info.comment=comment
+            info.note=note
+            info.svnVersion=int(svnVersion)
+            yield self.application.dbmgr.dynamicVersionUpdateDB.update(info)
+        res = {
+            'status': 'success'
+        }
+        self.write(res)
+
+    def failed(self, info):
+        res = {
+            'status': 'failed',
+            'info': info
+        }
+        self.write(res)
 
 class GameDynamicRenderHandler(BaseHandler):
     def self_get(self):
@@ -179,42 +243,3 @@ class ServerVersionHandler(BaseHandler):
         self.application.redis.publish('centerserver_notify_queue', '{"type":7, "time":%s}'%(int(time.time()*1000)))
         self.application.redis.publish('centerserver_notify_queue', '{"type":9, "time":%s}'%(int(time.time()*1000)))
 
-#game dynamic
-class DynamicHandler(tornado.web.RequestHandler):
-
-    def post(self):
-        self.permission_verify()
-
-    def permission_verify(self):
-        user = self.get_argument('user', None)
-        password = self.get_argument('password', None)
-
-        channel = self.get_argument('channel', None)
-        version = self.get_argument('version', None)
-        url = self.get_argument('url', None)
-        size = self.get_argument('size', None)
-        comment = self.get_argument('comment', None)
-        note = self.get_argument('note', None)
-        svnVersion = self.get_argument('svnVersion', None)
-
-        if user == DYNAMIC_USER and password == DYNAMIC_PASSWORD:
-            if channel == None or version == None or url == None or size == None or comment == None or note == None or svnVersion == None:
-                self.failed('need 8 arguments')
-            else:
-                self.success(channel,version,url,size,comment,note,svnVersion)
-        else:
-            self.failed('verification dose note pass')
-
-    def success(self,channel,version,url,size,comment,note,svnVersion):
-        self.application.dynamic_db.add_channel_dynamic(channel,version,url,size,comment,note,svnVersion)
-        res = {
-            'status': 'success'
-        }
-        self.write(res)
-
-    def failed(self, info):
-        res = {
-            'status': 'failed',
-            'info': info
-        }
-        self.write(res)

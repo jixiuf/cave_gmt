@@ -5,47 +5,68 @@
 {% block body %}
 <div class="ui-game-update">
     <h2 class="form-signin-heading">动态更新包上传</h2>
-    <form class="form-horizontal" role="form">
+    <form class="form-horizontal" role="form" action="/api/game/dynamic" method="post">
+        <!-- <div class="form-group">
+             <label class="col-sm-3 control-label">更新包</label>
+             <div class="col-sm-4">
+             <input type="file">
+             </div>
+             </div> -->
+        <!-- <div class="form-group">
+             <label class="col-sm-3 control-label">适用服务器</label>
+             <ul class="col-sm-9 ui-channel-list op-server-wrap"></ul>
+             </div> -->
         <div class="form-group">
-            <label class="col-sm-3 control-label">更新包</label>
+            <label class="col-sm-3 control-label">渠道号*</label>
             <div class="col-sm-4">
-                <input type="file">
+                <input class="form-control" name="channel" placeholder="如 7:iphonecake">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">内部版本号*</label>
+            <div class="col-sm-4">
+                <input class="form-control" placeholder="例如1001001" name="version">
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">适用服务器</label>
-            <ul class="col-sm-9 ui-channel-list op-server-wrap"></ul>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">内部版本号</label>
+            <label class="col-sm-3 control-label">动态更新包url地址*</label>
             <div class="col-sm-4">
-                <input class="form-control" placeholder="例如1001001">
+                <input class="form-control" placeholder="http://qiniu.com/a/b/c.zip" name="url">
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">发布版本号</label>
+            <label class="col-sm-3 control-label">包大小size(int)</label>
             <div class="col-sm-4">
-                <input class="form-control" placeholder="例如1.1.1">
+                <input class="form-control" placeholder="例如:102400,(非必須)" name="size">
             </div>
         </div>
+
         <div class="form-group">
             <label class="col-sm-3 control-label">SVN版本号</label>
             <div class="col-sm-4">
-                <input class="form-control" placeholder="">
+                <input class="form-control" placeholder="非必须,客户端备注用" name="svnVersion">
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label">版本说明</label>
             <div class="col-sm-4">
-                <textarea class="form-control" rows="3"></textarea>
+                <textarea class="form-control" rows="3" name="comment"></textarea>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label">备注</label>
             <div class="col-sm-4">
-                <textarea class="form-control" rows="3"></textarea>
+                <textarea class="form-control" rows="3" name="note"></textarea>
             </div>
         </div>
+        <div class="form-group">
+            <div class="col-sm-4">
+                <input type="hidden"  name="user" value="dynamicUser"></textarea>
+                <input type="hidden"  name="password" value="dynamicPassword"></textarea>
+            </div>
+        </div>
+
         <div class="form-group">
             <div class="col-sm-offset-3 col-sm-4">
                 <button type="submit" class="btn btn-default">提交</button>
@@ -58,198 +79,37 @@
 
 <script src="../static/javascript/base/base.js"></script>
 <script type="text/javascript">
-    //server select
+ /* server select
     var serverData = {% raw result %},
-        serverWrapEl = $('.op-server-wrap');
+    serverWrapEl = $('.op-server-wrap');
 
     serverChoise.serverDomAdd(serverData, serverWrapEl);
 
     var testEl = $('.op-test');
 
     testEl.on('click', function() {
-        var data = {
-            'user': 'dynamicUser',
-            'password': 'dynamicPassword',
-            'channel': 1,
-            'version': 1,
-            'url': 'www.baidu.com',
-            'size': 1,
-            'comment': 'comment',
-            'note': 'note',
-            'svnVersion': 1
-        }
+    var data = {
+    'user': 'dynamicUser',
+    'password': 'dynamicPassword',
+    'channel': 1,
+    'version': 1,
+    'url': 'www.baidu.com',
+    'size': 1,
+    'comment': 'comment',
+    'note': 'note',
+    'svnVersion': 1
+    }
 
-        $.ajax({
-            url: '/api/game/dynamic',
-            type: 'post',
-            data: data
-        })
-        .done(function(data) {
-            alert(data['status']);
-        });
+    $.ajax({
+    url: '/api/game/dynamic',
+    type: 'post',
+    data: data
+    })
+    .done(function(data) {
+    alert(data['status']);
     });
-
-//  var platformEl = $('.op-search-platform'),
-//      searchEl = $('.op-search-btn'),
-//      listEl = $('.op-channel-list'),
-//      submitEl = $('.op-submit-btn'),
-//      cacheEl = $('.op-cache-btn'),
-//      deleteEl = $('.op-delete-btn'),
-//      versionEl = $('.op-game-version'),
-//      ajaxing = false,
-//      data,
-//      channelFun,
-//      uploadAddFun,
-//      updateFinishFun;
-
-//  updateFinishFun = function(version,info) {
-//      info = JSON.stringify(info);
-//      $.ajax({
-//          url: '/api/version/update',
-//          type: 'post',
-//          data: {
-//              'updateInfo': info,
-//              'version': version
-//          }
-//      })
-//      .done(function(data) {
-//          if(data == 'wrong permissions') {
-//              location.href = '/';
-//          } else {
-//              data = JSON.parse(data);
-//          }
-
-//          if(data.action == 'success') {
-//              ajaxing = false;
-//              alert('更新包已成功入库!');
-//              location.href = '/game/update';
-//          }
-
-//          if(data.action == 'wrong channel-version') {
-//              alert('该版本已存在！');
-//              ajaxing = false;
-//          }
-//      });
-//  }
-
-//  uploadAddFun = function(channels) {
-//      var htmlStr = '';
-//      for(var i = 0, len = channels.length; i < len; i++) {
-//          htmlStr += '<li class="ui-channel-item clearfix">' +
-//                         '<div class="ui-channel-name">渠道：' + defaultChannelName[channels[i]] + '</div>' +
-//                         '<div class="ui-upload-text">上传：</div>' +
-//                         '<input class="ui-upload-ipt op-upload" type="file" accept="application/zip" data-channel="' + channels[i] + '">' +
-//                         '<input class="form-control ui-upload-reason op-upload-reason" type="text" placeholder="请输入版本说明">' +
-//                     '</li>';
-//      }
-//      listEl.html(htmlStr);
-//  }
-
-//  channelFun = function(platform) {
-//      if(ajaxing) return false;
-//      data = {},
-//      data['platform'] = platform;
-//      ajaxing = true;
-//      $.ajax({
-//          url: '/api/channel/info',
-//          type: 'post',
-//          data: data
-//      })
-//      .done(function(data) {
-//          ajaxing = false;
-//          uploadAddFun(JSON.parse(data))
-//      });
-//  }
-
-//  serverChoiseSingle.platformBinding(platformEl);
-//  serverChoiseSingle.search(searchEl, channelFun);
-
-//  submitEl.on('click', function() {
-//      var uploadEl = $('.op-upload'),
-//          reasonEl = $('.op-upload-reason'),
-//          data = {};
-//      for(var i = 0, len = uploadEl.length; i < len; i++) {
-//          var url = uploadEl.eq(i).data('url'),
-//              reason = reasonEl.eq(i).val(),
-//              channel = uploadEl.eq(i).data('channel'),
-//              size = uploadEl[0].files[0]['size'];
-//          if(!url) {
-//              alert('请检查各渠道更新包是否全部上传!');
-//          } else {
-//              data[channel] = {
-//                  'url': url,
-//                  'size': size,
-//                  'reason': reason
-//              }
-//          }
-//          if(i == len - 1) {
-//              if(ajaxing) return false;
-//              var version = versionEl.val()
-//              if(version == '') {
-//                  alert('请填写版本号！');
-//                  return false;
-//              }
-//              ajaxing = true;
-//              updateFinishFun(version, data);
-//          }
-//      }
-//  });
-
-//  //upload
-//  var upUrl = 'http://thgmtools.qiniudn.com/',
-//      perEl = $('.op-upload-percent');
-
-//  listEl.delegate('.op-upload', 'click', function(e) {
-//      var uploadEl = $('.op-upload'),
-//          el = $(e.currentTarget),
-//          action = 'zip';
-//      uploadToQiniu.run(upUrl, uploadEl, el, action, perEl);
-//  });
-
-//  cacheEl.on('click', function() {
-//      if(ajaxing) return false;
-//      ajaxing = true;
-//      $.ajax({
-//          url: '/api/cache/dynamic',
-//          type: 'post',
-//          data: data
-//      })
-//      .done(function(data) {
-//          if(data == 'wrong permissions') {
-//              location.href = '/';
-//          } else {
-//              data = JSON.parse(data);
-//          }
-
-//          if(data.action == 'success') {
-//              ajaxing = false;
-//              alert('缓存刷新成功!');
-//          }
-//      });
-//  });
-
-//  //game test use
-//  deleteEl.on('click', function() {
-//      if(ajaxing) return false;
-//      ajaxing = true;
-//      $.ajax({
-//          url: '/api/game/delete',
-//          type: 'post',
-//          data: data
-//      })
-//      .done(function(data) {
-//          if(data == 'wrong permissions') {
-//              location.href = '/';
-//          } else {
-//              data = JSON.parse(data);
-//          }
-
-//          if(data.action == 'success') {
-//              ajaxing = false;
-//              alert('更新包全部清除!');
-//          }
-//      });
-//  });
+    });
+  */
 
 </script>
 {% end %}

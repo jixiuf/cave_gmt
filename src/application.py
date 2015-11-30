@@ -45,6 +45,9 @@ class Application(tornado.web.Application):
             (r'/game/update', GameUpdateRenderHandler),
             (r'/game/dynamic', GameDynamicRenderHandler),
             (r'/game/address', GameAddressRenderHandler),
+
+            (r'/api/game/dynamic', DynamicHandler),
+
             # (r'/game/server_version_update', GameServerVersionRenderHandler),
             # (r'/game/server_version_update_notice', ServerMgrUpdateServerVerionNoticeRenderHandler),
 
