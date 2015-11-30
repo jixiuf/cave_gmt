@@ -43,8 +43,8 @@ class Application(tornado.web.Application):
             (r'/maintain/delete', MaintainDelete),
 
             (r'/game/update', GameUpdateRenderHandler),
-            # (r'/game/dynamic', GameDynamicRenderHandler),
-            # (r'/game/address', GameAddressRenderHandler),
+            (r'/game/dynamic', GameDynamicRenderHandler),
+            (r'/game/address', GameAddressRenderHandler),
             # (r'/game/server_version_update', GameServerVersionRenderHandler),
             # (r'/game/server_version_update_notice', ServerMgrUpdateServerVerionNoticeRenderHandler),
 

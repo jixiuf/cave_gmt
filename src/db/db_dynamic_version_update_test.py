@@ -29,7 +29,7 @@ class DynamicVersionUpdateDBTestCase(tornado.testing.AsyncTestCase):
         info.url="http://google.com"
         cursor=yield self.dynamicVersionUpdateDB.update(info)
         self.assertEqual (1,cursor.rowcount)
-        data=yield self.dynamicVersionUpdateDB.select(1)
+        data=yield self.dynamicVersionUpdateDB.select(1,10001)
         self.assertEqual (info.url,data.url)
 
 

@@ -17,6 +17,9 @@ from db_design_leader import DesignBLeaderDB
 from db_design_hero import DesignBHeroDB
 from db_player import PlayerDB
 from db_gamedb_user_attr import UserAttrDB
+from db_version_update import VersionUpdateDB
+from db_server_version import ServerVersionDB
+from db_dynamic_version_update import DynamicVersionUpdateDB
 
 class DBConfigList:
     def __init__(self,dbConfigObjList):
@@ -111,6 +114,16 @@ class DBMgr:
 
         self.maintainDB=MaintainDB(self.getProfileDB())
         yield self.maintainDB.create_table()
+
+        self.dynamicVersionUpdateDB=DynamicVersionUpdateDB(self.getProfileDB())
+        yield self.dynamicVersionUpdateDB.create_table()
+
+        self.versionUpdateDB=VersionUpdateDB(self.getProfileDB())
+        yield self.versionUpdateDB.create_table()
+
+        self.serverVersionDB=ServerVersionDB(self.getProfileDB())
+        yield self.serverVersionDB.create_table()
+
 
         print "after load application"
 

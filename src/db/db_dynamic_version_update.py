@@ -40,14 +40,18 @@ class DynamicVersionUpdateDB:
     def mapRow(self,row):
         info=DynamicVersionUpdate()
         info.channel=row[0]
-        info.os=row[1]
-        info.url=row[2]
-        info.comment=row[3]
+        info.version=row[1]
+        info.url = row[2]
+        info.size=row[3]
+        info.comment=row[4]
+        info.note=row[5]
+        info.svnVersion=row[6]
+        info.createTime=row[7]
         return info
 
     @gen.coroutine
-    def select(self,channel):
-        query="select channel,version,url,size,comment,note,svnVersion,create_time from dynamic_ver_update where channel=%d order by version asc"%(channel)
+    def select(self,channel,version):
+        query="select channel,version,url,size,comment,note,svnVersion,create_time from dynamic_ver_update where channel=%d and version=%d order by version asc"%(channel,version)
         res=yield self.dbtemplate.queryObject(query,self.mapRow)
         raise gen.Return(res)
     @gen.coroutine
@@ -64,6 +68,6 @@ class DynamicVersionUpdateDB:
 
     @gen.coroutine
     def update(self,info):
-        query="update dynamic_ver_update set comment='%s',url='%s',note='%d',svnVersion=%d,size=%d where channel=%d and version =%d"%(info.comment,info.url,info.note,info.svnVersion,info.size,info.channel,info.version)
+        query="update dynamic_ver_update set comment='%s',url='%s',note='%s',svnVersion=%d,size=%d where channel=%d and version =%d"%(info.comment,info.url,info.note,info.svnVersion,info.size,info.channel,info.version)
         result=yield self.dbtemplate.execSql(query)
         raise gen.Return(result)
