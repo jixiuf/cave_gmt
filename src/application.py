@@ -4,7 +4,9 @@ __author__ = 'jixiufeng'
 import os.path
 
 
+import redis
 import tornado.web
+from conf import *
 from tornado.options import  options
 from logger import *
 import db.dbmgr
@@ -73,11 +75,9 @@ class Application(tornado.web.Application):
         self.gm_logger = get_logger('gminfo',os.path.join(options.data_dir,'gminfo.log'))
 
 
-        # redis_host = redis_config().split(':')[0]
-        # redis_port = redis_config().split(':')[1]
-        # self.redis = redis.Redis(host=redis_host, port=redis_port, db=0)
         self.dbmgr=db.dbmgr.DBMgr(options.mode,options.locale)
         self.dbmgr.load()
+        self.redis=self.initRedisConfig(options.mode)
 
 
 
@@ -85,4 +85,13 @@ class Application(tornado.web.Application):
         close_logger(self.logger)
         close_logger(self.gm_logger)
 
+
+    def initRedisConfig(self,mode):
+        with open(CONFIG_DIR+"%s.json"%(mode)) as data_file:
+            value = json.load(data_file)
+            if value==None:
+                return None
+            redis_host = value["redis"]['addr'].split(':')[0]
+            redis_port = value["redis"]['addr'].split(':')[1]
+            return redis.Redis(host=redis_host, port=redis_port, db=0)
 
