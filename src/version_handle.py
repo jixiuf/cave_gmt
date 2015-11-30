@@ -8,6 +8,7 @@ import sys
 import time
 from conf import *
 from db.db_dynamic_version_update import DynamicVersionUpdate
+from db.db_version_update import VersionUpdate
 
 class GameUpdateRenderHandler(BaseHandler):
     @asynchronous
@@ -82,13 +83,31 @@ class GameDynamicRenderHandler(BaseHandler):
         self.render("game_dynamic.html",title="动态更新",channel=CHANNEL_PLATFORM_MAP)
 
 class VersionUpdateHandler(BaseHandler):
-
+    @asynchronous
+    @gen.coroutine
     def self_post(self):
         update_info = json.loads(self.get_argument('updateInfo'))
         version = self.get_argument('version')
         try:
             for i in update_info:
-                self.application.dynamic_db.add_by_channel(i,version,update_info[i]['url'],update_info[i]['size'],update_info[i]['reason'])
+                info=yield self.application.dbmgr.dynamicVersionUpdateDB.select(i,int(version))
+                if info==None:
+                    info=DynamicVersionUpdate()
+                    info.channel=i
+                    info.version=int(version)
+                    info.url=update_info[i]['url']
+                    info.size=int(update_info[i]['size'])
+                    # info.comment=comment
+                    info.note=update_info[i]['reason']
+                    # info.svnVersion=int(svnVersion)
+                    yield self.application.dbmgr.dynamicVersionUpdateDB.add(info)
+                else:
+                    info.url=update_info[i]['url']
+                    info.size=int(update_info[i]['size'])
+                    info.comment=comment
+                    info.note=update_info[i]['reason']
+                    # info.svnVersion=int(svnVersion)
+                    yield self.application.dbmgr.dynamicVersionUpdateDB.update(info)
             action = 'success'
         except:
             tuple = sys.exc_info()
@@ -101,40 +120,39 @@ class VersionUpdateHandler(BaseHandler):
 
 class GameAddressRenderHandler(BaseHandler):
     @asynchronous
+    @gen.coroutine
     def self_get(self):
-        channel_map = json.loads(get_channel_map())
+        channel_map = CHANNEL_PLATFORM_MAP
         channels = []
         for i in channel_map:
             if i == '112':
                 continue
             channels.append(int(i))
         channels.sort()
-        self.channels = channels
-        self.application.game_addres_db.select(self.resolve)
-
-    def resolve(self,res):
+        res=yield self.application.dbmgr.versionUpdateDB.select_all()
         info = {}
-        for i in res:
-            channel = int(i[0])
-            url = i[1]
-            comment = i[2].decode('utf-8')
-            info[channel] = {
-                'url': url,
-                'comment': comment
+        for rec in res:
+            info[rec.channel] = {
+                'url': rec.url,
+                'comment': rec.comments.decode('utf-8')
             }
         result = {
-            'channels': json.dumps(self.channels),
+            'channels': json.dumps(channels),
             'info': json.dumps(info)
         }
         self.render("game_address.html",title="下载地址",result=result)
 
 class GameAddressHandler(BaseHandler):
-
+    @asynchronous
+    @gen.coroutine
     def self_post(self):
-        channel = self.get_argument('channel')
-        game_url = self.get_argument('gameUrl')
-        comment = self.get_argument('comment')
-        self.application.game_addres_db.add_by_channel(channel,game_url,comment)
+        info=VersionUpdate()
+        info.channel=int(self.get_argument('channel'))
+        info.os=self.get_argument('os',0)
+        info.comments = self.get_argument('comment')
+        info.url = self.get_argument('gameUrl')
+
+        yield self.application.dbmgr.versionUpdateDB.add(info)
         self.write(json.dumps({ 'action': 'success' }))
 
 class CacheDynamicHandler(BaseHandler):

@@ -1,0 +1,50 @@
+.ui-game-address {
+  max-width: 1024px;
+  margin: 0 auto;
+}
+.ui-game-address h2 {
+  margin-left: 375px;
+}
+.ui-game-address .ui-url-field {
+  margin-top: 40px;
+}
+.ui-game-address .ui-url-field .ui-channel-select {
+  width: 180px;
+  float: left;
+  margin-right: 20px;
+}
+.ui-game-address .ui-url-field .ui-package-url,
+.ui-game-address .ui-url-field .ui-package-comment {
+  width: 280px;
+  float: left;
+  margin-right: 20px;
+}
+.ui-game-address .ui-url-field .ui-submit-btn {
+  float: left;
+}
+.ui-game-address .ui-url-list {
+  list-style: none;
+  margin: 20px 0 0 0;
+  padding: 0;
+}
+.ui-game-address .ui-url-list .ui-url-item {
+  padding: 10px;
+  border-bottom: 1px solid #d5d5d5;
+}
+.ui-game-address .ui-url-list .ui-url-item .ui-channel-name {
+  width: 30%;
+  float: left;
+}
+.ui-game-address .ui-url-list .ui-url-item .ui-channel-url {
+  width: 30%;
+  float: left;
+}
+.ui-game-address .ui-url-list .ui-url-item .ui-channel-comment {
+  width: 40%;
+  float: left;
+}
+.ui-game-address .ui-url-explain {
+  margin-top: 20px;
+  font-size: 25px;
+  color: red;
+}

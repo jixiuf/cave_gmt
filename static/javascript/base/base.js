@@ -471,27 +471,8 @@ parseDate = function (input) {
 },
 
 defaultChannelName = {
-    '100011': '91',
-    '11': '360',
-    '100007': 'pp助手',
-    '19': '姆指玩',
-    '12': '豌豆夹',
     '6': 'app store',
-    '7': 'google play',
-    '8': 'win',
-    '100009': '同步推',
-    '100010': 'itools',
-    '100008': '快用',
-    '13': '百度',
-    '18': '当乐',
-    '14': '小米',
-    '17': 'OPPO',
-    '20': '安智',
-    '16': 'pps',
-    '15': 'uc',
-    '100013': '爱思助手',
-    '100014': 'xy苹果助手',
-    '300001': 'winPhone_wfk'
+    '7': 'iphonecake',
 },
 
 defaultRewardName = {
@@ -512,14 +493,6 @@ defaultRewardName = {
     '16': '碎片',
     '17': '竞技场积分，功勋'
 },
-
-defaultAttackType = {
-    '1': '斩',
-    '2': '射',
-    '3': '突',
-    '4': '打',
-    '5': '魔'
-}
 
 getJsonLength = function(jsonData){
     var jsonLength = 0;
