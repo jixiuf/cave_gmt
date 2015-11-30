@@ -7,6 +7,7 @@ from tornado.web import asynchronous
 from tornado import  gen
 import traceback
 from utils import get_all_urls
+from conf import QINIU_ACCESS_KEY,QINIU_SECRET_KEY
 
 class BaseHandler(tornado.web.RequestHandler):
     def __init__(self, *args, **kwargs):
@@ -68,3 +69,29 @@ class BaseHandler(tornado.web.RequestHandler):
             self.application.logger.warning('errormsg\t%s' % (str(error),))
             self.application.logger.warning('errortrace\t%s' % (str(traceback.format_exc()),))
 
+class QiniuUptokenHandler(BaseHandler):
+    def self_post(self):
+        import qiniu.conf
+        import qiniu.rs
+
+        qiniu.conf.ACCESS_KEY = QINIU_ACCESS_KEY
+        qiniu.conf.SECRET_KEY = QINIU_SECRET_KEY
+
+        bucket_name = QINIU_SECRET_BUCKET_NAME
+
+        if self.request.body_arguments.has_key('file_name'):
+            key = self.get_argument('file_name')
+            policy = qiniu.rs.PutPolicy(bucket_name + ':' + key)
+            insert = self.get_argument('insert')
+            policy.returnBody = '{ "url": "http://$(bucket).qiniudn.com/$(key)" }'
+            if insert == 'true':
+                policy.insertOnly = 1
+        else:
+            policy = qiniu.rs.PutPolicy(bucket_name)
+
+        uptoken = policy.token()
+
+        result = {
+            'uptoken': uptoken
+        }
+        self.write(json.dumps(result))
