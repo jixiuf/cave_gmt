@@ -470,10 +470,6 @@ parseDate = function (input) {
     return new Date(parts[0], parts[1]-1, parts[2], parts[3], parts[4], parts[5]);
 },
 
-defaultChannelName = {
-    '6': 'app store',
-    '7': 'iphonecake',
-},
 
 defaultRewardName = {
     '1': '金币',

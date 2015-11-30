@@ -138,8 +138,10 @@ class GameAddressRenderHandler(BaseHandler):
             }
         result = {
             'channels': json.dumps(channels),
-            'info': json.dumps(info)
+            'info': json.dumps(info),
+            'defaultChannelName':json.dumps(DEFAULT_CHANNEL_NAME),
         }
+        print(json.dumps(DEFAULT_CHANNEL_NAME))
         self.render("game_address.html",title="下载地址",result=result)
 
 class GameAddressHandler(BaseHandler):

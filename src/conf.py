@@ -25,3 +25,8 @@ PLATFORM_SERVER_LIST={PLATFORM:
                           'server_type': "dev",
                           'server_status': 1
                       }}}
+DEFAULT_CHANNEL_NAME = {
+    '6': 'app store',
+    '7': 'iphonecake',
+}
+

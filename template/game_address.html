@@ -26,6 +26,7 @@
 <script src="../static/javascript/base/base.js"></script>
 <script type="text/javascript">
     var info = {% raw result['info'] %},
+        defaultChannelName={% raw result['defaultChannelName'] %},
         channels = {% raw result['channels'] %},
         channelEl = $('.op-channel-select'),
         listEl = $('.op-channel-list'),
