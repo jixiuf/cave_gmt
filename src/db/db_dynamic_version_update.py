@@ -10,6 +10,17 @@ class DynamicVersionUpdate:
         self.url = ""
         self.svnVersion=0
         self.note=0
+    def toJsonObj(self):
+      data={}
+      data["channel"]=self.channel
+      data["version"]=self.version
+      data["comment"]=self.comment
+      data["size"]=self.size
+      data["url"]=self.url
+      data["svnVersion"]=self.svnVersion
+      data["note"]=self.note
+      return data
+
 
 class DynamicVersionUpdateDB:
     def __init__(self,dbtemplate):
@@ -49,6 +60,11 @@ class DynamicVersionUpdateDB:
         info.createTime=row[7]
         return info
 
+    @gen.coroutine
+    def select_max_version(self,channel):
+        query="select channel,version,url,size,comment,note,svnVersion,create_time from dynamic_ver_update where channel=%d order by version desc limit 0,1"%(channel)
+        res=yield self.dbtemplate.queryObject(query,self.mapRow)
+        raise gen.Return(res)
     @gen.coroutine
     def select(self,channel,version):
         query="select channel,version,url,size,comment,note,svnVersion,create_time from dynamic_ver_update where channel=%d and version=%d order by version asc"%(channel,version)

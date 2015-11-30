@@ -3,6 +3,8 @@ __author__ = 'zhangjunkai'
 
 import ConfigParser
 
+from datetime import datetime
+
 import json
 
 QINIU_ACCESS_KEY = '4V9Hf9mJb-4oXbM5H_kqXEuV_5aI4v6S1_LaVLKY'
@@ -34,3 +36,9 @@ def is_float(s):
         return True
     except ValueError:
         return False
+
+class DateEncoder(json.JSONEncoder ):
+  def default(self, obj):
+    if isinstance(obj, datetime):
+      return obj.__str__()
+    return json.JSONEncoder.default(self, obj)

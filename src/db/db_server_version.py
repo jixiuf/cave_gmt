@@ -9,6 +9,15 @@ class ServerVersion:
         self.midVersion = 0
         self.minVersion = 0
         self.showVersion = ""
+    def toJsonObj(self):
+        data={}
+        data["platform"]=self.platform
+        data["comments"]=self.comments
+        data["maxVersion"]=self.maxVesion
+        data["midVersion"]=self.midVersion
+        data["minVersion"]=self.minVersion
+        data["showVersion"]=self.showVersion
+        return data
 
 class ServerVersionDB:
     def __init__(self,dbtemplate):

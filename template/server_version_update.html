@@ -1,0 +1,97 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/server_version_update.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-server-version-update op-center">
+    <h2 class="ui-title">服务器版本更新</h2>
+</div>
+
+<script src="../static/javascript/base/base.js"></script>
+<script type="text/javascript">
+    var data = {% raw result %},
+        defaultChannelName = data.defaultChannelName,
+        platformGroupEl;
+
+    var addGroup = function(platform,platformVersion) {
+        var groupStr = '<div class="ui-platform-group op-platform-group op-platform-' + platform + '" data-version="0" data-platform="' + platform + '">' +
+                           '<div class="ui-server-version">当前版本'+platformVersion+'</div>' +
+                           '<div class="ui-server-platform">平台号:' + platform + '</div>' +
+                           '<ul class="ui-channel-version-list op-info-list">' +
+                               '<li class="ui-channel-version-item clearfix">' +
+                                   '<div class="ui-cell-channel-id">渠道id</div>' +
+                                   '<div class="ui-cell-channel-name">渠道名称</div>' +
+                                   '<div class="ui-cell-channel-version">最新版本号</div>' +
+                               '</li>' +
+                           '</ul>' +
+                           '<button class="btn btn-default ui-update-btn op-update-btn">更新版本</button>' +
+                       '</div>';
+
+        $('.op-center').append(groupStr);
+
+        platformGroupEl = $('.op-platform-group');
+    }
+
+    for(var i in data.channels) {
+        if(!$('.op-platform-' + data.channels[i]).length) {
+            var platformVersion=data.versionData[data.channels[i]].maxVersion*1000*1000+data.versionData[data.channels[i]].midVersion*1000+data.versionData[data.channels[i]].minVersion;
+            addGroup(data.channels[i],platformVersion);
+        }
+    }
+
+    for(var i in data.channels) {
+        var platformEl = $('.op-platform-' + data.channels[i]);
+        var platformVersion=data.versionData[data.channels[i]].maxVersion*1000*1000+data.versionData[data.channels[i]].midVersion*1000+data.versionData[data.channels[i]].minVersion;
+        platformEl.data('version', platformVersion);
+        if(data.data[i]) {
+            var info = data.data[i],
+                version = info.version;
+        } else {
+            var version = 0;
+        }
+
+            /*             maxVersion = platformEl.data().version; */
+
+        if(version > platformVersion) {
+            platformEl.data('version', version);
+        }
+        var htmlStr = '<li class="ui-channel-version-item clearfix">' +
+                          '<div class="ui-cell-channel-id op-channel-id">' + i + '</div>' +
+                          '<div class="ui-cell-channel-name">' + defaultChannelName[i] + '</div>' +
+                          '<div class="ui-cell-channel-version op-channel-version">' + version + '</div>' +
+                      '</li>';
+
+        platformEl.find('.op-info-list').append(htmlStr);
+    }
+
+    for(var i = 0, len = platformGroupEl.length; i < len; i++) {
+        var versionEl = platformGroupEl.eq(i).find('.op-channel-version'),
+            updateEl = platformGroupEl.eq(i).find('.op-update-btn');
+
+        for(var j = 0, len = versionEl.length; j < len; j++) {
+            if(versionEl.eq(j).text() < platformGroupEl.eq(i).data().version) {
+                versionEl.eq(j).parent().addClass('ui-warning');
+                updateEl.attr('disabled', true);
+            }
+        }
+    }
+
+    $('.op-update-btn').on('click', function() {
+        var groupEl = $(this).parent('.op-platform-group');
+        var data = {
+            'version': groupEl.data().version,
+            'platform': groupEl.data().platform
+        }
+
+        $.ajax({
+            url: '/api/server/version',
+            type: 'post',
+            data: data
+        })
+        .done(function(data) {
+            console.log(data);
+            window.location.reload();
+        });
+    });
+</script>
+{% end %}

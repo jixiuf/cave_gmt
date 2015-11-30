@@ -50,7 +50,8 @@ class Application(tornado.web.Application):
             (r'/api/version/update', VersionUpdateHandler),
             (r'/api/game/address', GameAddressHandler),
 
-            # (r'/game/server_version_update', GameServerVersionRenderHandler),
+            (r'/game/server_version_update', GameServerVersionRenderHandler),
+            (r'/api/server/version', ServerVersionHandler),
             # (r'/game/server_version_update_notice', ServerMgrUpdateServerVerionNoticeRenderHandler),
 
             (r'/api/qiniu/uptoken', QiniuUptokenHandler),

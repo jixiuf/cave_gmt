@@ -1,0 +1,25 @@
+.ui-server-version-update .ui-title {
+  text-align: center;
+}
+.ui-server-version-update .ui-platform-group {
+  margin-top: 20px;
+}
+.ui-server-version-update .ui-platform-group .ui-channel-version-list {
+  padding: 0;
+  list-style: none;
+}
+.ui-server-version-update .ui-platform-group .ui-channel-version-list .ui-channel-version-item.ui-warning {
+  color: red;
+}
+.ui-server-version-update .ui-platform-group .ui-channel-version-list .ui-channel-version-item .ui-cell-channel-id {
+  float: left;
+  width: 20%;
+}
+.ui-server-version-update .ui-platform-group .ui-channel-version-list .ui-channel-version-item .ui-cell-channel-name {
+  float: left;
+  width: 40%;
+}
+.ui-server-version-update .ui-platform-group .ui-channel-version-list .ui-channel-version-item .ui-cell-channel-version {
+  float: left;
+  width: 40%;
+}
