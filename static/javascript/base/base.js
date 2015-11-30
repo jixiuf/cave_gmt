@@ -1,10 +1,10 @@
 serverChoise = {
     'useLikeThis': function() {
-       var  useStr = "var channelData = {% raw result %},\n" +
+       var  useStr = "var platformData = {% raw result %},\n" +
                      "    serverWrapEl = $('.op-server-wrap');\n" +
 
                      "**append to page\n" +
-                     "serverChoise.serverDomAdd(channelData, serverWrapEl, showTest = false);\n" +
+                     "serverChoise.serverDomAdd(platformData, serverWrapEl, showTest = false);\n" +
 
                      "**get list\n" +
                      "list = serverChoise.servers(channelEl);\n" +
@@ -16,34 +16,34 @@ serverChoise = {
         return useStr;
     },
 
-    'serverDomAdd': function(channelData, serverWrapEl, showTest) {
+    'serverDomAdd': function(platformData, serverWrapEl, showTest) {
         var htmlStr = '';
-        for(var channelIndex in channelData) {
-            var channelStr = '',
-                channelName = '';
+        for(var platformIndex in platformData) {
+            var platformStr = '',
+                platformName = '';
             //不显示停服中服务器
             if(!showTest) {
-                if(channelIndex > 100) {
+                if(platformIndex > 100) {
                     continue;
                 }
             }
-            for(var serverIndex in channelData[channelIndex]) {
-                var serverInfo = channelData[channelIndex][serverIndex];
-                if(serverInfo['channel_name'] != '') {
-                    channelName = serverInfo['channel_name'];
+            for(var serverIndex in platformData[platformIndex]) {
+                var serverInfo = platformData[platformIndex][serverIndex];
+                if(serverInfo['platform_name'] != '') {
+                    platformName = serverInfo['platform_name'];
                 }
-                channelStr += '<li class="ui-server-item">' +
+                platformStr += '<li class="ui-server-item">' +
                                  serverInfo['server_name'] +
                                  '<input class="op-server-select" type="checkbox" data-server="' + serverIndex + '">' +
                               '</li>'
             }
-            htmlStr += '<li class="ui-channel-item clearfix op-channel-item" data-channel="' + channelIndex + '">' +
+            htmlStr += '<li class="ui-channel-item clearfix op-channel-item" data-channel="' + platformIndex + '">' +
                            '<div class="ui-channel-name">' +
-                               channelName + '<input type="checkbox" class="op-select-all">' +
+                               platformName + '<input type="checkbox" class="op-select-all">' +
                            '</div>' +
                            '<div class="ui-server-field">' +
                                '<ul class="ui-server-list clearfix">' +
-                                   channelStr +
+                                   platformStr +
                                '</ul>' +
                            '</div>' +
                        '</li>'
@@ -176,7 +176,7 @@ serverChoiseSingle = {
                     continue;
                 }
             }
-            platformName = data[platformIndex][Object.keys(data[platformIndex])[0]]['channel_name'];
+            platformName = data[platformIndex][Object.keys(data[platformIndex])[0]]['platform_name'];
             platformStr += '<option value="' + platformIndex + '">' + platformName + '</option>';
         }
         this.platformEl.append(platformStr);

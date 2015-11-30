@@ -20,7 +20,7 @@ CHANNEL_PLATFORM_MAP={str(CHANNEL_IPHONECAKE):PLATFORM}
 # PLATFORM_CHANNEL_MAP={CHANNEL_IPHONECAKE:PLATFORM}
 PLATFORM_SERVER_LIST={PLATFORM:
                       {SERVER:{
-                          'channel_name': unicode(PLATFORM_NAME, 'utf-8'),
+                          'platform_name': unicode(PLATFORM_NAME, 'utf-8'),
                           'server_name': unicode(SERVER_NAME, 'utf-8'),
                           'server_type': "dev",
                           'server_status': 1
