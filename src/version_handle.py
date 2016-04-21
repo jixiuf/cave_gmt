@@ -133,13 +133,7 @@ class GameAddressRenderHandler(BaseHandler):
     @gen.coroutine
     def self_get(self):
 
-        channel_map = conf.CHANNEL_PLATFORM_MAP
-        channels = []
-        for i in channel_map:
-            if i == '112':
-                continue
-            channels.append(int(i))
-        channels.sort()
+        channels = conf.getChannelList()
         res=yield self.application.dbmgr.versionUpdateDB.select_all()
         info = {}
         for rec in res:
