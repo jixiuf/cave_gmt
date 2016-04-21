@@ -72,18 +72,11 @@
     for(var i = 0, len = platformGroupEl.length; i < len; i++) {
         var versionEl = platformGroupEl.eq(i).find('.op-channel-version'),
             updateEl = platformGroupEl.eq(i).find('.op-update-btn');
-        var allEqual=true;
         for(var j = 0, len = versionEl.length; j < len; j++) {
-            if(versionEl.eq(j).text() != platformGroupEl.eq(i).data().version) {
-                allEqual=false;
-            }
             if(versionEl.eq(j).text() < platformGroupEl.eq(i).data().version) {
                 versionEl.eq(j).parent().addClass('ui-warning');
                 updateEl.attr('disabled', true);
             }
-        }
-        if(allEqual){
-            updateEl.attr('disabled', true);
         }
     }
 
