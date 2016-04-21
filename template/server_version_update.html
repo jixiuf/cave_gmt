@@ -22,6 +22,7 @@
                                    '<div class="ui-cell-channel-id">渠道id</div>' +
                                    '<div class="ui-cell-channel-name">渠道名称</div>' +
                                    '<div class="ui-cell-channel-version">最新版本号</div>' +
+                                   '<div class="ui-cell-channel-url">url</div>' +
                                '</li>' +
                            '</ul>' +
                            '<button class="btn btn-default ui-update-btn op-update-btn">更新版本</button> 只有当所有渠道版本号一致时，更新才有效' +
@@ -62,6 +63,7 @@
                           '<div class="ui-cell-channel-id op-channel-id">' + i + '</div>' +
                           '<div class="ui-cell-channel-name">' + defaultChannelName[i] + '</div>' +
                           '<div class="ui-cell-channel-version op-channel-version">' + version + '</div>' +
+                          '<div class="ui-cell-channel-url op-channel-url">' + data.data[i].url + '</div>' +
                       '</li>';
 
         platformEl.find('.op-info-list').append(htmlStr);

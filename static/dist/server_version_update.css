@@ -17,9 +17,13 @@
 }
 .ui-server-version-update .ui-platform-group .ui-channel-version-list .ui-channel-version-item .ui-cell-channel-name {
   float: left;
-  width: 40%;
+  width: 20%;
 }
 .ui-server-version-update .ui-platform-group .ui-channel-version-list .ui-channel-version-item .ui-cell-channel-version {
+  float: left;
+  width: 20%;
+}
+.ui-server-version-update .ui-platform-group .ui-channel-version-list .ui-channel-version-item .ui-cell-channel-url {
   float: left;
   width: 40%;
 }
