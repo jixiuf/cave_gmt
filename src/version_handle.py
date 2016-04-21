@@ -222,7 +222,7 @@ class ServerVersionHandler(BaseHandler):
         yield self.application.dbmgr.serverVersionDB.update(sv)
 
 
-        self.application.redis.publish(CASTLE_NOTIFY_CHANNEL, '{"type":1}')
+        self.application.redis.publish(REDIS_NOTIFY_CHANNEL, '{"type":1}')
 #       for i in a:
 #           self.application.redis.publish('centerserver_notify_queue', '{"type":7, "time":%s}'%(int(time.time()*1000)))
 #       self.application.redis.publish('centerserver_notify_queue', '{"type":9, "time":%s}'%(int(time.time()*1000)))

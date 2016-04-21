@@ -8,6 +8,7 @@ from tornado import ioloop, gen
 
 import dbtemplate.dbtemplate
 import utils
+import conf
 
 from db_maintain import MaintainDB
 from db_present_pack import PresentPackDB
@@ -15,7 +16,7 @@ from db_permissions import PermissionDB
 from db_permissions import PermissionLevelDB
 from db_design_leader import DesignBLeaderDB
 from db_design_hero import DesignBHeroDB
-from db_player import PlayerDB
+from db_user import UserDB
 from db_gamedb_user_attr import UserAttrDB
 from db_version_update import VersionUpdateDB
 from db_server_version import ServerVersionDB
@@ -74,7 +75,7 @@ class DBMgr:
     # def get_all_server_id(self):
     #     list=[]
     #     reC=re.compile(r'.*%s_0_([0-9]+)\.json'%(self.mode))
-    #     for f in os.listdir('/data/castle/config/'):
+    #     for f in os.listdir('/data/%s/config/'):
     #         matched=reC.match( f)
     #         if matched:
     #             list.append(int(matched.group(1)))
@@ -130,8 +131,8 @@ class DBMgr:
 
     def getUserAttrDB(self,server=1):
         return UserAttrDB(self.getGameDB(server))
-    def getPlayerDB(self):
-        return PlayerDB(self.getProfileDB(),self.mode)
+    def getUserDB(self):
+        return UserDB(self.getProfileDB(),self.mode)
 
     def getDesignHeroDB(self,server=1):
         return DesignBLeaderDB(self.getDesignDB(server),self.locale)
@@ -163,7 +164,7 @@ class DBMgr:
 
 
     def _getDesignConfig(self,server):
-        with open("/data/castle/config/%s.json"%(self.mode)) as data_file:
+        with open("/data/%s/config/%s.json"%(conf.AppName,self.mode)) as data_file:
             value = json.load(data_file)
             if value==None:
                 return None
@@ -171,25 +172,25 @@ class DBMgr:
 
 
     def _getProfileConfig(self):
-        with open("/data/castle/config/%s.json"%(self.mode)) as data_file:
+        with open("/data/%s/config/%s.json"%(conf.AppName,self.mode)) as data_file:
             value = json.load(data_file)
             if value==None:
                 return None
             return self._getDBConfigMaster(value["profile_db_config"])
     def _getGMToolConfig(self):
-        with open("/data/castle/config/%s.json"%(self.mode)) as data_file:
+        with open("/data/%s/config/%s.json"%(conf.AppName,self.mode)) as data_file:
             value = json.load(data_file)
             if value==None:
                 return None
             return self._getDBConfigMaster(value["gmtool_db_config"])
 
     def _getGameDBConfig(self,server):
-        with open("/data/castle/config/%s.json"%(self.mode)) as data_file:
+        with open("/data/%s/config/%s.json"%(conf.AppName,self.mode)) as data_file:
             value = json.load(data_file)
             if value==None:
                 return None
             masterConfigList=[]
-            for masterSlaveJson in value["game_db_config"]['sharding']:
+            for masterSlaveJson in value["game_db_config"][str(server)]['sharding']:
                 masterConfigList.append(self._getDBConfigMaster(masterSlaveJson))
             return DBConfigList(masterConfigList)
 

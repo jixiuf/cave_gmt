@@ -1,6 +1,10 @@
 #  -*- coding:utf-8 -*-
 __author__ = 'jixiufeng'
 
+AppName="zjh"
+CONFIG_DIR="/data/%s/config/"%(AppName)
+REDIS_NOTIFY_CHANNEL="%s_notify_channel"%(AppName)
+
 
 DYNAMIC_USER='dynamicUser'
 DYNAMIC_PASSWORD='dynamicPassword'
@@ -9,7 +13,6 @@ QINIU_ACCESS_KEY = '4V9Hf9mJb-4oXbM5H_kqXEuV_5aI4v6S1_LaVLKY'
 QINIU_SECRET_KEY = 'BX6p6vGQWa-6VuWf6eikNKYN4P3RG_L4H5Sig_vh'
 QINIU_SECRET_BUCKET_NAME = 'thgmtools'
 
-CASTLE_NOTIFY_CHANNEL="castle_notify_channel"
 
 PLATFORM=1
 PLATFORM_NAME="默认平台"
@@ -30,4 +33,3 @@ DEFAULT_CHANNEL_NAME = {
     '7': 'iphonecake',
 }
 
-CONFIG_DIR="/data/castle/config/"

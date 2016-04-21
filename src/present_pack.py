@@ -10,7 +10,7 @@ class PresentPackList(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
-        # playerInfo=yield self.application.dbmgr.getPlayerDB().select_by_uin(144150423530676224)
+        # playerInfo=yield self.application.dbmgr.getUserDB().select_by_uin(144150423530676224)
         # playerInfo=yield self.application.dbmgr.getUserAttrDB(1).select_by_uin(144150423530676224)
         # print playerInfo
         packs=yield self.application.dbmgr.presentPackDB.select_all()
