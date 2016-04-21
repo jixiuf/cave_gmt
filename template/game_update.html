@@ -19,14 +19,16 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">渠道号*</label>
             <div class="col-sm-4">
-                <input class="form-control" name="channel" placeholder="如 7:iphonecake">
+            <select  name="channel" class="col-sm-4 form-control ui-channel-select op-channel-select">
+              <option value="0">请选择渠道</option>
+            </select>
             </div>
         </div>
 
         <div class="form-group">
             <label class="col-sm-3 control-label">内部版本号*</label>
             <div class="col-sm-4">
-                <input class="form-control" placeholder="例如1001001" name="version">
+                <input class="form-control" placeholder="例如001001001" name="version">
             </div>
         </div>
         <div class="form-group">
@@ -73,43 +75,19 @@
             </div>
         </div>
     </form>
-
-    <button class="op-test" value="test"></button>
 </div>
 
 <script src="../static/javascript/base/base.js"></script>
 <script type="text/javascript">
- /* server select
-    var serverData = {% raw result %},
-    serverWrapEl = $('.op-server-wrap');
+ var defaultChannelName={% raw result['defaultChannelName'] %},
+     channels = {% raw result['channels'] %},
+     channelEl = $('.op-channel-select') ;
 
-    serverChoise.serverDomAdd(serverData, serverWrapEl);
-
-    var testEl = $('.op-test');
-
-    testEl.on('click', function() {
-    var data = {
-    'user': 'dynamicUser',
-    'password': 'dynamicPassword',
-    'channel': 1,
-    'version': 1,
-    'url': 'www.baidu.com',
-    'size': 1,
-    'comment': 'comment',
-    'note': 'note',
-    'svnVersion': 1
-    }
-
-    $.ajax({
-    url: '/api/game/dynamic',
-    type: 'post',
-    data: data
-    })
-    .done(function(data) {
-    alert(data['status']);
-    });
-    });
-  */
+ var channelStr = '';
+ for(var i = 0, len = channels.length; i < len; i++) {
+     channelStr += '<option value="' + channels[i] + '">' + defaultChannelName[channels[i]] + '</option>';
+ }
+ channelEl.append(channelStr);
 
 </script>
 {% end %}

@@ -15,8 +15,8 @@
 
     var addGroup = function(platform,platformVersion) {
         var groupStr = '<div class="ui-platform-group op-platform-group op-platform-' + platform + '" data-version="0" data-platform="' + platform + '">' +
-                           '<div class="ui-server-version">当前版本'+platformVersion+'</div>' +
                            '<div class="ui-server-platform">平台号:' + platform + '</div>' +
+                           '<div class="ui-server-version">当前版本:'+platformVersion+'</div>' +
                            '<ul class="ui-channel-version-list op-info-list">' +
                                '<li class="ui-channel-version-item clearfix">' +
                                    '<div class="ui-cell-channel-id">渠道id</div>' +
@@ -24,7 +24,7 @@
                                    '<div class="ui-cell-channel-version">最新版本号</div>' +
                                '</li>' +
                            '</ul>' +
-                           '<button class="btn btn-default ui-update-btn op-update-btn">更新版本</button>' +
+                           '<button class="btn btn-default ui-update-btn op-update-btn">更新版本</button> 只有当所有渠道版本号一致时，更新才有效' +
                        '</div>';
 
         $('.op-center').append(groupStr);
@@ -39,15 +39,18 @@
         }
     }
 
-    for(var i in data.channels) {
+    for(var i in data.channels) {/* i==channelid,value=platform */
         var platformEl = $('.op-platform-' + data.channels[i]);
         var platformVersion=data.versionData[data.channels[i]].maxVersion*1000*1000+data.versionData[data.channels[i]].midVersion*1000+data.versionData[data.channels[i]].minVersion;
-        platformEl.data('version', platformVersion);
+        if (platformEl.data('version')==0){
+            platformEl.data('version', platformVersion);
+        }
+        var version = platformVersion;
         if(data.data[i]) {
-            var info = data.data[i],
+            var info = data.data[i];
+            if(info.version>version){
                 version = info.version;
-        } else {
-            var version = 0;
+            }
         }
 
             /*             maxVersion = platformEl.data().version; */
@@ -67,12 +70,19 @@
     for(var i = 0, len = platformGroupEl.length; i < len; i++) {
         var versionEl = platformGroupEl.eq(i).find('.op-channel-version'),
             updateEl = platformGroupEl.eq(i).find('.op-update-btn');
-
+        var allEqual=true;
         for(var j = 0, len = versionEl.length; j < len; j++) {
+            if(versionEl.eq(j).text() != platformGroupEl.eq(i).data().version) {
+                alert(versionEl.eq(j).text()+" "+platformGroupEl.eq(i).data().version) ;
+                allEqual=false;
+            }
             if(versionEl.eq(j).text() < platformGroupEl.eq(i).data().version) {
                 versionEl.eq(j).parent().addClass('ui-warning');
                 updateEl.attr('disabled', true);
             }
+        }
+        if(allEqual){
+            updateEl.attr('disabled', true);
         }
     }
 

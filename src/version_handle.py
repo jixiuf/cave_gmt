@@ -6,7 +6,8 @@ from tornado.web import asynchronous
 from utils import DateEncoder
 import sys
 import time
-from conf import *
+import redis_notify
+import conf
 from db.db_dynamic_version_update import DynamicVersionUpdate
 from db.db_version_update import VersionUpdate
 from db.db_server_version import ServerVersion
@@ -14,7 +15,12 @@ from db.db_server_version import ServerVersion
 class GameUpdateRenderHandler(BaseHandler):
     @asynchronous
     def self_get(self):
-        self.render("game_update.html",title="动态更新",result=json.dumps(PLATFORM_SERVER_LIST))
+        result = {
+            'channels': json.dumps(conf.getChannelList()),
+            'defaultChannelName':json.dumps(conf.getChannelNameMap()),
+        }
+        print(result)
+        self.render("game_update.html",title="动态更新",result=result)
 
 class DynamicHandler(tornado.web.RequestHandler):
 
@@ -25,6 +31,7 @@ class DynamicHandler(tornado.web.RequestHandler):
         user = self.get_argument('user', None)
         password = self.get_argument('password', None)
 
+        platform = self.get_argument('platform', str(conf.PLATFORM))
         channel = self.get_argument('channel', None)
         version = self.get_argument('version', None)
         url = self.get_argument('url', None)
@@ -38,17 +45,17 @@ class DynamicHandler(tornado.web.RequestHandler):
             svnVersion="0"
 
 
-        if user == DYNAMIC_USER and password == DYNAMIC_PASSWORD:
+        if user == conf.DYNAMIC_USER and password == conf.DYNAMIC_PASSWORD:
             if channel == None or version == None or  url == None or size == None or comment == None or note == None or svnVersion == None:
                 self.failed('need 8 arguments')
             else:
-                self.success(channel,version,url,size,comment,note,svnVersion)
+                self.success(platform,channel,version,url,size,comment,note,svnVersion)
         else:
             self.failed('verification dose note pass')
 
     @asynchronous
     @gen.coroutine
-    def success(self,channel,version,url,size,comment,note,svnVersion):
+    def success(self,platform,channel,version,url,size,comment,note,svnVersion):
         info=yield self.application.dbmgr.dynamicVersionUpdateDB.select(int(channel),int(version))
         if info==None:
             info=DynamicVersionUpdate()
@@ -70,6 +77,7 @@ class DynamicHandler(tornado.web.RequestHandler):
         res = {
             'status': 'success'
         }
+        self.application.redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
         self.write(res)
 
     def failed(self, info):
@@ -81,7 +89,7 @@ class DynamicHandler(tornado.web.RequestHandler):
 
 class GameDynamicRenderHandler(BaseHandler):
     def self_get(self):
-        self.render("game_dynamic.html",title="动态更新",channel=CHANNEL_PLATFORM_MAP)
+        self.render("game_dynamic.html",title="动态更新",channel=conf.CHANNEL_PLATFORM_MAP)
 
 class VersionUpdateHandler(BaseHandler):
     @asynchronous
@@ -110,6 +118,7 @@ class VersionUpdateHandler(BaseHandler):
                     # info.svnVersion=int(svnVersion)
                     yield self.application.dbmgr.dynamicVersionUpdateDB.update(info)
             action = 'success'
+            self.application.redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
         except:
             tuple = sys.exc_info()
             if tuple[1][0] == 1062:
@@ -123,7 +132,8 @@ class GameAddressRenderHandler(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
-        channel_map = CHANNEL_PLATFORM_MAP
+
+        channel_map = conf.CHANNEL_PLATFORM_MAP
         channels = []
         for i in channel_map:
             if i == '112':
@@ -140,9 +150,8 @@ class GameAddressRenderHandler(BaseHandler):
         result = {
             'channels': json.dumps(channels),
             'info': json.dumps(info),
-            'defaultChannelName':json.dumps(DEFAULT_CHANNEL_NAME),
+            'defaultChannelName':json.dumps(conf.getChannelNameMap()),
         }
-        print(json.dumps(DEFAULT_CHANNEL_NAME))
         self.render("game_address.html",title="下载地址",result=result)
 
 class GameAddressHandler(BaseHandler):
@@ -158,19 +167,19 @@ class GameAddressHandler(BaseHandler):
         yield self.application.dbmgr.versionUpdateDB.add(info)
         self.write(json.dumps({ 'action': 'success' }))
 
-class CacheDynamicHandler(BaseHandler):
+# class CacheDynamicHandler(BaseHandler):
 
-    def self_post(self):
-        self.application.redis.publish('centerserver_notify_queue', '{"type":9, "time":%s}'%(int(time.time()*1000)))
-        self.write(json.dumps({ 'action': 'success' }))
+#     def self_post(self):
+#         self.application.redis.publish('centerserver_notify_queue', '{"type":9, "time":%s}'%(int(time.time()*1000)))
+#         self.write(json.dumps({ 'action': 'success' }))
 
-#game test use
-class GameDeleteHandler(BaseHandler):
+# #game test use
+# class GameDeleteHandler(BaseHandler):
 
-    def self_post(self):
-        self.application.dynamic_db.truncate()
-        self.application.redis.publish('centerserver_notify_queue', '{"type":9, "time":%s}'%(int(time.time()*1000)))
-        self.write(json.dumps({ 'action': 'success' }))
+#     def self_post(self):
+#         self.application.dynamic_db.truncate()
+#         self.application.redis.publish('centerserver_notify_queue', '{"type":9, "time":%s}'%(int(time.time()*1000)))
+#         self.write(json.dumps({ 'action': 'success' }))
 
 #game server version update page
 class GameServerVersionRenderHandler(BaseHandler):
@@ -178,13 +187,8 @@ class GameServerVersionRenderHandler(BaseHandler):
     @gen.coroutine
     def self_get(self):
 
-        channel_map = CHANNEL_PLATFORM_MAP
-        channels = []
-        for i in channel_map:
-#           if i == '112':
-#               continue
-            channels.append(int(i))
-        channels.sort()
+        channel_map = conf.getChannelPlatformMap()
+        channels = conf.getChannelList()
 
         data = {}
         for i in channels:
@@ -200,7 +204,7 @@ class GameServerVersionRenderHandler(BaseHandler):
             'data': data,
             'versionData': versionData,
             'channels': channel_map,
-            'defaultChannelName':DEFAULT_CHANNEL_NAME,
+            'defaultChannelName':conf.getChannelNameMap(),
 
         }
         print(res)
@@ -222,7 +226,7 @@ class ServerVersionHandler(BaseHandler):
         yield self.application.dbmgr.serverVersionDB.update(sv)
 
 
-        self.application.redis.publish(REDIS_NOTIFY_CHANNEL, '{"type":1}')
+        self.application.redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
 #       for i in a:
 #           self.application.redis.publish('centerserver_notify_queue', '{"type":7, "time":%s}'%(int(time.time()*1000)))
 #       self.application.redis.publish('centerserver_notify_queue', '{"type":9, "time":%s}'%(int(time.time()*1000)))

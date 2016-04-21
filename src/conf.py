@@ -1,9 +1,11 @@
 #  -*- coding:utf-8 -*-
 __author__ = 'jixiufeng'
 
+import json
+from tornado.options import  options
+
 AppName="zjh"
 CONFIG_DIR="/data/%s/config/"%(AppName)
-REDIS_NOTIFY_CHANNEL="%s_notify_channel"%(AppName)
 
 
 DYNAMIC_USER='dynamicUser'
@@ -32,4 +34,32 @@ DEFAULT_CHANNEL_NAME = {
     '6': 'app store',
     '7': 'iphonecake',
 }
+
+def getChannelList():
+    channels = []
+    with open("%s/%s.json"%(CONFIG_DIR,options.mode)) as data_file:
+        value = json.load(data_file)
+        if value==None:
+            return channels
+        for k in value["channel"]:
+            channels.append(int(k))
+    channels.sort()
+    return channels
+
+# key=渠道号，value =渠道名
+def getChannelNameMap():
+    with open("%s/%s.json"%(CONFIG_DIR,options.mode)) as data_file:
+        value = json.load(data_file)
+        if value==None:
+            return {}
+        return value["channel"]
+
+#key=channelid value=platformid
+def getChannelPlatformMap():
+    ret ={}
+    m=getChannelNameMap()
+    for k in m:
+        ret[str(k)]=PLATFORM
+    return ret
+
 

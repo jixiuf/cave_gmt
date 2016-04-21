@@ -72,14 +72,22 @@ class DBMgr:
     def __init__(self,mode,locale):
         self.mode=mode
         self.locale=locale
-    # def get_all_server_id(self):
-    #     list=[]
-    #     reC=re.compile(r'.*%s_0_([0-9]+)\.json'%(self.mode))
-    #     for f in os.listdir('/data/%s/config/'):
-    #         matched=reC.match( f)
-    #         if matched:
-    #             list.append(int(matched.group(1)))
-    #     return list
+    def get_all_server_id(self):
+        list=[]
+        with open("%s/%s.json"%(conf.CONFIG_DIR,self.mode)) as data_file:
+            value = json.load(data_file)
+            if value==None:
+                return
+            for k in value["game_db_config"]:
+                list.append(int(k))
+
+
+        # reC=re.compile(r'.*%s_0_([0-9]+)\.json'%(self.mode))
+        # for f in os.listdir('/data/%s/config/'):
+        #     matched=reC.match( f)
+        #     if matched:
+        #         list.append(int(matched.group(1)))
+        return list
 
 
 
@@ -87,13 +95,14 @@ class DBMgr:
     def load(self):
         self._designDBDict={}
         self._gamedbDict={}
-        # for i in self.get_all_server_id(): #
-        #     designConfig=self._getDesignConfig(i)
-        #     if designConfig!=None:
-        #         self._designDBDict[i]=designConfig.getDatabaseTemplate()
-        #     gameDBConfig=self._getGameDBConfig(i)
-        #     if gameDBConfig!=None:
-        #         self._gamedbDict[i]=gameDBConfig.getDatabaseTemplate()
+
+        for i in self.get_all_server_id(): #
+            # designConfig=self._getDesignConfig(i)
+            # if designConfig!=None:
+            #     self._designDBDict[i]=designConfig.getDatabaseTemplate()
+            gameDBConfig=self._getGameDBConfig(i)
+            if gameDBConfig!=None:
+                self._gamedbDict[i]=gameDBConfig.getDatabaseTemplate()
 
         self._profileDB=self._getProfileConfig().getDatabaseTemplate()
         self._gmtooldb=self._getGMToolConfig().getDatabaseTemplate()
@@ -164,7 +173,7 @@ class DBMgr:
 
 
     def _getDesignConfig(self,server):
-        with open("/data/%s/config/%s.json"%(conf.AppName,self.mode)) as data_file:
+        with open("%s/%s.json"%(conf.CONFIG_DIR,self.mode)) as data_file:
             value = json.load(data_file)
             if value==None:
                 return None
@@ -172,20 +181,20 @@ class DBMgr:
 
 
     def _getProfileConfig(self):
-        with open("/data/%s/config/%s.json"%(conf.AppName,self.mode)) as data_file:
+        with open("%s/%s.json"%(conf.CONFIG_DIR,self.mode)) as data_file:
             value = json.load(data_file)
             if value==None:
                 return None
             return self._getDBConfigMaster(value["profile_db_config"])
     def _getGMToolConfig(self):
-        with open("/data/%s/config/%s.json"%(conf.AppName,self.mode)) as data_file:
+        with open("%s/%s.json"%(conf.CONFIG_DIR,self.mode)) as data_file:
             value = json.load(data_file)
             if value==None:
                 return None
             return self._getDBConfigMaster(value["gmtool_db_config"])
 
     def _getGameDBConfig(self,server):
-        with open("/data/%s/config/%s.json"%(conf.AppName,self.mode)) as data_file:
+        with open("%s/%s.json"%(conf.CONFIG_DIR,self.mode)) as data_file:
             value = json.load(data_file)
             if value==None:
                 return None

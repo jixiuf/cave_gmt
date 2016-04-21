@@ -31,3 +31,8 @@
   float: left;
   margin-right: 5px;
 }
+.ui-game-update .ui-channel-select {
+  width: 320px;
+  float: left;
+  /* margin-right: 80px; */
+}
