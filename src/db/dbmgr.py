@@ -14,13 +14,14 @@ from db_maintain import MaintainDB
 from db_present_pack import PresentPackDB
 from db_permissions import PermissionDB
 from db_permissions import PermissionLevelDB
-from db_design_leader import DesignBLeaderDB
-from db_design_hero import DesignBHeroDB
+# from db_design_leader import DesignBLeaderDB
+# from db_design_hero import DesignBHeroDB
 from db_user import UserDB
 from db_gamedb_user_attr import UserAttrDB
 from db_version_update import VersionUpdateDB
 from db_server_version import ServerVersionDB
 from db_dynamic_version_update import DynamicVersionUpdateDB
+from db_award_type import AwardDB
 
 class DBConfigList:
     def __init__(self,dbConfigObjList):
@@ -96,10 +97,11 @@ class DBMgr:
         self._designDBDict={}
         self._gamedbDict={}
 
+        designConfig=self._getDesignConfig()
+        if designConfig!=None:
+            self._designDBDict[1]=designConfig.getDatabaseTemplate()
+
         for i in self.get_all_server_id(): #
-            # designConfig=self._getDesignConfig(i)
-            # if designConfig!=None:
-            #     self._designDBDict[i]=designConfig.getDatabaseTemplate()
             gameDBConfig=self._getGameDBConfig(i)
             if gameDBConfig!=None:
                 self._gamedbDict[i]=gameDBConfig.getDatabaseTemplate()
@@ -143,15 +145,15 @@ class DBMgr:
     def getUserDB(self):
         return UserDB(self.getProfileDB(),self.mode)
 
-    def getDesignHeroDB(self,server=1):
-        return DesignBLeaderDB(self.getDesignDB(server),self.locale)
+    # def getDesignHeroDB(self,server=1):
+    #     return DesignBLeaderDB(self.getDesignDB(server),self.locale)
 
-    def getDesignLeaderDB(self,server=1):
-        return DesignBHeroDB(self.getDesignDB(server),self.locale)
+    def getAwardDB(self,server=1):
+        return AwardDB(self.getDesignDB(server),self.locale)
 
     def getGameDB(self,server):
         return self._gamedbDict[server]
-    def getDesignDB(self,server):
+    def getDesignDB(self,server=1):
         return self._designDBDict[server]
     def getProfileDB(self):
         return self._profileDB
@@ -172,7 +174,7 @@ class DBMgr:
         return DBConfig(user,passwd,host,database,port)
 
 
-    def _getDesignConfig(self,server):
+    def _getDesignConfig(self):
         with open("%s/%s.json"%(conf.CONFIG_DIR,self.mode)) as data_file:
             value = json.load(data_file)
             if value==None:
@@ -206,7 +208,7 @@ class DBMgr:
 @gen.coroutine
 def test_dbmgr_main():
     mgr=DBMgr("dev")
-    designConfig=mgr._getDesignConfig(1)
+    designConfig=mgr._getDesignConfig()
     print designConfig
     profileConfig=mgr._getProfileConfig()
     print profileConfig

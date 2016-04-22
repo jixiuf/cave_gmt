@@ -28,7 +28,12 @@ class PresentPackAdd(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
-        self.render("present_pack_add.html",title="礼包打包")
+        awardList=yield self.application.dbmgr.getAwardDB().select_all()
+        data={}
+        for a in awardList:
+            data[str(a.id)]={"name":a.name,"has_id":"true"}
+        print(data)
+        self.render("present_pack_add.html",title="礼包打包",awardList=data)
     @asynchronous
     @gen.coroutine
     def self_post(self):
@@ -63,48 +68,60 @@ class PresentPackAdd(BaseHandler):
         # self.render("present_pack_add.html",title="礼包打包")
 
 class PresentPackIdList(BaseHandler):
-    @asynchronous
+    def self_get(self):
+        self.self_post()
+
     def self_post(self):
         awardType=self.get_argument('id')
-        if awardType=='5':        # leader
-            self.id_list_leader()
-        elif awardType=='6':
-            self.id_list_hero()
-
-
-    @asynchronous
-    @gen.coroutine
-    def id_list_leader(self):
-        bLeaderList=yield self.application.dbmgr.getDesignLeaderDB().select_all()
         info = {}
-        result = []
-        for leader in bLeaderList:
-            data={}
-            data['label']=str(leader.id)+":"+leader.name
-            data['value']=leader.id
-            result.append(data)
-
-        print result
+        result = [{"label":"1:id1"+awardType,"value":"1"},{"label":"2:id2"+awardType,"value":"2"}]
         info['action'] = 'success'
-        # info['award_type'] = 5
+        info['award_type'] = awardType
         info['result'] = json.dumps(result)
         self.write(info)
 
 
-    @asynchronous
-    @gen.coroutine
-    def id_list_hero(self):
-        bLeaderList=yield self.application.dbmgr.getDesignHeroDB().select_all()
-        info = {}
-        result = []
-        for hero in bLeaderList:
-            data={}
-            data['label']=str(hero.id)+":"+hero.name
-            data['value']=hero.id
-            result.append(data)
+        return
+    #     awardType=self.get_argument('id')
+    #     if awardType=='5':        # leader
+    #         self.id_list_leader()
+    #     elif awardType=='6':
+    #         self.id_list_hero()
 
-        info['action'] = 'success'
-        info['result'] = json.dumps(result)
-        self.write(info)
+
+    # @asynchronous
+    # @gen.coroutine
+    # def id_list_leader(self):
+    #     bLeaderList=yield self.application.dbmgr.getDesignLeaderDB().select_all()
+    #     info = {}
+    #     result = []
+    #     for leader in bLeaderList:
+    #         data={}
+    #         data['label']=str(leader.id)+":"+leader.name
+    #         data['value']=leader.id
+    #         result.append(data)
+
+    #     print result
+    #     info['action'] = 'success'
+    #     # info['award_type'] = 5
+    #     info['result'] = json.dumps(result)
+    #     self.write(info)
+
+
+    # @asynchronous
+    # @gen.coroutine
+    # def id_list_hero(self):
+    #     bLeaderList=yield self.application.dbmgr.getDesignHeroDB().select_all()
+    #     info = {}
+    #     result = []
+    #     for hero in bLeaderList:
+    #         data={}
+    #         data['label']=str(hero.id)+":"+hero.name
+    #         data['value']=hero.id
+    #         result.append(data)
+
+    #     info['action'] = 'success'
+    #     info['result'] = json.dumps(result)
+    #     self.write(info)
 
 

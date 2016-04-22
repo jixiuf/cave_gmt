@@ -12,32 +12,29 @@
                 <input type="text" class="form-control ui-pack-name op-pack-name" id="inputEmail3" placeholder="礼包名称">
             </div>
         </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">礼包类型</label>
-            <div class="col-sm-10">
-                <div class="radio col-sm-2">
-                    <label>
-                        <input class="op-pack-type" type="radio" name="packType" value="" checked>全部
-                    </label>
-                </div>
-                <div class="radio col-sm-2">
-                    <label>
-                        <input class="op-pack-type" type="radio" name="packType" value="mail">邮件
-                    </label>
-                </div>
-            </div>
-        </div>
+        <!-- <div class="form-group">
+             <label class="col-sm-2 control-label">礼包类型</label>
+             <div class="col-sm-10">
+             <div class="radio col-sm-2">
+             <label>
+             <input class="op-pack-type" type="radio" name="packType" value="" checked>全部
+             </label>
+             </div>
+             <div class="radio col-sm-2">
+             <label>
+             <input class="op-pack-type" type="radio" name="packType" value="mail">邮件
+             </label>
+             </div>
+             </div>
+             </div> -->
         <div class="form-group">
             <label class="col-sm-2 control-label">礼包内容</label>
             <div class="col-sm-10">
                 <select class="form-control ui-goods op-goods-type">
                     <option value="0">请选择奖品类型</option>
-                    <option value="1">钻石(gem)</option>
-                    <option value="2">金币(gold)</option>
-                    <option value="3">舍利(relics)</option>
-                    <option value="4">RMB</option>
-                    <option value="5">主角(leader)</option>
-                    <option value="6">英雄(hero)</option>
+                    {% for award in awardList %}
+                    <option value='{{ escape(award) }}:{{ escape(awardList[award]["has_id"]) }}'>{{ escape(awardList[award]["name"]) }}</option>
+                    {% end %}
                 </select>
                 <input type="text" class="form-control ui-goods op-goods-id hide" placeholder="选择物品id">
                 <input type="hidden" id='goods_id_name' >
@@ -66,12 +63,11 @@
         goodsIdEl = $('.op-goods-id'),
         goodsIdNameEl = $('#goods_id_name'),
         nameEl = $('.op-pack-name'),
-        statusEl = $('.op-pack-type'),
+        /*         statusEl = $('.op-pack-type'), */
         versionEl = $('.op-pack-version'),
         submitEl = $('.op-submit-btn'),
         ajaxing = false,
-        leaderIdData,
-        heroIdData,
+        idData,
         getIdFun;
 
  
@@ -115,19 +111,8 @@
         });
 
         getIdFun = function(type) {
-            var url,
-                infoType = type;
-            switch(type) {
-                case '5':
-                    url = '/present_pack/id_list';
-                    break;
-                case '6':
-                    url = '/present_pack/id_list';
-                    break;
-            }
-            if(url==""){
-                return
-            }
+            var url='/present_pack/id_list';
+            var infoType = type;
 
             ajaxing = true;
             $.ajax({
@@ -139,19 +124,10 @@
             .done(function(data) {
                 if(data['action'] == 'success') {
                     ajaxing = false;
-                    if(infoType == '5') {
-                        leaderIdData=JSON.parse(data['result']);
-                        goodsIdEl.autocomplete({source: leaderIdData, minLength:0,
+                        idData=JSON.parse(data['result']);
+                        goodsIdEl.autocomplete({source: idData, minLength:0,
                                                 select: function( event, ui ) {goodsIdNameEl.val(ui.item.label);}});
                         goodsIdEl.autocomplete( "search", goodsIdEl.val());
-                    }
-                    if(infoType == '6') {
-                        heroIdData=JSON.parse(data['result']);
-                        goodsIdEl.autocomplete({source: heroIdData, minLength:0,
-                            select: function( event, ui ) {goodsIdNameEl.val(ui.item.label);}
-                        });
-                        goodsIdEl.autocomplete( "search", goodsIdEl.val());
-                    }
                 }
             });
         }
@@ -160,7 +136,7 @@
         typeEl.on('change', function(e) {
             var val = e.currentTarget.value;
             goodsIdEl.val('');
-            if(val == '5' || val == '6' ) {
+            if(val.indexOf(":true")!= -1 ) {
                 goodsIdEl.removeClass('hide');
             } else {
                 goodsIdEl.addClass('hide');
@@ -170,22 +146,12 @@
         goodsIdEl.on('click', function() {
             var type = typeEl.val(),
                 data;
+            tokens=type.split(":");
+            type=tokens[0];
+            hasId=tokens[1];
             if(ajaxing) return false;
-            if(type == '5' ) {
-                if( leaderIdData){
-                    goodsIdEl.autocomplete("option","source",leaderIdData);
-                    goodsIdEl.autocomplete( "search", goodsIdEl.val());
-                }else{
-                    getIdFun(type);
-                }
-            }else if(type == '6' ) {
-                if(heroIdData){
-                    goodsIdEl.autocomplete("option","source",heroIdData);
-                    /*                     goodsIdEl.autocomplete({source: heroIdData, minLength:0}); */
-                    goodsIdEl.autocomplete( "search", goodsIdEl.val());
-                }else{
-                    getIdFun(type);
-                }
+            if(hasId=="true") {
+                getIdFun(type);
             } else {
                 return false;
             }
@@ -220,7 +186,7 @@
             data['pack_name'] = nameEl.val();
             data['version'] = version;
             data['pack_icon'] = '';
-            data['status'] = statusEl.filter(":checked").val();
+            /*             data['status'] = statusEl.filter(":checked").val(); */
             ajaxing = true;
             $.ajax({
                 url: '/present_pack/add',
