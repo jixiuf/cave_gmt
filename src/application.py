@@ -31,8 +31,8 @@ class Application(tornado.web.Application):
         handlers = [
             (r'/ping', ping.PingHandler),
             (r'/', LoginHandler),
-            (r'/account/register', RegistrationRenderHandler),
-            (r'/account/manage', ManageRenderHandler),
+            (r'/account/register', AccountRegistrationRenderHandler),
+            (r'/account/manage', AccountManageRenderHandler),
             (r'/api/account/create', AccountCreateHandler),
             (r'/api/account/delete', AccountCreateHandler),
             (r'/api/account/update_level', AccountLevelHandler),
@@ -43,6 +43,7 @@ class Application(tornado.web.Application):
             (r'/present_pack/id_list', PresentPackIdList),
 
             (r'/maintain/mgr', Maintain),
+            (r'/maintain/mgr_post', Maintain),
             (r'/maintain/delete', MaintainDelete),
 
             (r'/game/update', GameUpdateRenderHandler),

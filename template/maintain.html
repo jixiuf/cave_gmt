@@ -100,7 +100,7 @@
      data['content'] = content;
      ajaxing = true;
      $.ajax({
-         url: '/maintain/mgr',
+         url: '/maintain/mgr_post',
          type: 'post',
          data: data
      })
@@ -109,7 +109,7 @@
           if(data == 'success') {
               location.href = '/maintain/mgr';
           } else {
-              alert('账号密码错误！');
+              alert('无权限'+data);
           }
       });
      return false;
@@ -134,7 +134,7 @@
           if(data == 'success') {
               location.href = '/maintain/mgr';
           } else {
-              alert('账号密码错误！');
+              alert('无权限'+data);
           }
       });
      return true;

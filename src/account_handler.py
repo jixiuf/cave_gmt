@@ -5,7 +5,7 @@ from base_handler import *
 from tornado.web import asynchronous
 import hashlib
 
-class ManageRenderHandler(BaseHandler):
+class AccountManageRenderHandler(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
@@ -18,14 +18,9 @@ class ManageRenderHandler(BaseHandler):
                     gmAccountList=gmAccountList,
                     permissionLevelList=permissionLevelList)
 
-class RegistrationRenderHandler(BaseHandler):
+class AccountRegistrationRenderHandler(BaseHandler):
     def self_get(self):
         self.render("account_registration.html",title="账号开通")
-
-class CompetenceRenderHandler(BaseHandler):
-
-    def self_get(self):
-        self.render("gmt_competence.html",title="权限管理")
 
 class AccountCreateHandler(BaseHandler):
 

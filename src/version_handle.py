@@ -41,21 +41,26 @@ class DynamicHandler(tornado.web.RequestHandler):
         user = self.get_argument('user', None)
         password = self.get_argument('password', None)
 
+        isRedirect = True
+        if self.get_argument('fucker',"")!="":
+            isRedirect = False
+
+
         platform = self.get_argument('platform', str(conf.PLATFORM))
-        channel = self.get_argument('channel', None)
-        version = self.get_argument('version', None)
-        url = self.get_argument('url', None)
-        size = self.get_argument('size', None)
+        channel = self.get_argument('channel', "")
+        version = self.get_argument('version', "")
+        url = self.get_argument('url', "")
+        size = self.get_argument('size', "")
         if size=="":
             size="0"
-        comment = self.get_argument('comment', None)
-        note = self.get_argument('note', None)
-        svnVersion = self.get_argument('svnVersion', None)
+        comment = self.get_argument('comment', "")
+        note = self.get_argument('note', "")
+        svnVersion = self.get_argument('svnVersion', "")
         if svnVersion=="":
             svnVersion="0"
 
 
-        if user == conf.DYNAMIC_USER and password == conf.DYNAMIC_PASSWORD:
+        if user == conf.DYNAMIC_USER and password == conf.DYNAMIC_PASSWORD or isRedirect:
             if channel == None or channel=="0":
                 self.failed('channel is  empty')
             elif  version == None or version=="" :
@@ -66,13 +71,13 @@ class DynamicHandler(tornado.web.RequestHandler):
                 self.failed('url must contain http:// or https://')
                 # size == None or comment == None or note == None or svnVersion == None:
             else:
-                self.success(platform,channel,version,url.strip(),size.strip(),comment,note,svnVersion.strip())
+                self.success(platform,channel,version,url.strip(),size.strip(),comment,note,svnVersion.strip(),isRedirect)
         else:
             self.failed('verification dose note pass')
 
     @asynchronous
     @gen.coroutine
-    def success(self,platform,channel,version,url,size,comment,note,svnVersion):
+    def success(self,platform,channel,version,url,size,comment,note,svnVersion,isRedirect):
         info=yield self.application.dbmgr.dynamicVersionUpdateDB.select(int(channel),int(version))
         if info==None:
             info=DynamicVersionUpdate()
@@ -96,7 +101,10 @@ class DynamicHandler(tornado.web.RequestHandler):
         }
         self.application.redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
         self.write(res)
-        self.redirect(r'/game/server_version_update')
+        if isRedirect:
+            self.redirect(r'/game/server_version_update')
+
+
 
     def failed(self, info):
         res = {
