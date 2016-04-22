@@ -189,6 +189,7 @@ class GameAddressHandler(BaseHandler):
             return
 
         yield self.application.dbmgr.versionUpdateDB.add(info)
+        self.application.redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
         self.write(json.dumps({ 'action': 'success' }))
 
 # class CacheDynamicHandler(BaseHandler):
