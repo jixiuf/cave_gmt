@@ -9,10 +9,12 @@ class ManageRenderHandler(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
+        msg = self.get_argument('msg','')
         gmAccountList = yield self.application.dbmgr.permissionDB.select_all()
         permissionLevelList=yield self.application.dbmgr.permissionLevelDB.select()
         self.render("gmt_manage.html",
                     title="账号管理",
+                    msg=msg,
                     gmAccountList=gmAccountList,
                     permissionLevelList=permissionLevelList)
 

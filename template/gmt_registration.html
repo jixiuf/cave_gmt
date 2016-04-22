@@ -62,7 +62,7 @@
         })
         .done(function(data) {
             if(data == 'wrong permissions') {
-                location.href = '/';
+                location.href = '/?msg=原页面无权限访问，跳转到此';
                 alert(data);
             } else {
                 data = JSON.parse(data)

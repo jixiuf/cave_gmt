@@ -49,7 +49,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def no_permissions(self):
         if self.type == 'get':
-            self.write('wrong permissions')
+            self.redirect("/?msg=原页面无权限访问，跳转到此")
         if self.type == 'post':
             self.write('wrong permissions')
 

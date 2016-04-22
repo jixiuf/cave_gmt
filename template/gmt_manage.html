@@ -34,6 +34,9 @@
                 <button type="submit" class="btn btn-default op-delete">删除账号</button>
             </div>
         </div>
+        <div class='ui-msg'>
+            {{ msg }}
+        </div>
     </form>
 </div>
 <script type="text/javascript">
@@ -58,7 +61,7 @@
         .done(function(data) {
             ajaxing = false;
             if(data == 'wrong permissions') {
-                location.href = '/';
+                location.href = '/?msg=原页面无权限访问，跳转到此';
                 alert(data);
             } else {
                 data = JSON.parse(data);
@@ -73,7 +76,10 @@
         return false;
     });
     deleteEl.on('click', function() {
-        if(ajaxing || accountEl.val()=="") return false;
+        if(ajaxing || accountEl.val()=="") {
+            alert("请选择账号");
+            return false;
+        }
         ajaxing = true;
         data['account'] = accountEl.val();
         data['delete'] = "true";
@@ -85,7 +91,7 @@
         .done(function(data) {
             ajaxing = false;
             if(data == 'wrong permissions') {
-                location.href = '/';
+                location.href = '/?msg=原页面无权限访问，跳转到此';
                 alert(data);
             } else {
                 data = JSON.parse(data);

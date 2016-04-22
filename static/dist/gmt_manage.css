@@ -5,3 +5,6 @@
 .ui-manage-form .ui-manage-title {
   margin-left: 200px;
 }
+.ui-msg {
+  color: red;
+}

@@ -10,14 +10,15 @@ class LoginHandler(BaseHandler):
     @gen.coroutine
     def get(self):
         try:
+            msg = self.get_argument('msg','')
             self.account = self.get_secure_cookie('user')
             self.password = self.get_secure_cookie('password')
             succ=yield self.verifyAccount(self.account,self.password)
             if succ:            # 如果有cookie 直接登录
-                self.redirect(r'/gmt/manage')
+                self.redirect(r'/gmt/manage?msg='+msg)
                 return
             else:
-                self.render("login.html",title="登录")
+                self.render("login.html",title="登录",msg=msg)
 
         except Exception, error:
             self.application.logger.warning('errorarg\t%s\t%s\t%s' % (self.request.headers.get('channel','xxx'),self.request.headers.get('User-Agent','xxx'),str(self.request.arguments)))
