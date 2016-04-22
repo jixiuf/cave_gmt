@@ -31,7 +31,7 @@ class Application(tornado.web.Application):
         handlers = [
             (r'/ping', ping.PingHandler),
             (r'/', LoginHandler),
-            (r'/gmt/register', RegistrationRenderHandler),
+            (r'/account/register', RegistrationRenderHandler),
             (r'/account/manage', ManageRenderHandler),
             (r'/api/account/create', AccountCreateHandler),
             (r'/api/account/delete', AccountCreateHandler),

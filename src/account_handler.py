@@ -20,7 +20,7 @@ class ManageRenderHandler(BaseHandler):
 
 class RegistrationRenderHandler(BaseHandler):
     def self_get(self):
-        self.render("gmt_registration.html",title="账号开通")
+        self.render("account_registration.html",title="账号开通")
 
 class CompetenceRenderHandler(BaseHandler):
 
