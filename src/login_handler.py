@@ -37,6 +37,10 @@ class LoginHandler(BaseHandler):
                 if rememberPassword=="on":
                     self.set_secure_cookie('user',account)
                     self.set_secure_cookie('password',password)
+                else:
+                    self.set_secure_cookie('user',account)
+                    self.clear_cookie('password')
+                    # self.clear_cookie('user')
             else:
                 result['action'] = 'wrong'
 

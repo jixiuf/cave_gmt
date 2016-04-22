@@ -20,6 +20,8 @@ class BaseHandler(tornado.web.RequestHandler):
 
     @gen.coroutine
     def verifyAccount(self,account,password):
+        if account=="" or password=="" or password==None or account==None:
+            raise gen.Return(False)
         gmAccount=yield self.application.dbmgr.permissionDB.select(account)
         if gmAccount==None:
             raise gen.Return(False)
@@ -31,7 +33,6 @@ class BaseHandler(tornado.web.RequestHandler):
     @gen.coroutine
     def permission_verify(self):
         self.account = self.get_secure_cookie('user')
-        self.password = self.get_secure_cookie('password')
         gmAccount =  yield self.application.dbmgr.permissionDB.select(self.account)
         if gmAccount==None:
             self.no_permissions()
