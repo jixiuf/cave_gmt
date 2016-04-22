@@ -83,6 +83,10 @@
             alert('需选择渠道并填写下载地址！');
             return false;
         };
+        if(gameUrl.indexOf("http://"==-1 && gameUrl.indexOf("https://")==-1)){
+            alert('url地址 必须以http:// https://开头');
+            return false;
+        }
         data['channel'] = channel;
         data['gameUrl'] = gameUrl;
         data['comment'] = comment;
@@ -103,6 +107,9 @@
             if(data['action'] == 'success') {
                 ajaxing = false;
                 location.href = '/game/address';
+            }else{
+                ajaxing = false;
+                alert(data['action']);
             }
         });
     });

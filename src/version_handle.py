@@ -46,10 +46,17 @@ class DynamicHandler(tornado.web.RequestHandler):
 
 
         if user == conf.DYNAMIC_USER and password == conf.DYNAMIC_PASSWORD:
-            if channel == None or version == None or  url == None or size == None or comment == None or note == None or svnVersion == None:
-                self.failed('need 8 arguments')
+            if channel == None or channel=="0":
+                self.failed('channel is  empty')
+            elif  version == None or version=="" :
+                self.failed('version is  empty')
+            elif    url == None or url=="" :
+                self.failed('url is  empty')
+            elif not  "http://" in url and not "https://" in url:
+                self.failed('url must contain http:// or https://')
+                # size == None or comment == None or note == None or svnVersion == None:
             else:
-                self.success(platform,channel,version,url,size,comment,note,svnVersion)
+                self.success(platform,channel,version,url.strip(),size.strip(),comment,note,svnVersion.strip())
         else:
             self.failed('verification dose note pass')
 
@@ -79,6 +86,7 @@ class DynamicHandler(tornado.web.RequestHandler):
         }
         self.application.redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
         self.write(res)
+        self.redirect(r'/game/server_version_update')
 
     def failed(self, info):
         res = {
@@ -157,6 +165,10 @@ class GameAddressHandler(BaseHandler):
         info.os=self.get_argument('os',0)
         info.comments = self.get_argument('comment')
         info.url = self.get_argument('gameUrl')
+
+        if not  "http://" in info.url and not "https://" in info.url:
+            self.write(json.dumps({ 'action': 'url must start with http:// or https://' }))
+            return
 
         yield self.application.dbmgr.versionUpdateDB.add(info)
         self.write(json.dumps({ 'action': 'success' }))
