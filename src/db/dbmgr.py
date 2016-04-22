@@ -17,7 +17,7 @@ from db_permissions import PermissionLevelDB
 # from db_design_leader import DesignBLeaderDB
 # from db_design_hero import DesignBHeroDB
 from db_user import UserDB
-from db_gamedb_user_attr import UserAttrDB
+# from db_gamedb_user_attr import UserAttrDB
 from db_version_update import VersionUpdateDB
 from db_server_version import ServerVersionDB
 from db_dynamic_version_update import DynamicVersionUpdateDB

@@ -37,7 +37,7 @@ class PresentPackAdd(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_post(self):
-        awardList= utils.getJson(self.get_argument('awards'))
+        awardList= utils.getJson(self.get_argument('pack_awards'))
         content=''
 
         for award in awardList:
@@ -60,10 +60,10 @@ class PresentPackAdd(BaseHandler):
         if content=="":
             return
 
-        packName=self.get_argument('pack_name')
-        packVersion=self.get_argument('version')
+        packName=self.get_argument('pack_name','')
+        packVersion=self.get_argument('version','1')
         # packIcon=self.get_argument('pack_icon')
-        status=self.get_argument('status')
+        status=self.get_argument('status','')
         yield self.application.dbmgr.presentPackDB.add(packName,content,packVersion,status)
         # self.render("present_pack_add.html",title="礼包打包")
 

@@ -9,63 +9,45 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">礼包名称</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control ui-pack-name op-pack-name" id="inputEmail3" placeholder="礼包名称">
+                <input type="text" class="form-control ui-pack-name op-pack-name" id="op-pack-name" placeholder="礼包名称">
             </div>
         </div>
-        <!-- <div class="form-group">
-             <label class="col-sm-2 control-label">礼包类型</label>
-             <div class="col-sm-10">
-             <div class="radio col-sm-2">
-             <label>
-             <input class="op-pack-type" type="radio" name="packType" value="" checked>全部
-             </label>
-             </div>
-             <div class="radio col-sm-2">
-             <label>
-             <input class="op-pack-type" type="radio" name="packType" value="mail">邮件
-             </label>
-             </div>
-             </div>
-             </div> -->
         <div class="form-group">
             <label class="col-sm-2 control-label">礼包内容</label>
             <div class="col-sm-10">
-                <select class="form-control ui-goods op-goods-type">
+                <select class="form-control ui-goods op-pack-goods-type" id='op-pack-goods-type'>
                     <option value="0">请选择奖品类型</option>
                     {% for award in awardList %}
                     <option value='{{ escape(award) }}:{{ escape(awardList[award]["has_id"]) }}'>{{ escape(awardList[award]["name"]) }}</option>
                     {% end %}
                 </select>
-                <input type="text" class="form-control ui-goods op-goods-id hide" placeholder="选择物品id">
-                <input type="hidden" id='goods_id_name' >
-                <input type="text"  class="form-control ui-goods op-goods-num" placeholder="物品数量">
-                <button type="button" class="btn btn-default ui-goods op-goods-add">添加</button>
-                
+                <input type="text" class="form-control ui-goods op-pack-goods-id hide" id='op-pack-goods-id' placeholder="选择物品id">
+                <input type="hidden" id='op-pack-goods_id_name' >
+                <input type="text"  class="form-control ui-goods op-pack-goods-num" id='op-pack-goods-num' placeholder="物品数量">
+                <button type="button" class="btn btn-default ui-goods op-pack-goods-add" id='op-pack-goods-add'>添加</button>
             </div>
             <div class="col-sm-10 ui-list-wrap">
-                <ul class="col-sm-6 ui-pack-content op-content-list">
+                <ul class="col-sm-6 ui-pack-content op-pack-content-list" id="op-pack-content-list">
                 </ul>
             </div>
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default op-submit-btn">生成</button>
+                <button type="submit" class="btn btn-default op-generate-pack-btn" id='op-generate-pack-btn'>生成</button>
             </div>
         </div>
     </form>
 </div>
 
 <script type="text/javascript">
-    var goodsAddEl = $('.op-goods-add'),
-        listEl = $('.op-content-list'),
-        typeEl = $('.op-goods-type'),
-        numEl = $('.op-goods-num'),
-        goodsIdEl = $('.op-goods-id'),
-        goodsIdNameEl = $('#goods_id_name'),
-        nameEl = $('.op-pack-name'),
-        /*         statusEl = $('.op-pack-type'), */
-        versionEl = $('.op-pack-version'),
-        submitEl = $('.op-submit-btn'),
+    var goodsAddEl = $('#op-pack-goods-add'),
+        listEl = $('#op-pack-content-list'),
+        typeEl = $('#op-pack-goods-type'),
+        numEl = $('#op-pack-goods-num'),
+        goodsIdEl = $('#op-pack-goods-id'),
+        goodsIdNameEl = $('#op-pack-goods_id_name'),
+        nameEl = $('#op-pack-name'),
+        submitEl = $('.op-generate-pack-btn'),
         ajaxing = false,
         idData,
         getIdFun;
@@ -78,21 +60,31 @@
                 count = '',
                 htmlStr = '';
 
-            typeId = typeEl.val();
+            tokens=typeEl.val().split(":");
+            typeId = tokens[0];
+            /*             hasId  = tokens[1]; */
             goodsId = goodsIdEl.val();
             goodsIdName=goodsIdNameEl.val();
             count = numEl.val();
-            if(typeId != '0' && count != '') {
+            if(isNaN(goodsId)){
+                alert("物品id格式不对 不是数字");
+                return false;
+            }
+            if(isNaN(count)){
+                alert("数量格式不对 不是数字");
+                return false;
+            }
+            if(typeId != '0' && count != ''&&count!='0') {
                 typeName = typeEl.find("option:selected").text();
                 if(goodsId==""){
                     htmlStr += '<li class="ui-pack-item clearfix op-goods-item" data-id="' + typeId + '" data-goodsid="' + goodsId + '" data-count="' + count + '">' +
                                '<span>' + typeName + 'x' + count + '</span>' +
-                               '<button class="btn btn-default ui-item-delete op-delete">删除</button>' +
+                               '<button class="btn btn-default ui-item-delete op-pack-award-delete">删除</button>' +
                                '</li>';
                 }else{
                     htmlStr += '<li class="ui-pack-item clearfix op-goods-item" data-id="' + typeId + '" data-goodsid="' + goodsId + '" data-count="' + count + '">' +
                                '<span>[' + typeName +" "+goodsIdName+ ']x' + count + '</span>' +
-                               '<button class="btn btn-default ui-item-delete op-delete">删除</button>' +
+                               '<button class="btn btn-default ui-item-delete op-pack-award-delete">删除</button>' +
                                '</li>';
                 }
                 listEl.append(htmlStr);
@@ -105,7 +97,7 @@
             }
         });
 
-        listEl.delegate('.op-delete', 'click', function(e) {
+        listEl.delegate('.op-pack-award-delete', 'click', function(e) {
             $(e.currentTarget).parent().remove();
             return false;
         });
@@ -159,19 +151,15 @@
 
         submitEl.on('click', function() {
             var data = {},
-                awards = [],
+                pack_awards = [],
                 goods = $('.op-goods-item'),
                 id,count,
-                name = nameEl.val(),
-                version = '1';
+                name = nameEl.val();
             goods = $('.op-goods-item');
             if(goods.length == 0 || name == '') {
                 alert("礼包名为空 或未添加任何奖品");
                 return false;
             }
-            /* if(versionEl.val() != '') {
-               version = versionEl.val();
-               } */
             for(var i = 0, len = goods.length; i < len; i++ ) {
                 var info = {};
                 id = goods.eq(i).data('id');
@@ -180,13 +168,10 @@
                 info['award_type_id'] = id;
                 info['award_sub_id'] = goodsId;
                 info['award_count'] = count;
-                awards.push(info);
+                pack_awards.push(info);
             }
-            data['awards'] = JSON.stringify(awards);
+            data['pack_awards'] = JSON.stringify(pack_awards);
             data['pack_name'] = nameEl.val();
-            data['version'] = version;
-            data['pack_icon'] = '';
-            /*             data['status'] = statusEl.filter(":checked").val(); */
             ajaxing = true;
             $.ajax({
                 url: '/present_pack/add',
