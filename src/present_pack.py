@@ -31,6 +31,8 @@ class PresentPackAdd(BaseHandler):
         awardList=yield self.application.dbmgr.getAwardDB().select_all()
         data={}
         for a in awardList:
+            # 如果 has_id 为true ,则用于处理 装备 卡片等有id 的奖品，以例js 显示field供输入id
+            # zjh 项目里所有的奖励乾了是key:value ,无key:id:value的，故此处一直为false
             data[str(a.id)]={"name":a.name,"has_id":"false"}
         print(data)
         self.render("present_pack_add.html",title="礼包打包",awardList=data)
@@ -49,10 +51,17 @@ class PresentPackIdList(BaseHandler):
     def self_get(self):
         self.self_post()
 
+        # 对装备 卡片的奖励类型， 其有对应的装备id 卡片id ,此处用于返回所有的装备id 或卡片id , 以便客户端进行选择
     def self_post(self):
         awardType=self.get_argument('id')
         info = {}
-        result = [{"label":"1:id1"+awardType,"value":"1"},{"label":"2:id2"+awardType,"value":"2"}]
+        # 这里只是示范相应的格式
+        if awardType==5:
+            result = [{"label":"1:装备1","value":"1"},{"label":"2:装备2","value":"2"}]
+        else:
+            result = [{"label":"1:卡片1","value":"1"},{"label":"2:卡片2","value":"2"}]
+
+
         info['action'] = 'success'
         info['award_type'] = awardType
         info['result'] = json.dumps(result)
