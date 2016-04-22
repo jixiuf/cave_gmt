@@ -103,9 +103,9 @@ class DynamicHandler(tornado.web.RequestHandler):
         }
         self.write(res)
 
-class GameDynamicRenderHandler(BaseHandler):
-    def self_get(self):
-        self.render("game_dynamic.html",title="动态更新",channel=conf.CHANNEL_PLATFORM_MAP)
+# class GameDynamicRenderHandler(BaseHandler):
+#     def self_get(self):
+#         self.render("game_dynamic.html",title="动态更新",channel=conf.CHANNEL_PLATFORM_MAP)
 
 class VersionUpdateHandler(BaseHandler):
     @asynchronous

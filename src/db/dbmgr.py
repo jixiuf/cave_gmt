@@ -115,7 +115,7 @@ class DBMgr:
         yield self.permissionLevelDB.create_table()
 
         yield self.permissionDB.init_data()
-        yield self.permissionLevelDB.init_data()
+        yield self.permissionLevelDB.init_data(conf.initPermissionLevel)
 
 
 

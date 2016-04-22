@@ -1,7 +1,22 @@
 #  -*- coding:utf-8 -*-
 from tornado import  gen
+import os,sys
+modulepath = os.getcwd()+'/..'
+sys.path.append(modulepath)
+import conf
 import hashlib
+
+def NewGmToolAccountPermissionLevel(level,levelDesc,urls):
+    a=GmToolAccount()
+    a.level=level
+    a.levelDesc=levelDesc
+    a.urls=urls
+    return a
+
 class GmToolAccount:
+    def isAdmin(self):
+        return self.level==1
+
     def __init__(self):
         self.account=""
         self.passwd=""
@@ -33,10 +48,10 @@ class PermissionDB:
 
     @gen.coroutine
     def init_data(self):
-        defaultAccount=yield self.select('snowcatAdmin')
+        defaultAccount=yield self.select('admin')
         if defaultAccount==None:
-            yield self.add('snowcatAdmin',hashlib.sha1('snowcatPassword').hexdigest())
-            yield self.update_level('snowcatAdmin',1)
+            yield self.add('admin',hashlib.sha1('admin').hexdigest())
+            yield self.update_level('admin',1)
 
 
     def mapRow(self,row):
@@ -69,6 +84,12 @@ class PermissionDB:
         query="update permission set level=%s where account='%s' and update_time=now()"%(level,account)
         result=yield self.dbtemplate.execSql(query)
         raise gen.Return(result)
+    @gen.coroutine
+    def delete(self,account):
+        query="delete from permission  where account='%s' "%(account)
+        result=yield self.dbtemplate.execSql(query)
+        raise gen.Return(result)
+
 
 class PermissionLevelDB:
     def __init__(self,dbtemplate):
@@ -92,11 +113,12 @@ class PermissionLevelDB:
         yield self.dbtemplate.execDDL(query)
 
     @gen.coroutine
-    def init_data(self):
+    def init_data(self,accountList):
         levelRows=yield self.select()
         if len(levelRows)==0:
-            yield self.add(0,'取消权限','')
-            yield self.add(1,'一级账号','')
+            for account in accountList:
+                yield self.add(account.level,account.levelDesc,account.urls)
+
     def mapRow(self,row):
         account=GmToolAccount()
         account.level=row[0]

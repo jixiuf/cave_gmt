@@ -34,6 +34,7 @@ class Application(tornado.web.Application):
             (r'/gmt/register', RegistrationRenderHandler),
             (r'/gmt/manage', ManageRenderHandler),
             (r'/api/account/create', AccountCreateHandler),
+            (r'/api/account/delete', AccountCreateHandler),
             (r'/api/account/update_level', AccountLevelHandler),
 
             (r'/present_pack/list', PresentPackList),

@@ -1,5 +1,5 @@
 #  -*- coding:utf-8 -*-
-__author__ = 'fanngyuan'
+__author__ = 'jixiufeng'
 
 import tornado
 import json
@@ -8,6 +8,7 @@ from tornado import  gen
 import conf
 import traceback
 from utils import get_all_urls
+import hashlib
 
 from qiniu import Auth, put_file, etag, urlsafe_base64_encode
 import qiniu.config
@@ -18,13 +19,24 @@ class BaseHandler(tornado.web.RequestHandler):
 
 
     @gen.coroutine
+    def verifyAccount(self,account,password):
+        gmAccount=yield self.application.dbmgr.permissionDB.select(account)
+        if gmAccount==None:
+            raise gen.Return(False)
+        hpassword = hashlib.sha1(password).hexdigest()
+        if gmAccount.passwd == hpassword and gmAccount.passwd!="":
+            raise gen.Return(True)
+        raise gen.Return(False)
+
+    @gen.coroutine
     def permission_verify(self):
         self.account = self.get_secure_cookie('user')
+        self.password = self.get_secure_cookie('password')
         gmAccount =  yield self.application.dbmgr.permissionDB.select(self.account)
         if gmAccount==None:
             self.no_permissions()
         else:
-            if gmAccount.level == 1:
+            if gmAccount.isAdmin():
                 urls = get_all_urls(self.application.handlers).split(',')
             else:
                 urls = gmAccount.urls.split(',')
@@ -36,7 +48,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def no_permissions(self):
         if self.type == 'get':
-            self.redirect('/')
+            self.write('wrong permissions')
         if self.type == 'post':
             self.write('wrong permissions')
 
@@ -44,6 +56,8 @@ class BaseHandler(tornado.web.RequestHandler):
         count = 0
         for i in urls:
             count += 1
+            print(i)
+            print(self.request.uri.split('?')[0])
             if i == self.request.uri.split('?')[0]:
                 self.have_permissions()
                 return

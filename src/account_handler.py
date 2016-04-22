@@ -48,12 +48,17 @@ class AccountLevelHandler(BaseHandler):
     @gen.coroutine
     def self_post(self):
         account = self.get_argument('account')
-        level = self.get_argument('level')
-        gmAccount= yield self.application.dbmgr.permissionDB.select(account)
-
-        if gmAccount!=None:
-            yield self.application.dbmgr.permissionDB.update_level(account,level)
+        level = self.get_argument('level',0)
+        delete = self.get_argument('delete',"false")
+        if delete=="true":
+            yield self.application.dbmgr.permissionDB.delete(account)
             self.write(json.dumps({ 'action': 'success'}))
+            return
         else:
-            self.write(json.dumps({ 'action': 'no account'}))
+            gmAccount= yield self.application.dbmgr.permissionDB.select(account)
+            if gmAccount!=None:
+                yield self.application.dbmgr.permissionDB.update_level(account,level)
+                self.write(json.dumps({ 'action': 'success'}))
+            else:
+                self.write(json.dumps({ 'action': 'no account'}))
 

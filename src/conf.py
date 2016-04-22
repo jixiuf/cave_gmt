@@ -2,38 +2,25 @@
 __author__ = 'jixiufeng'
 
 import json
+import db.db_permissions
 from tornado.options import  options
 
 AppName="zjh"
 CONFIG_DIR="/data/%s/config/"%(AppName)
 
+initPermissionLevel=[db.db_permissions.NewGmToolAccountPermissionLevel(1,"管理员",''),
+db.db_permissions.NewGmToolAccountPermissionLevel(0,"浏览权限",'/ping,/game/address,/game/update,/gmt/manage')]
 
 DYNAMIC_USER='najaplus'
 DYNAMIC_PASSWORD='qHcdGfE6TH'
 
 QINIU_ACCESS_KEY = 'diDp_FZuFNaxi8eX2qKwIRvRewY0RfQced3WQcIt'
 QINIU_SECRET_KEY = 'WA9qohA7cAaMQDwr4mT_AG2TzxqXXNzNCbvXokaJ'
-QINIU_SECRET_BUCKET_NAME = 'thgmtools'
+QINIU_SECRET_BUCKET_NAME = 'najaplus'
 
 
 PLATFORM=1
 PLATFORM_NAME="默认平台"
-SERVER=1
-SERVER_NAME="1服"
-CHANNEL_IPHONECAKE=7
-CHANNEL_PLATFORM_MAP={str(CHANNEL_IPHONECAKE):PLATFORM}
-# PLATFORM_CHANNEL_MAP={CHANNEL_IPHONECAKE:PLATFORM}
-PLATFORM_SERVER_LIST={PLATFORM:
-                      {SERVER:{
-                          'platform_name': unicode(PLATFORM_NAME, 'utf-8'),
-                          'server_name': unicode(SERVER_NAME, 'utf-8'),
-                          'server_type': "dev",
-                          'server_status': 1
-                      }}}
-DEFAULT_CHANNEL_NAME = {
-    '6': 'app store',
-    '7': 'iphonecake',
-}
 
 def getChannelList():
     channels = []

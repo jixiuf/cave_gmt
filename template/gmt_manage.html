@@ -13,7 +13,7 @@
                     <option value=''>下拉选择GM账号</option>
                     {% for gmAccount in gmAccountList %}
                     <option value='{{ escape(gmAccount.account) }}'>{{ escape(gmAccount.account) }}</option>
-                    {% end %}                
+                    {% end %}
                 </select>
             </div>
         </div>
@@ -24,13 +24,14 @@
                     <option>下拉选择权限等级</option>
                     {% for permissionLevel in permissionLevelList %}
                     <option value='{{permissionLevel.level}}'>{{ escape(permissionLevel.levelDesc)}}</option>
-                    {% end %}                
+                    {% end %}
                 </select>
             </div>
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default op-level-submit">修改</button>
+                <button type="submit" class="btn btn-default op-level-submit">修改权限</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="submit" class="btn btn-default op-delete">删除账号</button>
             </div>
         </div>
     </form>
@@ -38,12 +39,13 @@
 <script type="text/javascript">
     var selectEl = $('.op-level-select'),
         accountEl = $('.op-level-account'),
-        submitEl = $('.op-level-submit'),
+        updateEl = $('.op-level-submit'),
+        deleteEl = $('.op-delete'),
         ajaxing = false,
         data = {};
 
 
-    submitEl.on('click', function() {
+    updateEl.on('click', function() {
         if(ajaxing || selectEl.val().length != 1||accountEl.val()=="") return false;
         ajaxing = true;
         data['account'] = accountEl.val();
@@ -57,6 +59,7 @@
             ajaxing = false;
             if(data == 'wrong permissions') {
                 location.href = '/';
+                alert(data);
             } else {
                 data = JSON.parse(data);
             }
@@ -69,6 +72,35 @@
         });
         return false;
     });
+    deleteEl.on('click', function() {
+        if(ajaxing || accountEl.val()=="") return false;
+        ajaxing = true;
+        data['account'] = accountEl.val();
+        data['delete'] = "true";
+        $.ajax({
+            url: '/api/account/update_level',
+            type: 'post',
+            data: data
+        })
+        .done(function(data) {
+            ajaxing = false;
+            if(data == 'wrong permissions') {
+                location.href = '/';
+                alert(data);
+            } else {
+                data = JSON.parse(data);
+            }
+
+            if(data.action == 'success') {
+                window.location.reload();
+                alert('删除权限修改成功！');
+            } else if(data.action == 'no account') {
+                alert('该账号不存在！');
+            }
+        });
+        return false;
+    });
+ 
 
 </script>
 {% end %}

@@ -100,6 +100,7 @@
         .done(function(data) {
             if(data == 'wrong permissions') {
                 location.href = '/';
+                alert(data);
             } else {
                 data = JSON.parse(data);
             }
