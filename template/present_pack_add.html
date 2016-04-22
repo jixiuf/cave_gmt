@@ -28,12 +28,23 @@
 <script type="text/javascript" src='../static/javascript/base/present_pack.js'>
 </script>
 <script type="text/javascript">
+ var  nameEl = $('#op-pack-name');
+ var ajaxing = false;
+ var submitEl = $('.op-generate-pack-btn');
  submitEl.on('click', function(){
+     var data=getPackDataFun();
+     var name = nameEl.val();
+     var ajaxing=false;
+     if(name== '') {
+         alert("礼包名为空");
+         return false;
+     }
+     data['pack_name'] = name;
      ajaxing = true;
      $.ajax({
          url: '/present_pack/add',
          type: 'post',
-         data: getPackDataFun()
+         data: data
      })
       .done(function(data) {
           ajaxing = false;

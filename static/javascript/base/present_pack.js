@@ -4,9 +4,6 @@ var goodsAddEl = $('#op-pack-goods-add'),
     numEl = $('#op-pack-goods-num'),
     goodsIdEl = $('#op-pack-goods-id'),
     goodsIdNameEl = $('#op-pack-goods_id_name'),
-    nameEl = $('#op-pack-name'),
-    submitEl = $('.op-generate-pack-btn'),
-    ajaxing = false,
     idData,
     getIdFun,
     getPackDataFun;
@@ -110,27 +107,28 @@ goodsIdEl.on('click', function() {
 
 getPackDataFun=function() {
     var data = {},
-        pack_awards = [],
+        pack_awards = "",
         goods = $('.op-goods-item'),
-        id,count,
-        name = nameEl.val();
+        id,count;
     goods = $('.op-goods-item');
-    if(goods.length == 0 || name == '') {
-        alert("礼包名为空 或未添加任何奖品");
+    if(goods.length == 0) {
+        alert("未添加任何奖品");
         return data;
     }
     for(var i = 0, len = goods.length; i < len; i++ ) {
         var info = {};
         id = goods.eq(i).data('id');
         goodsId = goods.eq(i).data('goodsid');
+        if (goodsId=="") {
+            goodsId='0';
+        }
         count = goods.eq(i).data('count');
-        info['award_type_id'] = id;
-        info['award_sub_id'] = goodsId;
-        info['award_count'] = count;
-        pack_awards.push(info);
+        pack_awards=pack_awards+ id+":"+goodsId+":"+count;
+        if (i!=len-1) {
+            pack_awards=pack_awards+"|"
+        }
     }
-    data['pack_awards'] = JSON.stringify(pack_awards);
-    data['pack_name'] = nameEl.val();
+    data['pack_awards'] = pack_awards;
     return data
 }
 // demo
