@@ -14,10 +14,18 @@ from db.db_server_version import ServerVersion
 
 class GameUpdateRenderHandler(BaseHandler):
     @asynchronous
+    @gen.coroutine
     def self_get(self):
+        serverVersionRec= yield self.application.dbmgr.serverVersionDB.select(conf.PLATFORM)
+        if serverVersionRec==None:
+            currentVersion=0
+        else:
+            currentVersion=serverVersionRec.toInnerVersion()
+
         result = {
             'channels': json.dumps(conf.getChannelList()),
             'defaultChannelName':json.dumps(conf.getChannelNameMap()),
+            'platformServerVersion':currentVersion,
         }
         print(result)
         self.render("game_update.html",title="动态更新",result=result)
@@ -196,16 +204,26 @@ class GameServerVersionRenderHandler(BaseHandler):
         channel_map = conf.getChannelPlatformMap()
         channels = conf.getChannelList()
 
+        versionData={}
+        serverVersionRec= yield self.application.dbmgr.serverVersionDB.select(conf.PLATFORM)
+        if serverVersionRec!=None:
+            versionData[conf.PLATFORM]=serverVersionRec.toJsonObj()
+            currentVersion=serverVersionRec.toInnerVersion()
+        else:
+            currentVersion=0
+
+
         data = {}
         for i in channels:
             dynamicRec=yield self.application.dbmgr.dynamicVersionUpdateDB.select_max_version(i)
             if dynamicRec!= None:
                 data[dynamicRec.channel]=dynamicRec.toJsonObj()
+            else:
+                info=DynamicVersionUpdate()
+                info.channel=i
+                info.version=currentVersion
+                data[i]=info.toJsonObj()
 
-        versionData={}
-        versionRecs= yield self.application.dbmgr.serverVersionDB.select_all()
-        for rec in versionRecs:
-            versionData[rec.platform]=rec.toJsonObj()
         res = {
             'data': data,
             'versionData': versionData,

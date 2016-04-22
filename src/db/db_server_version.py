@@ -9,6 +9,8 @@ class ServerVersion:
         self.midVersion = 0
         self.minVersion = 0
         self.showVersion = ""
+    def toInnerVersion(self):
+        return self.maxVesion*1000*1000+self.midVersion*1000+self.minVersion
     def toJsonObj(self):
         data={}
         data["platform"]=self.platform
