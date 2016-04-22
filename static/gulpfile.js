@@ -14,7 +14,7 @@ var path = {
             './less/reward_input/reward_query.less',
             './less/reward_single/reward_single.less',
             './less/edit/edit-pack-add.less',
-            './less/gmt_manage/gmt_manage.less',
+            './less/account_manage/account_manage.less',
             './less/gmt_registration/gmt_registration.less',
             './less/gmt_competence/gmt_competence.less',
             './less/ann_edit/ann_edit.less',

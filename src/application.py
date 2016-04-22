@@ -32,7 +32,7 @@ class Application(tornado.web.Application):
             (r'/ping', ping.PingHandler),
             (r'/', LoginHandler),
             (r'/gmt/register', RegistrationRenderHandler),
-            (r'/gmt/manage', ManageRenderHandler),
+            (r'/account/manage', ManageRenderHandler),
             (r'/api/account/create', AccountCreateHandler),
             (r'/api/account/delete', AccountCreateHandler),
             (r'/api/account/update_level', AccountLevelHandler),

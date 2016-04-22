@@ -9,7 +9,7 @@ AppName="zjh"
 CONFIG_DIR="/data/%s/config/"%(AppName)
 
 initPermissionLevel=[db.db_permissions.NewGmToolAccountPermissionLevel(1,"管理员",''),
-db.db_permissions.NewGmToolAccountPermissionLevel(0,"浏览权限",'/ping,/game/address,/gmt/manage')]
+db.db_permissions.NewGmToolAccountPermissionLevel(0,"浏览权限",'/ping,/game/address,/account/manage,game/server_version_update')]
 
 DYNAMIC_USER='najaplus'
 DYNAMIC_PASSWORD='qHcdGfE6TH'
