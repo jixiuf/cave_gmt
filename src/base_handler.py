@@ -5,9 +5,12 @@ import tornado
 import json
 from tornado.web import asynchronous
 from tornado import  gen
+import conf
 import traceback
 from utils import get_all_urls
-from conf import QINIU_ACCESS_KEY,QINIU_SECRET_KEY
+
+from qiniu import Auth, put_file, etag, urlsafe_base64_encode
+import qiniu.config
 
 class BaseHandler(tornado.web.RequestHandler):
     def __init__(self, *args, **kwargs):
@@ -70,28 +73,29 @@ class BaseHandler(tornado.web.RequestHandler):
             self.application.logger.warning('errortrace\t%s' % (str(traceback.format_exc()),))
 
 class QiniuUptokenHandler(BaseHandler):
+    # http://127.0.0.1:8000/api/qiniu/uptoken?file_name=helllo&user=najaplus&password=qHcdGfE6TH
+    def self_get(self):
+        return self.self_post()
     def self_post(self):
-        import qiniu.conf
-        import qiniu.rs
 
-        qiniu.conf.ACCESS_KEY = QINIU_ACCESS_KEY
-        qiniu.conf.SECRET_KEY = QINIU_SECRET_KEY
+        #构建鉴权对象
+        q = Auth(conf.QINIU_ACCESS_KEY,conf.QINIU_SECRET_KEY)
+        bucket_name = conf.QINIU_SECRET_BUCKET_NAME
 
-        bucket_name = QINIU_SECRET_BUCKET_NAME
+        user = self.get_argument('user', None)
+        password = self.get_argument('password', None)
+        if user != conf.DYNAMIC_USER and password != conf.DYNAMIC_PASSWORD:
+            self.write(json.dumps({"error":"need user and password"}))
+            return
 
-        if self.request.body_arguments.has_key('file_name'):
-            key = self.get_argument('file_name')
-            policy = qiniu.rs.PutPolicy(bucket_name + ':' + key)
-            insert = self.get_argument('insert')
-            policy.returnBody = '{ "url": "http://$(bucket).qiniudn.com/$(key)" }'
-            if insert == 'true':
-                policy.insertOnly = 1
+        key = self.get_argument('file_name')
+        if key==None or key=="":
+            self.write(json.dumps({"error":"need file_name param"}))
+            return
         else:
-            policy = qiniu.rs.PutPolicy(bucket_name)
-
-        uptoken = policy.token()
-
-        result = {
-            'uptoken': uptoken
-        }
-        self.write(json.dumps(result))
+            #生成上传 Token，可以指定过期时间等
+            token = q.upload_token(bucket_name, key, 3600)
+            result = {
+                'uptoken': token
+            }
+            self.write(json.dumps(result))
