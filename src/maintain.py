@@ -5,8 +5,9 @@ __author__ = 'jixiufeng'
 from datetime import datetime, timedelta
 import utils
 import redis_notify
-from base_handler import *
+from base_handler import BaseHandler
 from tornado.web import asynchronous
+from tornado import  gen
 
 class Maintain(BaseHandler):
     @asynchronous

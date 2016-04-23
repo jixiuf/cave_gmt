@@ -7,11 +7,11 @@ from tornado.web import asynchronous
 from tornado import  gen
 import conf
 import traceback
-from utils import get_all_urls
+import utils
 import hashlib
 
 from qiniu import Auth, put_file, etag, urlsafe_base64_encode
-import qiniu.config
+# import qiniu.config
 
 class BaseHandler(tornado.web.RequestHandler):
     def __init__(self, *args, **kwargs):
@@ -38,7 +38,7 @@ class BaseHandler(tornado.web.RequestHandler):
             self.no_permissions()
         else:
             if gmAccount.isAdmin():
-                urls = get_all_urls(self.application.handlers).split(',')
+                urls = utils.get_all_urls(self.application.handlers).split(',')
             else:
                 urls = gmAccount.urls.split(',')
             self.check_permissions(urls)

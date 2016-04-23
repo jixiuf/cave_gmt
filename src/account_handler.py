@@ -1,9 +1,11 @@
 #coding=utf-8
 __author__ = 'jixiufeng'
 
-from base_handler import *
+from tornado import  gen
+from base_handler import BaseHandler
 from tornado.web import asynchronous
 import hashlib
+import json
 
 class AccountManageRenderHandler(BaseHandler):
     @asynchronous

@@ -1,8 +1,8 @@
 #  -*- coding:utf-8 -*-
 from tornado import  gen
 import os,sys
-modulepath = os.getcwd()+'/..'
-sys.path.append(modulepath)
+# modulepath = os.getcwd()+'/..'
+# sys.path.append(modulepath)
 import hashlib
 
 def NewGmToolAccountPermissionLevel(level,levelDesc,urls):

@@ -3,8 +3,10 @@ __author__ = 'jixiufeng'
 
 
 import utils
-from base_handler import *
+from base_handler import BaseHandler
 from tornado.web import asynchronous
+from tornado import  gen
+
 
 class PresentPackList(BaseHandler):
     @asynchronous
