@@ -10,14 +10,14 @@ import conf
 from tornado.options import  options
 from logger import *
 import db.dbmgr
-import ping
 
 import handler
-from handler.login_handler import *
-from handler.account_handler import *
+from handler.ping import PingHandler
+from handler.login import *
+from handler.account import *
 from handler.present_pack import *
 from handler.maintain import *
-from version_handle import *
+from handler.version import *
 
 from tornado.ioloop import IOLoop
 
@@ -30,7 +30,7 @@ class Application(tornado.web.Application):
     def __init__(self):
 
         handlers = [
-            (r'/ping', ping.PingHandler),
+            (r'/ping', PingHandler),
             (r'/', LoginHandler),
             (r'/account/register', AccountRegistrationRenderHandler),
             (r'/account/manage', AccountManageRenderHandler),

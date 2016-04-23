@@ -2,8 +2,8 @@
 __author__ = 'jixiufeng'
 
 
+from handler.base import BaseHandler
 import utils
-from base_handler import BaseHandler
 from tornado.web import asynchronous
 from tornado import  gen
 

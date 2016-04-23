@@ -2,7 +2,7 @@
 __author__ = 'jixiufeng'
 
 from tornado import  gen
-from base_handler import BaseHandler
+from handler.base import *
 from tornado.web import asynchronous
 import hashlib
 import json

@@ -4,7 +4,7 @@ __author__ = 'jixiufeng'
 import tornado
 from tornado import  gen
 from tornado.web import asynchronous
-from base_handler import BaseHandler
+from handler.base import BaseHandler
 import sys
 import json
 import time
