@@ -8,6 +8,8 @@ import utils
 from tornado.web import asynchronous
 from tornado import  gen
 import app
+import json
+import time
 from datetime import datetime, timedelta
 
 
@@ -23,6 +25,7 @@ class MailEdit(BaseHandler):
         award= self.get_argument('awards')
         title=self.get_argument('title','')
         content=self.get_argument('content','1')
+        mailContent=json.dumps({"title":title,"text":content,"sender":self.account})
         startTime=self.get_argument('startTime',datetime.now())
         endTime=self.get_argument('startTime',datetime.now()+ timedelta(days=7))
         # packIcon=self.get_argument('pack_icon')
@@ -36,9 +39,9 @@ class MailEdit(BaseHandler):
             uinList.extend(uinListFromSUinList)
             uinList.extend(uinListFromNickNameList) # str list
         for uin in uinList:
-            mailId=1
-            app.DBMgr.getMailDB().add(mailId,uin,startTime,endTime,award,content)
-            return
+            mailId= int(time.time()*1000000)
+            app.DBMgr.getMailDB().add(mailId,uin,startTime,endTime,award,mailContent)
+            time.sleep(0.001)
 
 
     @gen.coroutine
