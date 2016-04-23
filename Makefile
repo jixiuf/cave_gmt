@@ -21,3 +21,5 @@ build-dep:
 	./virtual/bin/pip install redis
 	./virtual/bin/pip install tornado-mysql
 	cd src/tea;sh buildtea.sh
+clean:
+	find . -name "*.pyc" -exec rm {} \;

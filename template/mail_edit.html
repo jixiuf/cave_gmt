@@ -1,0 +1,73 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/mail_edit.css" rel="stylesheet" type="text/css"/>
+<link href="../static/dist/award_select.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+
+<div class="ui-mail-edit">
+    <h2 class="form-signin-heading">邮件编辑</h2>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">邮件标题</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control ui-mail-title op-mail-title" id="op-mail-title" placeholder="邮件标题">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">玩家id</label>
+            <div class="col-sm-10">
+                <textarea type="text" class="form-control ui-playerid" id='op-playerid' placeholder="逗号或换行分隔的玩家id(长短都行)，为空时表示给发给所有玩家"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">邮件内容</label>
+            <div class="col-sm-10">
+                <textarea type="text" class="form-control op-mail-content" id='op-mail-content' placeholder="邮件内容"></textarea>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">奖励</label>
+            {% include award_select_template.html %}
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default op-submit-btn" id='op-submit-btn'>保存</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src='../static/javascript/base/award_select.js'>
+</script>
+<script type="text/javascript">
+ getAwardIdFun();
+
+ var  titleEl = $('#op-mail-title');
+ var  contentEl = $('#op-mail-content');
+ var  playerIdEl = $('#op-playerid');
+ var ajaxing = false;
+ var submitEl = $('#op-submit-btn');
+ submitEl.on('click', function(){
+     var data=getAwardDataFun();
+     data['title'] = titleEl.val();
+     data['content'] =contentEl.val() ;
+     data['playerid'] =playerIdEl.val() ;
+     ajaxing = true;
+     $.ajax({
+         url: '/mail/edit',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          location.href = '/mail/edit'
+      });
+     return false;
+
+ });
+</script>
+{% end %}

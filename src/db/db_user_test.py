@@ -27,6 +27,6 @@ class UserDBTestCase(tornado.testing.AsyncTestCase):
         uin=yield self.userDB.select_uin_by_suin("3333")
         self.assertEqual (None,uin)
 
-        data=yield self.userDB.select_uin_list_by_suins(str(suin))
+        data=yield self.userDB.select_uin_list_by_suins(str(suin),False)
         self.assertEqual (1,len(data))
         self.assertEqual (3,data[0])

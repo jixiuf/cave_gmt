@@ -30,7 +30,6 @@ class GameUpdateRenderHandler(BaseHandler):
             'defaultChannelName':json.dumps(conf.getChannelNameMap()),
             'platformServerVersion':currentVersion,
         }
-        print(result)
         self.render("game_update.html",title="动态更新",result=result)
 
 class DynamicHandler(tornado.web.RequestHandler):
@@ -245,7 +244,6 @@ class GameServerVersionRenderHandler(BaseHandler):
             'defaultChannelName':conf.getChannelNameMap(),
 
         }
-        print(res)
         self.render("server_version_update.html",title="服务器版本号更新",result=json.dumps(res))
 
 class ServerVersionHandler(BaseHandler):

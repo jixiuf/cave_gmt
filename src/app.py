@@ -19,6 +19,7 @@ from handler.present_pack import *
 from handler.maintain import *
 from handler.version import *
 from handler.award import *
+from handler.mail import *
 
 from tornado.ioloop import IOLoop
 
@@ -44,8 +45,13 @@ class Application(tornado.web.Application):
             (r'/present_pack/list', PresentPackList),
             (r'/present_pack/show_or_hide', PresentPackHideShow),
             (r'/present_pack/add', PresentPackAdd),
+
             (r'/award/sub_id_list', AwardSubIdList),
             (r'/award/id_list', AwardIdList),
+
+            (r'/mail/edit', MailEdit),
+
+
 
 
             (r'/maintain/mgr', Maintain),

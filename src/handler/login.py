@@ -7,6 +7,7 @@ from handler.base import BaseHandler
 from tornado.web import asynchronous
 from tornado import  gen
 import app
+import json
 
 class LoginHandler(BaseHandler):
     @gen.coroutine

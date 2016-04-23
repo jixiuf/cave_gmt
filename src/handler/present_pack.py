@@ -15,7 +15,6 @@ class PresentPackList(BaseHandler):
     def self_get(self):
         # playerInfo=yield app.DBMgr.getUserDB().select_by_uin(144150423530676224)
         # playerInfo=yield app.DBMgr.getUserAttrDB(1).select_by_uin(144150423530676224)
-        # print playerInfo
         packs=yield app.DBMgr.presentPackDB.select_all()
         self.render("present_pack_list.html",title="礼包列表",packs=packs)
 class PresentPackHideShow(BaseHandler):

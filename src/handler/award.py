@@ -64,7 +64,6 @@ class AwardSubIdList(BaseHandler):
     #         data['value']=leader.id
     #         result.append(data)
 
-    #     print result
     #     info['action'] = 'success'
     #     # info['award_type'] = 5
     #     info['result'] = json.dumps(result)

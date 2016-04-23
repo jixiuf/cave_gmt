@@ -9,7 +9,15 @@ AppName="zjh"
 CONFIG_DIR="/data/%s/config/"%(AppName)
 
 initPermissionLevel=[db.db_permissions.NewGmToolAccountPermissionLevel(1,"管理员",''),
-db.db_permissions.NewGmToolAccountPermissionLevel(0,"浏览权限",'/ping,/game/address,/account/manage,game/server_version_update,/maintain/mgr')]
+db.db_permissions.NewGmToolAccountPermissionLevel(0,"浏览权限",
+                                                  ','.join(['/ping',
+                                                       '/game/address',
+                                                       '/account/manage',
+                                                       'game/server_version_update',
+                                                       '/maintain/mgr',
+                                                       '/award/sub_id_list',
+                                                       '/award/id_list',])
+)]
 
 DYNAMIC_USER='najaplus'
 DYNAMIC_PASSWORD='qHcdGfE6TH'
@@ -30,7 +38,7 @@ def getChannelList():
             return channels
         for k in value["channel"]:
             channels.append(int(k))
-    channels.sort()
+            channels.sort()
     return channels
 
 # key=渠道号，value =渠道名

@@ -58,8 +58,6 @@ class BaseHandler(tornado.web.RequestHandler):
         count = 0
         for i in urls:
             count += 1
-            print(i)
-            print(self.request.uri.split('?')[0])
             if i == self.request.uri.split('?')[0]:
                 self.have_permissions()
                 return

@@ -92,13 +92,38 @@ CREATE TABLE if not exists `user` (
         raise gen.Return(res)
 
     @gen.coroutine
-    def select_uin_list_by_suins(self,suins): # suins="1,2,3"
+    def select_uin_list_by_suins(self,suins,asStr): # suins="1,2,3", return []
         if suins.strip()=="":
             raise gen.Return([])
-
+        if asStr==None or asStr ==False:
+            mapRow=self.mapRowUinAsInt
+        else:
+            mapRow=self.mapRowUinAsStr
 
         query="select uin from user where autoIncrementId in(%s)"%(suins)
-        def mapRowUin(row):
-            return row[0]
-        res=yield self.dbtemplate.query(query,mapRowUin)
+        res=yield self.dbtemplate.query(query,mapRow)
+        raise gen.Return(res)
+
+    def mapRowUinAsInt(self,row):
+        return row[0]
+    def mapRowUinAsStr(self,row):
+        return str(row[0])
+
+    # select
+    @gen.coroutine
+    def select_uin_list_by_nickname(self,nicknameList,asStr):
+        if len(nicknameList)==0:
+            raise gen.Return([])
+
+        if asStr==None or asStr ==False:
+            mapRow=self.mapRowUinAsInt
+        else:
+            mapRow=self.mapRowUinAsStr
+
+        newList=[]
+        for nickName in nicknameList:
+            newList.append( '\''+nickName+'\'')
+
+        query="select uin from UserAttr where nickName in(%s)"%(",".join(newList))
+        res=yield self.dbtemplate.query(query,mapRow)
         raise gen.Return(res)

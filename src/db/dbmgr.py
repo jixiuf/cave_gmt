@@ -144,7 +144,7 @@ class DBMgr:
     def getUserAttrDB(self,server=1):
         return UserAttrDB(self.getGameDB(server))
     def getUserDB(self):
-        return UserDB(self.getProfileDB(),self.mode)
+        return UserDB(self.getProfileDB())
 
     # def getDesignHeroDB(self,server=1):
     #     return DesignBLeaderDB(self.getDesignDB(server),self.locale)

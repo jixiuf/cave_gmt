@@ -112,7 +112,7 @@ getAwardDataFun=function() {
         id,count;
     goods = $('.op-goods-item');
     if(goods.length == 0) {
-        alert("未添加任何奖品");
+        data['awards'] = award_awards;
         return data;
     }
     for(var i = 0, len = goods.length; i < len; i++ ) {
