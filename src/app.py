@@ -21,6 +21,8 @@ from handler.version import *
 
 from tornado.ioloop import IOLoop
 
+DBMgr=db.dbmgr.DBMgr()
+Redis=redis.Redis()
 
 class Application(tornado.web.Application):
     """
@@ -76,11 +78,13 @@ class Application(tornado.web.Application):
         self.logger = get_logger('server', os.path.join(options.data_dir, 'server.log'))
         # self.channel_logger = get_logger('channel',os.path.join(options.data_dir,'channel.log'))
         self.gm_logger = get_logger('gminfo',os.path.join(options.data_dir,'gminfo.log'))
+        global DBMgr
+        DBMgr.init(options.mode,options.locale)
+        DBMgr.load()
+        global Redis
+        Redis =initRedisConfig(options.mode)
 
 
-        self.dbmgr=db.dbmgr.DBMgr(options.mode,options.locale)
-        self.dbmgr.load()
-        self.redis=self.initRedisConfig(options.mode)
 
 
 
@@ -89,12 +93,12 @@ class Application(tornado.web.Application):
         close_logger(self.gm_logger)
 
 
-    def initRedisConfig(self,mode):
-        with open(conf.CONFIG_DIR+"%s.json"%(mode)) as data_file:
-            value = json.load(data_file)
-            if value==None:
-                return None
-            redis_host = value["redis"]['addr'].split(':')[0]
-            redis_port = value["redis"]['addr'].split(':')[1]
-            return redis.Redis(host=redis_host, port=redis_port, db=0)
+def initRedisConfig(mode):
+    with open(conf.CONFIG_DIR+"%s.json"%(mode)) as data_file:
+        value = json.load(data_file)
+        if value==None:
+            return None
+        redis_host = value["redis"]['addr'].split(':')[0]
+        redis_port = value["redis"]['addr'].split(':')[1]
+        return redis.Redis(host=redis_host, port=redis_port, db=0)
 

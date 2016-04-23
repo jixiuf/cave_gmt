@@ -9,6 +9,7 @@ import conf
 import traceback
 import utils
 import hashlib
+import app
 
 from qiniu import Auth, put_file, etag, urlsafe_base64_encode
 # import qiniu.config
@@ -22,7 +23,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def verifyAccount(self,account,password):
         if account=="" or password=="" or password==None or account==None:
             raise gen.Return(False)
-        gmAccount=yield self.application.dbmgr.permissionDB.select(account)
+        gmAccount=yield app.DBMgr.permissionDB.select(account)
         if gmAccount==None:
             raise gen.Return(False)
         hpassword = hashlib.sha1(password).hexdigest()
@@ -33,7 +34,7 @@ class BaseHandler(tornado.web.RequestHandler):
     @gen.coroutine
     def permission_verify(self):
         self.account = self.get_secure_cookie('user')
-        gmAccount =  yield self.application.dbmgr.permissionDB.select(self.account)
+        gmAccount =  yield app.DBMgr.permissionDB.select(self.account)
         if gmAccount==None:
             self.no_permissions()
         else:

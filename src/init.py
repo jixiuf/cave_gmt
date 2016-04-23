@@ -3,7 +3,7 @@ from tornado.options import define
 import os
 import os.path
 
-from application import Application
+from app import Application
 define("port", default=8000, help="run on the given port", type=int)
 define("host", default="127.0.0.1", help="host or ip", type=str)
 define("mode", default="dev", help="mode (dev or pro)", type=str)
@@ -22,10 +22,10 @@ def init():
 
 def get_app():
     init()
-    application = Application()
-    return application
+    app = Application()
+    return app
 
 def get_test_app():
     init()
-    application = Application()
-    return application
+    app = Application()
+    return app

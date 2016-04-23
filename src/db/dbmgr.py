@@ -70,9 +70,10 @@ class DBConfig:
 
 
 class DBMgr:
-    def __init__(self,mode,locale):
+    def init(self,mode,locale):
         self.mode=mode
         self.locale=locale
+
     def get_all_server_id(self):
         list=[]
         with open("%s/%s.json"%(conf.CONFIG_DIR,self.mode)) as data_file:

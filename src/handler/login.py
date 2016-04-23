@@ -2,9 +2,11 @@
 
 __author__ = 'jixiufeng'
 
+import traceback
 from handler.base import BaseHandler
 from tornado.web import asynchronous
 from tornado import  gen
+import app
 
 class LoginHandler(BaseHandler):
     @gen.coroutine

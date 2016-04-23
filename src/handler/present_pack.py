@@ -6,16 +6,17 @@ from handler.base import BaseHandler
 import utils
 from tornado.web import asynchronous
 from tornado import  gen
+import app
 
 
 class PresentPackList(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
-        # playerInfo=yield self.application.dbmgr.getUserDB().select_by_uin(144150423530676224)
-        # playerInfo=yield self.application.dbmgr.getUserAttrDB(1).select_by_uin(144150423530676224)
+        # playerInfo=yield app.DBMgr.getUserDB().select_by_uin(144150423530676224)
+        # playerInfo=yield app.DBMgr.getUserAttrDB(1).select_by_uin(144150423530676224)
         # print playerInfo
-        packs=yield self.application.dbmgr.presentPackDB.select_all()
+        packs=yield app.DBMgr.presentPackDB.select_all()
         self.render("present_pack_list.html",title="礼包列表",packs=packs)
 class PresentPackHideShow(BaseHandler):
     @asynchronous
@@ -23,14 +24,14 @@ class PresentPackHideShow(BaseHandler):
     def self_post(self):
         id=self.get_argument('id')
         hide=self.get_argument('hide')
-        self.application.dbmgr.presentPackDB.update_hide(id,hide)
+        app.DBMgr.presentPackDB.update_hide(id,hide)
         self.write('success')
 
 class PresentPackAdd(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
-        awardList=yield self.application.dbmgr.getAwardDB().select_all()
+        awardList=yield app.DBMgr.getAwardDB().select_all()
         data={}
         for a in awardList:
             # 如果 has_id 为true ,则用于处理 装备 卡片等有id 的奖品，以例js 显示field供输入id
@@ -46,7 +47,7 @@ class PresentPackAdd(BaseHandler):
         packVersion=self.get_argument('version','1')
         # packIcon=self.get_argument('pack_icon')
         status=self.get_argument('status','')
-        yield self.application.dbmgr.presentPackDB.add(packName,awardList,packVersion,status)
+        yield app.DBMgr.presentPackDB.add(packName,awardList,packVersion,status)
         # self.render("present_pack_add.html",title="礼包打包")
 
 class PresentPackIdList(BaseHandler):
@@ -81,7 +82,7 @@ class PresentPackIdList(BaseHandler):
     # @asynchronous
     # @gen.coroutine
     # def id_list_leader(self):
-    #     bLeaderList=yield self.application.dbmgr.getDesignLeaderDB().select_all()
+    #     bLeaderList=yield app.DBMgr.getDesignLeaderDB().select_all()
     #     info = {}
     #     result = []
     #     for leader in bLeaderList:
@@ -100,7 +101,7 @@ class PresentPackIdList(BaseHandler):
     # @asynchronous
     # @gen.coroutine
     # def id_list_hero(self):
-    #     bLeaderList=yield self.application.dbmgr.getDesignHeroDB().select_all()
+    #     bLeaderList=yield app.DBMgr.getDesignHeroDB().select_all()
     #     info = {}
     #     result = []
     #     for hero in bLeaderList:

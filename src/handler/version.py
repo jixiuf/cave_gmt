@@ -13,12 +13,13 @@ import conf
 from db.db_dynamic_version_update import DynamicVersionUpdate
 from db.db_version_update import VersionUpdate
 from db.db_server_version import ServerVersion
+import app
 
 class GameUpdateRenderHandler(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
-        serverVersionRec= yield self.application.dbmgr.serverVersionDB.select(conf.PLATFORM)
+        serverVersionRec= yield app.DBMgr.serverVersionDB.select(conf.PLATFORM)
         if serverVersionRec==None:
             currentVersion=0
         else:
@@ -80,7 +81,7 @@ class DynamicHandler(tornado.web.RequestHandler):
     @asynchronous
     @gen.coroutine
     def success(self,platform,channel,version,url,size,comment,note,svnVersion,isRedirect):
-        info=yield self.application.dbmgr.dynamicVersionUpdateDB.select(int(channel),int(version))
+        info=yield app.DBMgr.dynamicVersionUpdateDB.select(int(channel),int(version))
         if info==None:
             info=DynamicVersionUpdate()
             info.channel=int(channel)
@@ -90,18 +91,18 @@ class DynamicHandler(tornado.web.RequestHandler):
             info.comment=comment
             info.note=note
             info.svnVersion=int(svnVersion)
-            yield self.application.dbmgr.dynamicVersionUpdateDB.add(info)
+            yield app.DBMgr.dynamicVersionUpdateDB.add(info)
         else:
             info.url=url
             info.size=int(size)
             info.comment=comment
             info.note=note
             info.svnVersion=int(svnVersion)
-            yield self.application.dbmgr.dynamicVersionUpdateDB.update(info)
+            yield app.DBMgr.dynamicVersionUpdateDB.update(info)
         res = {
             'status': 'success'
         }
-        self.application.redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
+        app.Redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
         self.write(res)
         if isRedirect:
             self.redirect(r'/game/server_version_update')
@@ -127,7 +128,7 @@ class VersionUpdateHandler(BaseHandler):
         version = self.get_argument('version')
         try:
             for i in update_info:
-                info=yield self.application.dbmgr.dynamicVersionUpdateDB.select(i,int(version))
+                info=yield app.DBMgr.dynamicVersionUpdateDB.select(i,int(version))
                 if info==None:
                     info=DynamicVersionUpdate()
                     info.channel=i
@@ -137,16 +138,16 @@ class VersionUpdateHandler(BaseHandler):
                     # info.comment=comment
                     info.note=update_info[i]['reason']
                     # info.svnVersion=int(svnVersion)
-                    yield self.application.dbmgr.dynamicVersionUpdateDB.add(info)
+                    yield app.DBMgr.dynamicVersionUpdateDB.add(info)
                 else:
                     info.url=update_info[i]['url']
                     info.size=int(update_info[i]['size'])
                     info.comment=comment
                     info.note=update_info[i]['reason']
                     # info.svnVersion=int(svnVersion)
-                    yield self.application.dbmgr.dynamicVersionUpdateDB.update(info)
+                    yield app.DBMgr.dynamicVersionUpdateDB.update(info)
             action = 'success'
-            self.application.redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
+            app.Redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
         except:
             tuple = sys.exc_info()
             if tuple[1][0] == 1062:
@@ -162,7 +163,7 @@ class GameAddressRenderHandler(BaseHandler):
     def self_get(self):
 
         channels = conf.getChannelList()
-        res=yield self.application.dbmgr.versionUpdateDB.select_all()
+        res=yield app.DBMgr.versionUpdateDB.select_all()
         info = {}
         for rec in res:
             info[rec.channel] = {
@@ -190,14 +191,14 @@ class GameAddressHandler(BaseHandler):
             self.write(json.dumps({ 'action': 'url must start with http:// or https://' }))
             return
 
-        yield self.application.dbmgr.versionUpdateDB.add(info)
-        self.application.redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
+        yield app.DBMgr.versionUpdateDB.add(info)
+        app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
         self.write(json.dumps({ 'action': 'success' }))
 
 # class CacheDynamicHandler(BaseHandler):
 
 #     def self_post(self):
-#         self.application.redis.publish('centerserver_notify_queue', '{"type":9, "time":%s}'%(int(time.time()*1000)))
+#         app.Redis.publish('centerserver_notify_queue', '{"type":9, "time":%s}'%(int(time.time()*1000)))
 #         self.write(json.dumps({ 'action': 'success' }))
 
 # #game test use
@@ -205,7 +206,7 @@ class GameAddressHandler(BaseHandler):
 
 #     def self_post(self):
 #         self.application.dynamic_db.truncate()
-#         self.application.redis.publish('centerserver_notify_queue', '{"type":9, "time":%s}'%(int(time.time()*1000)))
+#         app.Redis.publish('centerserver_notify_queue', '{"type":9, "time":%s}'%(int(time.time()*1000)))
 #         self.write(json.dumps({ 'action': 'success' }))
 
 #game server version update page
@@ -218,7 +219,7 @@ class GameServerVersionRenderHandler(BaseHandler):
         channels = conf.getChannelList()
 
         versionData={}
-        serverVersionRec= yield self.application.dbmgr.serverVersionDB.select(conf.PLATFORM)
+        serverVersionRec= yield app.DBMgr.serverVersionDB.select(conf.PLATFORM)
         if serverVersionRec!=None:
             versionData[conf.PLATFORM]=serverVersionRec.toJsonObj()
             currentVersion=serverVersionRec.toInnerVersion()
@@ -228,7 +229,7 @@ class GameServerVersionRenderHandler(BaseHandler):
 
         data = {}
         for i in channels:
-            dynamicRec=yield self.application.dbmgr.dynamicVersionUpdateDB.select_max_version(i)
+            dynamicRec=yield app.DBMgr.dynamicVersionUpdateDB.select_max_version(i)
             if dynamicRec!= None:
                 data[dynamicRec.channel]=dynamicRec.toJsonObj()
             else:
@@ -255,25 +256,25 @@ class ServerVersionHandler(BaseHandler):
         version = int(self.get_argument('version'))
         platform=int(self.get_argument('platform'))
 
-        sv=yield self.application.dbmgr.serverVersionDB.select(platform)
+        sv=yield app.DBMgr.serverVersionDB.select(platform)
         sv.platform=platform
         sv.maxVesion=version/(1000*1000)
         sv.midVersion=(version/(1000) -sv.maxVesion*1000)
         sv.minVersion=version%1000
-        yield self.application.dbmgr.serverVersionDB.update(sv)
+        yield app.DBMgr.serverVersionDB.update(sv)
 
 
-        self.application.redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
+        app.Redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
 #       for i in a:
-#           self.application.redis.publish('centerserver_notify_queue', '{"type":7, "time":%s}'%(int(time.time()*1000)))
-#       self.application.redis.publish('centerserver_notify_queue', '{"type":9, "time":%s}'%(int(time.time()*1000)))
+#           app.Redis.publish('centerserver_notify_queue', '{"type":7, "time":%s}'%(int(time.time()*1000)))
+#       app.Redis.publish('centerserver_notify_queue', '{"type":9, "time":%s}'%(int(time.time()*1000)))
 
         # self.application.server_db.select_using(self.redis_push)
 
     # def redis_push(self,res):
     #     for i in res:
-    #         self.application.redis.publish('notify_queue_%s_%s'%(i[0],i[2]), '{"type":7, "time":%s}'%(int(time.time()*1000)))
+    #         app.Redis.publish('notify_queue_%s_%s'%(i[0],i[2]), '{"type":7, "time":%s}'%(int(time.time()*1000)))
 
-    #     self.application.redis.publish('centerserver_notify_queue', '{"type":7, "time":%s}'%(int(time.time()*1000)))
-    #     self.application.redis.publish('centerserver_notify_queue', '{"type":9, "time":%s}'%(int(time.time()*1000)))
+    #     app.Redis.publish('centerserver_notify_queue', '{"type":7, "time":%s}'%(int(time.time()*1000)))
+    #     app.Redis.publish('centerserver_notify_queue', '{"type":9, "time":%s}'%(int(time.time()*1000)))
 
