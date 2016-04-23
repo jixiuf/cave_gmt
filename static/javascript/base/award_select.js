@@ -1,12 +1,12 @@
-var goodsAddEl = $('#op-pack-goods-add'),
-    listEl = $('#op-pack-content-list'),
-    typeEl = $('#op-pack-goods-type'),
-    numEl = $('#op-pack-goods-num'),
-    goodsIdEl = $('#op-pack-goods-id'),
-    goodsIdNameEl = $('#op-pack-goods_id_name'),
+var goodsAddEl = $('#op-award-goods-add'),
+    listEl = $('#op-award-content-list'),
+    typeEl = $('#op-award-goods-type'),
+    numEl = $('#op-award-goods-num'),
+    goodsIdEl = $('#op-award-goods-id'),
+    goodsIdNameEl = $('#op-award-goods_id_name'),
     idData,
-    getIdFun,
-    getPackDataFun;
+    getAwardSubIdFun,
+    getAwardDataFun;
 
 
 goodsAddEl.on('click', function() {
@@ -33,14 +33,14 @@ goodsAddEl.on('click', function() {
     if(typeId != '0' && count != ''&&count!='0') {
         typeName = typeEl.find("option:selected").text();
         if(goodsId==""){
-            htmlStr += '<li class="ui-pack-item clearfix op-goods-item" data-id="' + typeId + '" data-goodsid="' + goodsId + '" data-count="' + count + '">' +
+            htmlStr += '<li class="ui-award-item clearfix op-goods-item" data-id="' + typeId + '" data-goodsid="' + goodsId + '" data-count="' + count + '">' +
                 '<span>' + typeName + 'x' + count + '</span>' +
-                '<button class="btn btn-default ui-item-delete op-pack-award-delete">删除</button>' +
+                '<button class="btn btn-default ui-item-delete op-award-delete">删除</button>' +
                 '</li>';
         }else{
-            htmlStr += '<li class="ui-pack-item clearfix op-goods-item" data-id="' + typeId + '" data-goodsid="' + goodsId + '" data-count="' + count + '">' +
+            htmlStr += '<li class="ui-award-item clearfix op-goods-item" data-id="' + typeId + '" data-goodsid="' + goodsId + '" data-count="' + count + '">' +
                 '<span>[' + typeName +" "+goodsIdName+ ']x' + count + '</span>' +
-                '<button class="btn btn-default ui-item-delete op-pack-award-delete">删除</button>' +
+                '<button class="btn btn-default ui-item-delete op-award-delete">删除</button>' +
                 '</li>';
         }
         listEl.append(htmlStr);
@@ -53,13 +53,13 @@ goodsAddEl.on('click', function() {
     }
 });
 
-listEl.delegate('.op-pack-award-delete', 'click', function(e) {
+listEl.delegate('.op-award-delete', 'click', function(e) {
     $(e.currentTarget).parent().remove();
     return false;
 });
 
-getIdFun = function(type) {
-    var url='/present_pack/id_list';
+getAwardSubIdFun = function(type) {
+    var url='/award/sub_id_list';
     var infoType = type;
 
     ajaxing = true;
@@ -99,15 +99,15 @@ goodsIdEl.on('click', function() {
     hasId=tokens[1];
     if(ajaxing) return false;
     if(hasId=="true") {
-        getIdFun(type);
+        getAwardSubIdFun(type);
     } else {
         return false;
     }
 });
 
-getPackDataFun=function() {
+getAwardDataFun=function() {
     var data = {},
-        pack_awards = "",
+        award_awards = "",
         goods = $('.op-goods-item'),
         id,count;
     goods = $('.op-goods-item');
@@ -123,25 +123,47 @@ getPackDataFun=function() {
             goodsId='0';
         }
         count = goods.eq(i).data('count');
-        pack_awards=pack_awards+ id+":"+goodsId+":"+count;
+        award_awards=award_awards+ id+":"+goodsId+":"+count;
         if (i!=len-1) {
-            pack_awards=pack_awards+"|"
+            award_awards=award_awards+"|"
         }
     }
-    data['pack_awards'] = pack_awards;
+    data['awards'] = award_awards;
     return data
+}
+
+getAwardIdFun = function() {
+    var url='/award/id_list';
+
+    ajaxing = true;
+    $.ajax({
+        url: url,
+        type: 'post',
+        data:{}
+    })
+        .done(function(data) {
+            if(data['action'] == 'success') {
+                ajaxing = false;
+                idData=JSON.parse(data['result']);
+                for(var key in idData){
+                    htmlStr ="<option value='"+key+":"+idData[key]["has_id"]+"'>"+idData[key]["name"]+"</option>"
+                    typeEl.append(htmlStr);
+                }
+            }
+        });
 }
 // demo
 // submitEl.on('click', function(){
 //     ajaxing = true;
 //     $.ajax({
-//         url: '/present_pack/add',
+//         url: '/present_award/add',
 //         type: 'post',
-//         data: getPackDataFun()
+//         data: getAwardDataFun()
 //     })
 //         .done(function(data) {
 //             ajaxing = false;
-//             location.href = '/present_pack/list'
+//             location.href = '/present_award/list'
 //         });
 //     return false;
 // });
+

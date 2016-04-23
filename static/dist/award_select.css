@@ -1,0 +1,19 @@
+.ui-goods {
+  max-width: 200px;
+  float: left;
+  margin-right: 15px;
+}
+.ui-list-wrap {
+  float: right;
+}
+.ui-list-wrap .ui-award-content {
+  margin: 15px 0 0 0;
+  padding: 0;
+  list-style: none;
+}
+.ui-list-wrap .ui-award-content .ui-award-item {
+  margin-bottom: 10px;
+}
+.ui-list-wrap .ui-award-content .ui-award-item .ui-item-delete {
+  float: right;
+}
