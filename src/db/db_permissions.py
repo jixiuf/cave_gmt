@@ -21,7 +21,7 @@ class GmToolAccount:
         self.passwd=""
         self.level = 0
         self.levelDesc = ""
-        self.urls=[]
+        self.urls=''
 
 class PermissionDB:
     def __init__(self,dbtemplate):
