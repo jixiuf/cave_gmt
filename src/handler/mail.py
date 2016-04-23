@@ -8,6 +8,7 @@ import utils
 from tornado.web import asynchronous
 from tornado import  gen
 import app
+from datetime import datetime, timedelta
 
 
 
@@ -19,17 +20,24 @@ class MailEdit(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_post(self):
-        awardList= self.get_argument('awards')
+        award= self.get_argument('awards')
         title=self.get_argument('title','')
         content=self.get_argument('content','1')
+        startTime=self.get_argument('startTime',datetime.now())
+        endTime=self.get_argument('startTime',datetime.now()+ timedelta(days=7))
         # packIcon=self.get_argument('pack_icon')
         playerId=self.userIdTrim(self.get_argument('playerid',''))
-        uinList,suinList,nickNameList=self.splitUinList(playerId)
-        uinListFromSUinList=yield self.suinList2uinList(suinList)
-        uinListFromNickNameList=yield self.nickNameList2uinList(nickNameList)
-        uinList.extend(uinListFromSUinList)
-        uinList.extend(uinListFromNickNameList) # str list
+        if playerId=="":
+            uinList=[0]
+        else:
+            uinList,suinList,nickNameList=self.splitUinList(playerId)
+            uinListFromSUinList=yield self.suinList2uinList(suinList)
+            uinListFromNickNameList=yield self.nickNameList2uinList(nickNameList)
+            uinList.extend(uinListFromSUinList)
+            uinList.extend(uinListFromNickNameList) # str list
         for uin in uinList:
+            mailId=1
+            app.DBMgr.getMailDB().add(mailId,uin,startTime,endTime,award,content)
             return
 
 

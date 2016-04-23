@@ -75,8 +75,7 @@ CREATE TABLE if not exists `user` (
     @gen.coroutine
     def add(self,uin):
         query="insert into user (uin) values(%d)"%(uin)
-        res=yield self.dbtemplate.queryObject(query,self.mapRow)
-        raise gen.Return(res)
+        yield self.dbtemplate.execSql(query)
 
     @gen.coroutine
     def select_by_uin(self,uin):

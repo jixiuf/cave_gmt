@@ -17,7 +17,7 @@ from db_permissions import PermissionLevelDB
 # from db_design_leader import DesignBLeaderDB
 # from db_design_hero import DesignBHeroDB
 from db_user import UserDB
-# from db_gamedb_user_attr import UserAttrDB
+from db_mail import MailDB
 from db_version_update import VersionUpdateDB
 from db_server_version import ServerVersionDB
 from db_dynamic_version_update import DynamicVersionUpdateDB
@@ -141,10 +141,11 @@ class DBMgr:
         print "after load application"
 
 
-    def getUserAttrDB(self,server=1):
-        return UserAttrDB(self.getGameDB(server))
     def getUserDB(self):
         return UserDB(self.getProfileDB())
+    def getMailDB(self,server=1):
+        return MailDB(self.getGameDB(server))
+
 
     # def getDesignHeroDB(self,server=1):
     #     return DesignBLeaderDB(self.getDesignDB(server),self.locale)
