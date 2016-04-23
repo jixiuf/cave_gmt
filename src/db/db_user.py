@@ -18,31 +18,87 @@ class User:
 
 
 class UserDB:
-    def __init__(self,dbtemplate,mode):
+    def __init__(self,dbtemplate):
         self.dbtemplate=dbtemplate
 
 
 
     def mapRow(self,row):
         d=User()
-        d.uin         =row[ 0]
-        d.accountId   =row[ 1]
-        d.password    =row[ 2]
-        d.accountType =row[ 3]
-        d.platform    =row[ 4]
-        d.server      =row[ 5]
-        d.channel     =row[ 6]
-        d.uuid        =row[ 7]
-        d.ip          =row[ 8]
-        d.os          =row[ 9]
-        d.osVersion   =row[10]
-        d.deviceModel =row[11]
-        d.createTime  =row[12]
+        d.uin         =row[ 0 ]
+        d.suin        =row[ 1 ]
+        d.accountId   =row[ 2 ]
+        d.password    =row[ 3 ]
+        d.accountType =row[ 4 ]
+        d.platform    =row[ 5 ]
+        d.server      =row[ 6 ]
+        d.channel     =row[ 7 ]
+        d.uuid        =row[ 8 ]
+        d.ip          =row[ 9 ]
+        d.os          =row[10 ]
+        d.osVersion   =row[11 ]
+        d.deviceModel =row[12 ]
+        d.createTime  =row[13 ]
         return d
 
     @gen.coroutine
-    def select_by_uin(self,uin):
-        query="select uin,accountId,password,accountType,platform,server,channel,uuid,ip,os,osVersion,deviceModel,createTime from user where uin=%s"%(uin)
-        print query
+    def create_table(self):
+        query = '''
+CREATE TABLE if not exists `user` (
+  `Uin` bigint(20) NOT NULL COMMENT '唯一ID',
+  `autoIncrementId` bigint(20) NOT NULL AUTO_INCREMENT,
+  `AccountId` varchar(64) NOT NULL DEFAULT '' COMMENT '设备ID',
+  `Password` varchar(64) NOT NULL DEFAULT '' COMMENT '设备ID',
+  `accountType` tinyint(4) NOT NULL DEFAULT '0' COMMENT '性别',
+  `platform` smallint(6) NOT NULL DEFAULT '0' COMMENT '平台',
+  `server` smallint(6) NOT NULL DEFAULT '0' COMMENT 'serverid',
+  `channel` int(11) NOT NULL DEFAULT '0' COMMENT '渠道',
+  `uuid` varchar(64) NOT NULL DEFAULT '' COMMENT '设备ID',
+  `ip` int(10) unsigned NOT NULL DEFAULT '0' COMMENT 'ip',
+  `os` tinyint(4) NOT NULL DEFAULT '0' COMMENT '系统',
+  `osVersion` varchar(32) NOT NULL DEFAULT '' COMMENT '系统',
+  `deviceModel` varchar(64) NOT NULL DEFAULT '' COMMENT '设备型号  iPhone 4S、iPhone 5S',
+  `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间时间',
+  PRIMARY KEY (`Uin`),
+  KEY `account_idx` (`AccountId`),
+  KEY `uuid` (`uuid`),
+  KEY `autoIncrementId_ix` (`autoIncrementId`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+'''
+        yield self.dbtemplate.execDDL(query)
+
+    @gen.coroutine
+    def truncate_table(self):
+        query="truncate table user "
+        yield self.dbtemplate.execDDL(query)
+
+    @gen.coroutine
+    def add(self,uin):
+        query="insert into user (uin) values(%d)"%(uin)
         res=yield self.dbtemplate.queryObject(query,self.mapRow)
+        raise gen.Return(res)
+
+    @gen.coroutine
+    def select_by_uin(self,uin):
+        query="select uin,autoIncrementId,accountId,password,accountType,platform,server,channel,uuid,ip,os,osVersion,deviceModel,createTime from user where uin=%s"%(uin)
+        res=yield self.dbtemplate.queryObject(query,self.mapRow)
+        raise gen.Return(res)
+    @gen.coroutine
+    def select_uin_by_suin(self,suin):
+        query="select uin from user where autoIncrementId=%s"%(suin)
+        def mapRowUin(row):
+            return row[0]
+        res=yield self.dbtemplate.queryObject(query,mapRowUin)
+        raise gen.Return(res)
+
+    @gen.coroutine
+    def select_uin_list_by_suins(self,suins): # suins="1,2,3"
+        if suins.strip()=="":
+            raise gen.Return([])
+
+
+        query="select uin from user where autoIncrementId in(%s)"%(suins)
+        def mapRowUin(row):
+            return row[0]
+        res=yield self.dbtemplate.query(query,mapRowUin)
         raise gen.Return(res)

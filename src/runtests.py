@@ -13,6 +13,7 @@ TEST_MODULES = [
     'db.db_server_version_test',
     "db.db_version_update_test",
     "db.db_dynamic_version_update_test",
+    "db.db_user_test",
     'handler.ping_test',
 ]
 
