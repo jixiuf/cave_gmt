@@ -6,7 +6,7 @@ import os.path
 
 import redis
 import tornado.web
-from conf import *
+import conf
 from tornado.options import  options
 from logger import *
 import db.dbmgr
@@ -89,7 +89,7 @@ class Application(tornado.web.Application):
 
 
     def initRedisConfig(self,mode):
-        with open(CONFIG_DIR+"%s.json"%(mode)) as data_file:
+        with open(conf.CONFIG_DIR+"%s.json"%(mode)) as data_file:
             value = json.load(data_file)
             if value==None:
                 return None

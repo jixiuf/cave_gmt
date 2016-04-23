@@ -3,7 +3,6 @@ from tornado import  gen
 import os,sys
 modulepath = os.getcwd()+'/..'
 sys.path.append(modulepath)
-import conf
 import hashlib
 
 def NewGmToolAccountPermissionLevel(level,levelDesc,urls):
