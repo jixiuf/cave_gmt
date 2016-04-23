@@ -1,6 +1,5 @@
 # -*- coding:utf-8 -*-
 __author__ = 'jixiufeng'
-
 import tornado.web
 
 class PingHandler(tornado.web.RequestHandler):
