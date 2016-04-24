@@ -22,7 +22,7 @@ class MailDraftDB:
   `startTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '邮件开始时间',
   `endTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '邮件结束时间',
   `awardStr` varchar(64) NOT NULL DEFAULT '' COMMENT '奖励内容',
-  `awardDesc` varchar(48) NOT NULL DEFAULT '' COMMENT '',
+  `awardDesc` varchar(1024) NOT NULL DEFAULT '' COMMENT '',
   `content` varchar(1024) NOT NULL DEFAULT '' COMMENT 'mail内容',
   `reason` varchar(64) NOT NULL DEFAULT '' COMMENT 'mail reason',
   status tinyint NOT NULL DEFAULT '' COMMENT '是否已发送',

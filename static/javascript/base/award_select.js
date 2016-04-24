@@ -33,12 +33,12 @@ goodsAddEl.on('click', function() {
     if(typeId != '0' && count != ''&&count!='0') {
         typeName = typeEl.find("option:selected").text();
         if(goodsId==""){
-            htmlStr += '<li class="ui-award-item clearfix op-goods-item" data-id="' + typeId + '" data-goodsid="' + goodsId + '" data-count="' + count + '">' +
+            htmlStr += '<li class="ui-award-item clearfix op-goods-item" data-id="' + typeId + '"'+' data-goods-desc="'+ typeName + 'x' + count+ '"'+' data-goodsid="0" data-count="' + count + '">' +
                 '<span>' + typeName + 'x' + count + '</span>' +
                 '<button class="btn btn-default ui-item-delete op-award-delete">删除</button>' +
                 '</li>';
         }else{
-            htmlStr += '<li class="ui-award-item clearfix op-goods-item" data-id="' + typeId + '" data-goodsid="' + goodsId + '" data-count="' + count + '">' +
+            htmlStr += '<li class="ui-award-item clearfix op-goods-item" data-id="' + typeId + '"'+' data-goods-desc="[' + typeName +" "+goodsIdName+ ']x' + count  +'" data-goodsid="' + goodsId + '" data-count="' + count + '">' +
                 '<span>[' + typeName +" "+goodsIdName+ ']x' + count + '</span>' +
                 '<button class="btn btn-default ui-item-delete op-award-delete">删除</button>' +
                 '</li>';
@@ -107,28 +107,29 @@ goodsIdEl.on('click', function() {
 
 getAwardDataFun=function() {
     var data = {},
-        award_awards = "",
+        awardStr = "",
+        awardsDesc = "",
         goods = $('.op-goods-item'),
         id,count;
     goods = $('.op-goods-item');
     if(goods.length == 0) {
-        data['awards'] = award_awards;
+        data['awards'] = awardStr;
         return data;
     }
     for(var i = 0, len = goods.length; i < len; i++ ) {
         var info = {};
         id = goods.eq(i).data('id');
         goodsId = goods.eq(i).data('goodsid');
-        if (goodsId=="") {
-            goodsId='0';
-        }
         count = goods.eq(i).data('count');
-        award_awards=award_awards+ id+":"+goodsId+":"+count;
+        awardStr=awardStr+ id+":"+goodsId+":"+count;
+        awardsDesc+=goods.eq(i).data('goods-desc');
         if (i!=len-1) {
-            award_awards=award_awards+"|"
+            awardStr=awardStr+"|";
+            awardsDesc+="|";
         }
     }
-    data['awards'] = award_awards;
+    data['awards'] = awardStr;
+    data['awardsDesc'] = awardsDesc;
     return data
 }
 

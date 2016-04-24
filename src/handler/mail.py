@@ -23,7 +23,7 @@ class MailEdit(BaseHandler):
     @gen.coroutine
     def self_post(self):
         award= self.get_argument('awards')
-        awardDesc= self.get_argument('awardDesc','')
+        awardsDesc= self.get_argument('awardsDesc','')
         title=self.get_argument('title','')
         content=self.get_argument('content','1')
         mailContent=json.dumps({"title":title,"text":content,"sender":self.account})
@@ -41,7 +41,7 @@ class MailEdit(BaseHandler):
             uinList.extend(uinListFromNickNameList) # str list
         for uin in uinList:
             mailId= int(time.time()*1000000)
-            yield app.DBMgr.getMailDraftDB().add(mailId,uin,startTime,endTime,award,awardDesc,mailContent)
+            yield app.DBMgr.getMailDraftDB().add(mailId,uin,startTime,endTime,award,awardsDesc,mailContent)
             time.sleep(0.001)
 
 
