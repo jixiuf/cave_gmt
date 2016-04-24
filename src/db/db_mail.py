@@ -4,6 +4,7 @@ __author__ = 'jixiufeng'
 #  -*- coding:utf-8 -*-
 from tornado import  gen
 from datetime import datetime, timedelta
+import db.dbtemplate.dbtemplate
 class Mail:
     def __init__(self):
         self.uin=0
@@ -27,4 +28,4 @@ class MailDB:
     def add(self,mailId,uin,startTime,endTime,awardStr,conent):
         query="insert into MailSystem (mailId,uin,FromUin,MailType,StartTime,EndTime,AwardStr,Content,Reason) values(%d,%s,0,0,'%s','%s','%s','%s','system')"%(mailId,uin,startTime,endTime,awardStr,conent)
         print(query)
-        yield self.dbtemplate.execSql(query)
+        yield self.dbtemplate.execSql(query,db.dbtemplate.dbtemplate.Uint64Sum(uin))

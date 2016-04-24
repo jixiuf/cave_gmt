@@ -17,7 +17,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">玩家id</label>
             <div class="col-sm-10">
-                <textarea type="text" class="form-control ui-playerid" id='op-playerid' placeholder="逗号或换行分隔的玩家id(长短都行)，为空时表示给发给所有玩家"></textarea>
+                <textarea type="text" class="form-control ui-playerid" id='op-playerid' placeholder="逗号或换行分隔的玩家id(长短都行,昵称也可)，为空时表示发给所有玩家"></textarea>
             </div>
         </div>
 
@@ -56,6 +56,10 @@
      data['title'] = titleEl.val();
      data['content'] =contentEl.val() ;
      data['playerid'] =playerIdEl.val() ;
+     if (contentEl.val()=="" &&data['awards']==""){
+         alert("不允许 内容和奖励都是空");
+     }
+
      ajaxing = true;
      $.ajax({
          url: '/mail/edit',
