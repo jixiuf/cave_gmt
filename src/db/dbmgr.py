@@ -18,6 +18,7 @@ from db_permissions import PermissionLevelDB
 # from db_design_hero import DesignBHeroDB
 from db_user import UserDB
 from db_mail import MailDB
+from db_mail_draft import MailDraftDB
 from db_version_update import VersionUpdateDB
 from db_server_version import ServerVersionDB
 from db_dynamic_version_update import DynamicVersionUpdateDB
@@ -137,6 +138,9 @@ class DBMgr:
         self.serverVersionDB=ServerVersionDB(self.getProfileDB())
         yield self.serverVersionDB.create_table()
 
+        self.mailDraftDB=MailDraftDB(self.getGMToolDB())
+        yield self.mailDraftDB.create_table()
+
 
         print "after load application"
 
@@ -145,6 +149,9 @@ class DBMgr:
         return UserDB(self.getProfileDB())
     def getMailDB(self,server=1):
         return MailDB(self.getGameDB(server))
+    def getMailDraftDB(self):
+        return self.mailDraftDB
+
 
 
     # def getDesignHeroDB(self,server=1):
