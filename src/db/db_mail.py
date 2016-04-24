@@ -27,5 +27,5 @@ class MailDB:
     @gen.coroutine
     def add(self,mailId,uin,startTime,endTime,awardStr,conent):
         query="insert into MailSystem (mailId,uin,FromUin,MailType,StartTime,EndTime,AwardStr,Content,Reason) values(%d,%s,0,0,'%s','%s','%s','%s','system')"%(mailId,uin,startTime,endTime,awardStr,conent)
-        print(query)
         yield self.dbtemplate.execSql(query,db.dbtemplate.dbtemplate.Uint64Sum(uin))
+

@@ -1,0 +1,140 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/mail_draft_list.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-mail-draft-option">
+    <h2 class="form-signin-heading ui-mail-draft-title">邮件草稿列表</h2>
+    <ul class="ui-mail-draft-list op-mail-draft-list">
+        <li class="ui-mail-draft-item clearfix">
+            <div class="ui-mail-draft-cell ui-mail-draft-cell-uin">
+                接收者(0:所有玩家)
+            </div>
+            <div class="ui-mail-draft-cell-title">
+                标题
+            </div>
+            <div class="ui-mail-draft-cell-content">
+                内容
+            </div>
+            <div class="ui-mail-draft-cell">
+                奖励
+            </div>
+            <div class="ui-mail-draft-cell-startTime">
+                开始时间
+            </div>
+            <div class="ui-mail-draft-cell-sender">
+                发送者
+            </div>
+            <div class="ui-mail-draft-cell-status">
+                已发送
+            </div>
+            <div class="ui-mail-draft-cell-operation">
+                操作
+            </div>
+        </li>
+        {% for ml in mailList %}
+        <li class="ui-mail-draft-item clearfix">
+            <div class="ui-mail-draft-cell">
+                {{ ml['uin']}}
+            </div>
+            <div class="ui-mail-draft-cell-title">
+                {% if ml['content']['title']=='' %}
+                   空
+                {% else %}
+                  {{ ml['content']['title']}}
+                {% end %}
+            </div>
+            <div class="ui-mail-draft-cell-content">
+                {% if ml['content']['text']=='' %}
+                   空
+                {% else %}
+                  {{ ml['content']['text']}}
+                {% end %}
+            </div>
+            <div class="ui-mail-draft-cell">
+                {% if ml['awardDesc']=='' %}
+                   空
+                {% else %}
+                  {{ ml['awardDesc']}}
+                {% end %}
+            </div>
+            <div class="ui-mail-draft-cell-startTime">
+                {{ ml['startTime']}}
+            </div>
+            <div class="ui-mail-draft-cell-sender">
+                {{ ml['content']['sender']}}
+            </div>
+            <div class="ui-mail-draft-cell-status">
+                {% if ml['status']==0 %}
+                   否
+                {% else %}
+                  是
+                {% end %}
+                
+            </div>
+            <div class="ui-mail-draft-cell-operation">
+                <button  value='{{ml["mailId"] }}' class="btn btn-default ui-item-btn op-mail-draft-send ">发送</button>
+                <button value='{{ml["mailId"]}}'  class="btn btn-default ui-item-btn op-mail-draft-delete">删除</button>
+            </div>
+        </li>
+        {% end %}
+    </ul>
+</div>
+
+<script type="text/javascript">
+    var listEl = $('.op-mail-draft-list'),
+        ajaxing = false,
+        htmlStr = '',
+        data = {};
+
+    listEl.delegate('.op-mail-draft-send', 'click', function(e) {
+        var el = $(e.currentTarget),
+            id=el.val();
+        data['mailId'] = id;
+        ajaxing = true;
+        $.ajax({
+            url: '/mail/draft_send',
+            type: 'post',
+            data: data,
+            el: el
+        })
+        .done(function(data) {
+            ajaxing = false;
+            if(data == 'success') {
+                window.location.reload();
+                /*                 el.addClass('disabled'); */
+                /*                 el.siblings('.op-mail-draft-delete').removeClass('disabled'); */
+            }else if(data == 'wrong permissions') {
+                location.href = '/?msg=原页面无权限访问，跳转到此';
+                alert(data);
+            } else{
+                alert(data);
+            }
+        });
+    });
+
+    listEl.delegate('.op-mail-draft-delete', 'click', function(e) {
+        var el = $(e.currentTarget),
+            id=el.val();
+            /*             id = el.parent().siblings('.op-mail-draft-id').html(); */
+        data['mailId'] = id;
+        ajaxing = true;
+        $.ajax({
+            url: '/mail/draft_delete',
+            type: 'post',
+            data: data,
+            el: el
+        })
+        .done(function(data) {
+            ajaxing = false;
+            if(data == 'success') {
+                window.location.reload();
+            }
+            else if(data == 'wrong permissions') {
+                location.href = '/?msg=原页面无权限访问，跳转到此';
+                alert(data);
+            }
+        });
+    });
+</script>
+{% end %}

@@ -50,6 +50,10 @@ class Application(tornado.web.Application):
             (r'/award/id_list', AwardIdList),
 
             (r'/mail/edit', MailEdit),
+            (r'/mail/list_draft', MailDraftList),
+            (r'/mail/draft_send', MailDraftSend),
+            (r'/mail/draft_delete', MailDraftDelete),
+
 
 
 

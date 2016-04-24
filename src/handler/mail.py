@@ -23,6 +23,7 @@ class MailEdit(BaseHandler):
     @gen.coroutine
     def self_post(self):
         award= self.get_argument('awards')
+        awardDesc= self.get_argument('awardDesc','')
         title=self.get_argument('title','')
         content=self.get_argument('content','1')
         mailContent=json.dumps({"title":title,"text":content,"sender":self.account})
@@ -40,7 +41,7 @@ class MailEdit(BaseHandler):
             uinList.extend(uinListFromNickNameList) # str list
         for uin in uinList:
             mailId= int(time.time()*1000000)
-            app.DBMgr.getMailDraftDB().add(mailId,uin,startTime,endTime,award,mailContent)
+            yield app.DBMgr.getMailDraftDB().add(mailId,uin,startTime,endTime,award,awardDesc,mailContent)
             time.sleep(0.001)
 
 
@@ -90,3 +91,50 @@ class MailEdit(BaseHandler):
             userIdListStr=userIdListStr.replace(",,",",")
         return userIdListStr
 
+
+class MailDraftList(BaseHandler):
+
+    @asynchronous
+    @gen.coroutine
+    def self_get(self):
+        mailList=yield app.DBMgr.getMailDraftDB().select_all()
+        print(mailList)
+        self.render("mail_draft_list.html",title="邮件草稿列表",mailList=mailList)
+class MailDraftSend(BaseHandler):
+
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+        mailId= self.get_argument('mailId',0)
+        if mailId==0:
+            self.write('mail id is empty')
+            return
+
+
+        ml=yield app.DBMgr.getMailDraftDB().select_by_mailid(mailId)
+        if ml==None:
+            self.write('mail doesnot exsits')
+            return
+
+        newMailId= int(time.time()*1000000)
+        yield app.DBMgr.getMailDB().add(newMailId,ml['uin'],ml['startTime'],ml['endTime'],ml['awardStr'],json.dumps(ml['content']))
+        yield app.DBMgr.getMailDraftDB().updateStatusReaded(mailId)
+        self.write('success')
+class MailDraftDelete(BaseHandler):
+
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+        mailId= self.get_argument('mailId',0)
+        if mailId==0:
+            self.write('mail id is empty')
+            return
+
+
+        ml=yield app.DBMgr.getMailDraftDB().select_by_mailid(mailId)
+        if ml==None:
+            self.write('mail doesnot exsits')
+            return
+
+        yield app.DBMgr.getMailDraftDB().delete(mailId)
+        self.write('success')
