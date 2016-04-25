@@ -20,6 +20,7 @@ from handler.maintain import *
 from handler.version import *
 from handler.award import *
 from handler.mail import *
+from handler.player import *
 
 from tornado.ioloop import IOLoop
 
@@ -34,6 +35,9 @@ class Application(tornado.web.Application):
     def __init__(self):
 
         handlers = [
+            (r'/player/search' ,PlayerSearchRenderHandler),
+            (r'/api/player_search' ,PlayerSearchHandler),
+
             (r'/ping', PingHandler),
             (r'/', LoginHandler),
             (r'/account/register', AccountRegistrationRenderHandler),

@@ -1,0 +1,29 @@
+.ui-lists-item {
+    border-bottom: 1px solid #000000;
+    list-style: none;
+}
+.ui-lists-item:last-child {
+    border: none;
+    
+}
+.ui-lists-item .ui-items-cell {
+    word-break: break-all;
+    
+}
+.ui-info-lists {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    
+}
+.ui-info-lists .ui-lists-item {
+    padding: 5px 0;
+    float: left;
+    
+}
+.ui-lists-item .ui-items-cell {
+    display: inline-block;
+    padding: 0 5px;
+    word-break: break-all;
+}
+

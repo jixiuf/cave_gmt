@@ -1,0 +1,15 @@
+.ui-info-option {
+    max-width: 1024px;
+    margin: 0 auto;
+}
+.ui-info-option .ui-info-title {
+    margin-left: 200px;
+}
+.ui-items-cell{
+    padding: 5px 0;
+    font-size: 20px;
+}
+.control-label{
+    text-align:left;
+    margin-left: 30px;
+}

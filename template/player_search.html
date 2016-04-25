@@ -1,0 +1,51 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/player_search.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-search-form">
+    <h2 class="form-signin-heading ui-search-title">玩家信息查询</h2>
+    <form class="form-horizontal" role="form" action="/api/player_search" method="get">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">PlayerID</label>
+            <div class="col-sm-10">
+                <input class="form-control op-player-id" name="playerId" id="playerId" placeholder="玩家长id">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">PlayerSID</label>
+            <div class="col-sm-10">
+                <input class="form-control op-player-id" id="playerSId" name="playerSId" placeholder="玩家短id">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">昵称</label>
+            <div class="col-sm-10">
+                <input class="form-control op-player-id" id="nickName" name="nickName"  placeholder="玩家昵称">
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default op-submit">查询</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+ var playerIdEl = $('#playerId');
+ var playerSIdEl = $('#playerSId');
+ var nickNameEl = $('#nickName');
+ var submitEl = $('.op-submit');
+
+
+ submitEl.on('click', function() {
+     if(playerIdEl.val()==""&&playerSIdEl.val()=="" &&nickNameEl.val()=="") {
+         alert("请输入一个查询条件");
+         return false;
+     }
+     return true;
+ });
+</script>
+{% end %}

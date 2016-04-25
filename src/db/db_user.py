@@ -1,6 +1,15 @@
 #  -*- coding:utf-8 -*-
 from tornado import  gen
 from datetime import datetime, timedelta
+class UserAttr:
+    def __init__(self):
+        self.uin=0
+        self.nickName=0
+        self.gender=""
+        self.avatar= ""
+        self.desc= 0
+        # self.lastPayTime= datetime.now()
+
 class User:
     def __init__(self):
         self.uin=0
@@ -20,6 +29,17 @@ class User:
 class UserDB:
     def __init__(self,dbtemplate):
         self.dbtemplate=dbtemplate
+
+
+    def mapRowAttr(self,row):
+        d=UserAttr()
+        d.uin         =row[ 0 ]
+        d.nickName    =row[ 1 ]
+        d.gender      =row[ 2 ]
+        d.avatar      =row[ 3 ]
+        d.desc        =row[ 4 ]
+        d.lastPayTime =row[ 5 ]
+        return d
 
 
 
@@ -80,8 +100,15 @@ CREATE TABLE if not exists `user` (
     @gen.coroutine
     def select_by_uin(self,uin):
         query="select uin,autoIncrementId,accountId,password,accountType,platform,server,channel,uuid,ip,os,osVersion,deviceModel,createTime from user where uin=%s"%(uin)
+        print(query)
         res=yield self.dbtemplate.queryObject(query,self.mapRow)
         raise gen.Return(res)
+    @gen.coroutine
+    def select_attr_by_uin(self,uin):
+        query="select uin,nickName,gender,avatar,description,lastPayTime from UserAttr where uin=%s"%(uin)
+        res=yield self.dbtemplate.queryObject(query,self.mapRowAttr)
+        raise gen.Return(res)
+
     @gen.coroutine
     def select_uin_by_suin(self,suin):
         query="select uin from user where autoIncrementId=%s"%(suin)

@@ -19,6 +19,7 @@ from db_permissions import PermissionLevelDB
 from db_user import UserDB
 from db_mail import MailDB
 from db_mail_draft import MailDraftDB
+from db_money import MoneyDB
 from db_version_update import VersionUpdateDB
 from db_server_version import ServerVersionDB
 from db_dynamic_version_update import DynamicVersionUpdateDB
@@ -151,6 +152,8 @@ class DBMgr:
         return MailDB(self.getGameDB(server))
     def getMailDraftDB(self):
         return self.mailDraftDB
+    def getMoneyDB(self,server=1):
+        return MoneyDB(self.getGameDB(server))
 
 
 
