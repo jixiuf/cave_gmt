@@ -17,6 +17,7 @@ class MailDraftDB:
   `MailId` bigint(20) NOT NULL COMMENT '唯一ID',
   `uin` bigint(20) NOT NULL COMMENT '此邮件的拥有者',
   `fromUin` bigint(20) NOT NULL COMMENT '此邮件的发送者',
+  `serverId` smallint(6) NOT NULL DEFAULT '0' COMMENT '',
   `mailType` smallint(6) NOT NULL DEFAULT '0' COMMENT '邮件类型',
   `createTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '',
   `startTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '邮件开始时间',
@@ -25,7 +26,7 @@ class MailDraftDB:
   `awardDesc` varchar(1024) NOT NULL DEFAULT '' COMMENT '',
   `content` varchar(1024) NOT NULL DEFAULT '' COMMENT 'mail内容',
   `reason` varchar(64) NOT NULL DEFAULT '' COMMENT 'mail reason',
-  status tinyint NOT NULL DEFAULT '' COMMENT '是否已发送',
+  status tinyint NOT NULL DEFAULT 0 COMMENT '是否已发送',
   PRIMARY KEY (`uin`,`MailId`),
   UNIQUE KEY `MailId` (`MailId`),
   KEY `startTime` (`startTime`),
@@ -40,8 +41,8 @@ class MailDraftDB:
         yield self.dbtemplate.execDDL(query)
 
     @gen.coroutine
-    def add(self,mailId,uin,startTime,endTime,awardStr,awardDesc,content):
-        query="insert into MailDraft (mailId,uin,fromUin,mailType,startTime,endTime,awardStr,awardDesc,content,reason,createTime,status) values(%d,%s,0,0,'%s','%s','%s','%s','%s','system',now(),0)"%(mailId,uin,startTime,endTime,awardStr,awardDesc,content)
+    def add(self,mailId,uin,startTime,endTime,awardStr,awardDesc,content,serverId):
+        query="insert into MailDraft (mailId,uin,fromUin,serverId,mailType,startTime,endTime,awardStr,awardDesc,content,reason,createTime,status) values(%d,%s,0,%d,0,'%s','%s','%s','%s','%s','system',now(),0)"%(mailId,uin,serverId,startTime,endTime,awardStr,awardDesc,content)
         print(query)
         yield self.dbtemplate.execSql(query,db.dbtemplate.dbtemplate.Uint64Sum(uin))
     def mapRow(self,row):
@@ -57,6 +58,7 @@ class MailDraftDB:
         d['content']   =json.loads(row[8])
         d['reason']    =row[9]
         d['status']    =row[10]
+        d['serverId']    =row[11]
         return d
     @gen.coroutine
     def delete(self,mailId):
@@ -64,13 +66,13 @@ class MailDraftDB:
         yield self.dbtemplate.execSql(query)
     @gen.coroutine
     def select_all(self):
-        query="select mailId,uin,fromUin,mailType,startTime,endTime,awardStr,awardDesc,content,reason,status from MailDraft order by createTime desc"
+        query="select mailId,uin,fromUin,mailType,startTime,endTime,awardStr,awardDesc,content,reason,status,serverId from MailDraft order by createTime desc"
         res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)
 
     @gen.coroutine
     def select_by_mailid(self,mailId):
-        query="select mailId,uin,fromUin,mailType,startTime,endTime,awardStr,awardDesc,content,reason,status from MailDraft where mailid=%d"%(int(mailId))
+        query="select mailId,uin,fromUin,mailType,startTime,endTime,awardStr,awardDesc,content,reason,status,serverId from MailDraft where mailid=%d"%(int(mailId))
         res=yield self.dbtemplate.queryObject(query,self.mapRow,mailId)
         raise gen.Return(res)
 

@@ -9,7 +9,9 @@ from tornado.web import asynchronous
 from tornado import  gen
 import app
 import json
+import conf
 import time
+import redis_notify
 from datetime import datetime, timedelta
 
 
@@ -18,10 +20,12 @@ class MailEdit(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
-        self.render("mail_edit.html",title="邮件编辑")
+        serverIdList=app.DBMgr.get_all_server_id()
+        self.render("mail_edit.html",title="邮件编辑",serverIdList=serverIdList)
     @asynchronous
     @gen.coroutine
     def self_post(self):
+        serverId= self.get_argument('serverid','1')
         award= self.get_argument('awards')
         awardsDesc= self.get_argument('awardsDesc','')
         title=self.get_argument('title','')
@@ -41,7 +45,7 @@ class MailEdit(BaseHandler):
             uinList.extend(uinListFromNickNameList) # str list
         for uin in uinList:
             mailId= int(time.time()*1000000)
-            yield app.DBMgr.getMailDraftDB().add(mailId,uin,startTime,endTime,award,awardsDesc,mailContent)
+            yield app.DBMgr.getMailDraftDB().add(mailId,uin,startTime,endTime,award,awardsDesc,mailContent,int(serverId))
             time.sleep(0.001)
 
 
@@ -117,8 +121,9 @@ class MailDraftSend(BaseHandler):
             return
 
         newMailId= int(time.time()*1000000)
-        yield app.DBMgr.getMailDB().add(newMailId,ml['uin'],ml['startTime'],ml['endTime'],ml['awardStr'],json.dumps(ml['content']))
+        yield app.DBMgr.getMailDB(ml['serverId']).add(newMailId,ml['uin'],ml['startTime'],ml['endTime'],ml['awardStr'],json.dumps(ml['content']))
         yield app.DBMgr.getMailDraftDB().updateStatusReaded(mailId)
+        app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_MAIL)
         self.write('success')
 class MailDraftDelete(BaseHandler):
 
@@ -135,6 +140,7 @@ class MailDraftDelete(BaseHandler):
         if ml==None:
             self.write('mail doesnot exsits')
             return
+
 
         yield app.DBMgr.getMailDraftDB().delete(mailId)
         self.write('success')
