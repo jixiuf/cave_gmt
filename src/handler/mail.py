@@ -123,7 +123,7 @@ class MailDraftSend(BaseHandler):
         newMailId= int(time.time()*1000000)
         yield app.DBMgr.getMailDB(ml['serverId']).add(newMailId,ml['uin'],ml['startTime'],ml['endTime'],ml['awardStr'],json.dumps(ml['content']))
         yield app.DBMgr.getMailDraftDB().updateStatusReaded(mailId)
-        app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_MAIL)
+        app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,ml['serverId']), redis_notify.NOTIFY_TYPE_RELOAD_MAIL%(str(ml['uin'])))
         self.write('success')
 class MailDraftDelete(BaseHandler):
 
