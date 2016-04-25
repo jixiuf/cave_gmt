@@ -47,7 +47,9 @@ class PlayerSearchHandler(BaseHandler):
         user=yield app.DBMgr.getUserDB().select_by_uin(uin)
         userAttr=yield app.DBMgr.getUserDB().select_attr_by_uin(uin)
         money=yield app.DBMgr.getMoneyDB(user.server).select_by_uin(uin)
-        self.render("player_info.html", title="玩家信息" ,user=user,userAttr=userAttr,money=money,channelMap=conf.getChannelNameMap())
+        isBanned=yield app.DBMgr.getUserDB().isbanned(uin)
+
+        self.render("player_info.html", title="玩家信息" ,user=user,userAttr=userAttr,money=money,channelMap=conf.getChannelNameMap(),isBanned=isBanned)
     @gen.coroutine
     def suin2uin(self,suin): #
         if suin=="":
@@ -84,7 +86,7 @@ class PlayerInfoUpdateHandler(BaseHandler):
             return
 
         yield app.DBMgr.getMoneyDB(int(server)).update(uin,gold,gem,speaker,vipValue,kickCard,watch,car,house,boat)
-        time.sleep(0.3)
+        time.sleep(0.03)
         app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,server), redis_notify.NOTIFY_TYPE_RELOAD_MONEY%(str(uin)))
         self.write("success")
 
@@ -97,6 +99,20 @@ class PlayerBanHandler(BaseHandler):
             self.write("fail")
             return
         yield app.DBMgr.getUserDB().banUin(uin)
+        time.sleep(0.03)
+        app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_BAN)
+        self.write("success")
+        return
+class PlayerUnBanHandler(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+        uin  = int(self.get_argument('uin',0))
+        if uin==0:
+            self.write("fail")
+            return
+        yield app.DBMgr.getUserDB().unbanUin(uin)
+        time.sleep(0.03)
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_BAN)
         self.write("success")
         return

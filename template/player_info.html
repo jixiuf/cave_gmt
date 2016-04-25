@@ -6,7 +6,11 @@
 {% block body %}
 <div class="ui-info-option">
     <h2 class="form-signin-heading ui-info-title">玩家信息</h2>
+    {% if not isBanned %}
     <button type="button" class="btn btn-default op-ban " id='btn-ban'>封号</button>
+    {%else%}
+    <button type="button" class="btn btn-default op-unban " id='btn-unban'>解封</button>
+    {% end %}
     <ul class=" list-unstyled ui-content-lists">
         {% if user != None %}
         <li class="clearfix ui-lists-item">
@@ -156,6 +160,7 @@
  var kickCardEl= $('#op-kickCard');
  var submitEl = $('.op-submit');
  var banEl=$("#btn-ban");
+ var unbanEl=$("#btn-unban");
 
  submitEl.on('click', function(){
      var data={};
@@ -205,7 +210,28 @@
      return false;
 
 
-});
+ });
+ unbanEl.on('click',function(){
+     var data={};
+     data['uin'] = uinEl.val();
+     ajaxing = true;
+     $.ajax({
+         url: '/api/player_unban',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          if(data!="success"){
+              alert(data);
+          }
+          window.location.reload();
+      });
+     return false;
+
+
+ });
+
 </script>
 
 {% end %}
