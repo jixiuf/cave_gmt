@@ -8,8 +8,10 @@ from tornado import  gen
 from handler.base import *
 from tornado.web import asynchronous
 import conf
+import redis_notify
 # import json
-# import app
+import app
+import time
 
 class PlayerSearchRenderHandler(BaseHandler):
     @asynchronous
@@ -81,7 +83,20 @@ class PlayerInfoUpdateHandler(BaseHandler):
             self.write("fail")
             return
 
-        print(car)
         yield app.DBMgr.getMoneyDB(int(server)).update(uin,gold,gem,speaker,vipValue,kickCard,watch,car,house,boat)
+        time.sleep(0.3)
+        app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,server), redis_notify.NOTIFY_TYPE_RELOAD_MONEY%(str(uin)))
         self.write("success")
 
+class PlayerBanHandler(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+        uin  = int(self.get_argument('uin',0))
+        if uin==0:
+            self.write("fail")
+            return
+        yield app.DBMgr.getUserDB().banUin(uin)
+        app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_BAN)
+        self.write("success")
+        return

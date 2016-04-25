@@ -38,6 +38,8 @@ class Application(tornado.web.Application):
             (r'/player/search' ,PlayerSearchRenderHandler),
             (r'/api/player_search' ,PlayerSearchHandler),
             (r'/api/player_info_update',PlayerInfoUpdateHandler),
+            (r'/api/player_ban',PlayerBanHandler),
+
 
             (r'/ping', PingHandler),
             (r'/', LoginHandler),

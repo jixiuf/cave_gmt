@@ -6,6 +6,7 @@
 {% block body %}
 <div class="ui-info-option">
     <h2 class="form-signin-heading ui-info-title">玩家信息</h2>
+    <button type="button" class="btn btn-default op-ban " id='btn-ban'>封号</button>
     <ul class=" list-unstyled ui-content-lists">
         {% if user != None %}
         <li class="clearfix ui-lists-item">
@@ -105,8 +106,9 @@
                 <span class="ui-items-cell col-sm-2 control-label">vip过期时间:</span>
                 {% if (money.lastPayTime+datetime.timedelta(days=30)-datetime.datetime.now()).days>0 %}
                 <span class="ui-items-cell col-sm-2">剩余{{ (money.lastPayTime+datetime.timedelta(days=30)-datetime.datetime.now()).days }}天</span>
-                {%end%}
+                {%else%}
                 <span class="ui-items-cell col-sm-2">已过期</span>
+                {%end%}
             </li>
 
             <li class="clearfix ui-lists-item">
@@ -153,6 +155,7 @@
  var speakerEl= $('#op-speaker');
  var kickCardEl= $('#op-kickCard');
  var submitEl = $('.op-submit');
+ var banEl=$("#btn-ban");
 
  submitEl.on('click', function(){
      var data={};
@@ -183,6 +186,26 @@
      return false;
 
  });
+ banEl.on('click',function(){
+     var data={};
+     data['uin'] = uinEl.val();
+     ajaxing = true;
+     $.ajax({
+         url: '/api/player_ban',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          if(data!="success"){
+              alert(data);
+          }
+          window.location.reload();
+      });
+     return false;
+
+
+});
 </script>
 
 {% end %}

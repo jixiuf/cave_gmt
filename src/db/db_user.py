@@ -153,3 +153,10 @@ CREATE TABLE if not exists `user` (
         query="select uin from UserAttr where nickName in(%s)"%(",".join(newList))
         res=yield self.dbtemplate.query(query,mapRow)
         raise gen.Return(res)
+
+    @gen.coroutine
+    def banUin(self,uin):
+        now=datetime.now()
+        end= datetime.now()+ timedelta(days=365)
+        query="insert into ban(Type,content,reason,startBanTime,endBanTime) values(2,'%s','gmt','%s','%s')"%(str(uin),now,end)
+        yield self.dbtemplate.execSql(query)
