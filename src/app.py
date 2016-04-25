@@ -37,6 +37,7 @@ class Application(tornado.web.Application):
         handlers = [
             (r'/player/search' ,PlayerSearchRenderHandler),
             (r'/api/player_search' ,PlayerSearchHandler),
+            (r'/api/player_info_update',PlayerInfoUpdateHandler),
 
             (r'/ping', PingHandler),
             (r'/', LoginHandler),

@@ -43,9 +43,14 @@ class MoneyDB:
         if res!=None:
             lastPayTime=yield self.select_lastPayTime(uin)
             res.lastPayTime=lastPayTime
-
-
         raise gen.Return(res)
+    @gen.coroutine
+    def update(self,uin,gold ,gem,speaker,vipValue,kickCard,watch,car,house,boat):
+        query="update Money set gold=%d,gem=%d,speaker=%d,vipValue=%d,kickCard=%d,watch=%d,car=%d,house=%d,boat=%d  where uin=%s"%(
+            int(gold),int(gem),int(speaker),int(vipValue),int(kickCard),int(watch),int(car),int(house),int(boat),str(uin))
+        print(query)
+        yield self.dbtemplate.execSql(query,db.dbtemplate.dbtemplate.Uint64Sum(int(uin)))
+
 
     @gen.coroutine
     def select_lastPayTime(self,uin):

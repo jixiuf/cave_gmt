@@ -62,3 +62,26 @@ class PlayerSearchHandler(BaseHandler):
         if len(uinList)==0:
             raise gen.Return(None)
         raise gen.Return(uinList[0])
+class PlayerInfoUpdateHandler(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+        uin      = int(self.get_argument('uin',0))
+        server   = int(self.get_argument('server',0))
+        gold     = int(self.get_argument('gold',0))
+        gem      = int(self.get_argument('gem',0))
+        vipValue = int(self.get_argument('vipValue',0))
+        car      = int(self.get_argument('car',0))
+        watch    = int(self.get_argument('watch',0))
+        house    = int(self.get_argument('house',0))
+        boat     = int(self.get_argument('boat',0))
+        speaker  = int(self.get_argument('speaker',0))
+        kickCard = int(self.get_argument('kickCard',0))
+        if uin==0:
+            self.write("fail")
+            return
+
+        print(car)
+        yield app.DBMgr.getMoneyDB(int(server)).update(uin,gold,gem,speaker,vipValue,kickCard,watch,car,house,boat)
+        self.write("success")
+
