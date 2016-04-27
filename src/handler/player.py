@@ -43,6 +43,7 @@ class PlayerSearchHandler(BaseHandler):
     def doSearch(self,uin):
         if uin==None:
             self.write("player not found")
+            return
 
         user=yield app.DBMgr.getUserDB().select_by_uin(uin)
         userAttr=yield app.DBMgr.getUserDB().select_attr_by_uin(uin)
