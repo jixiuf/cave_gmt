@@ -38,7 +38,6 @@ class UserDB:
         d.gender      =row[ 2 ]
         d.avatar      =row[ 3 ]
         d.desc        =row[ 4 ]
-        d.lastPayTime =row[ 5 ]
         return d
 
 
@@ -105,7 +104,7 @@ CREATE TABLE if not exists `user` (
         raise gen.Return(res)
     @gen.coroutine
     def select_attr_by_uin(self,uin):
-        query="select uin,nickName,gender,avatar,description,lastPayTime from UserAttr where uin=%s"%(uin)
+        query="select uin,nickName,gender,avatar,description from UserAttr where uin=%s"%(uin)
         res=yield self.dbtemplate.queryObject(query,self.mapRowAttr)
         raise gen.Return(res)
 
