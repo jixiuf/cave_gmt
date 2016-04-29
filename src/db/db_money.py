@@ -54,7 +54,7 @@ class MoneyDB:
 
     @gen.coroutine
     def select_lastPayTime(self,uin):
-        query="select lastPayTime from vip where uin=%s"%(str(uin))
+        query="select lastPayTime from Vip where uin=%s"%(str(uin))
         def mapRowVip(row):
             return row[0]
         res=yield self.dbtemplate.queryObject(query,mapRowVip,db.dbtemplate.dbtemplate.Uint64Sum(int(uin)))
