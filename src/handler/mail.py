@@ -28,8 +28,8 @@ class MailEdit(BaseHandler):
         serverId= self.get_argument('serverid','1')
         award= self.get_argument('awards')
         awardsDesc= self.get_argument('awardsDesc','')
-        title=self.get_argument('title','')
-        content=self.get_argument('content','1')
+        title=unicode(self.get_argument('title',''))
+        content=unicode(self.get_argument('content','1')),
         mailContent=json.dumps({"title":title,"text":content,"sender":self.account})
         startTime=self.get_argument('startTime',datetime.now())
         endTime=self.get_argument('startTime',datetime.now()+ timedelta(days=7))
