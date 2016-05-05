@@ -33,7 +33,7 @@ class PlayerSearchHandler(BaseHandler):
             uin=yield self.suin2uin(suin)
             yield self.doSearch(uin)
         elif nickName!='':
-            uin=yield self.nickName2uin(suin)
+            uin=yield self.nickName2uin(nickName)
             yield self.doSearch(uin)
         else:
             self.write("player not found")
