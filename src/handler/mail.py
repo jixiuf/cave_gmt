@@ -29,8 +29,8 @@ class MailEdit(BaseHandler):
         award= self.get_argument('awards')
         awardsDesc= self.get_argument('awardsDesc','')
         title=self.get_argument('title','')
-        content=self.get_argument('content','1')
-        mailContent=json.dumps({"title":title,"text":content,"sender":self.account})
+        content=unicode(self.get_argument('content','1'))
+        mailContent=json.dumps({"title":title,"text":content,"sender":self.account},ensure_ascii=False)
         startTime=self.get_argument('startTime',datetime.now())
         endTime=self.get_argument('startTime',datetime.now()+ timedelta(days=7))
         # packIcon=self.get_argument('pack_icon')
@@ -102,7 +102,6 @@ class MailDraftList(BaseHandler):
     @gen.coroutine
     def self_get(self):
         mailList=yield app.DBMgr.getMailDraftDB().select_all()
-        print(mailList)
         self.render("mail_draft_list.html",title="邮件草稿列表",mailList=mailList)
 class MailDraftSend(BaseHandler):
 
@@ -121,7 +120,7 @@ class MailDraftSend(BaseHandler):
             return
 
         newMailId= int(time.time()*1000000)
-        yield app.DBMgr.getMailDB(ml['serverId']).add(newMailId,ml['uin'],ml['startTime'],ml['endTime'],ml['awardStr'],json.dumps(ml['content']))
+        yield app.DBMgr.getMailDB(ml['serverId']).add(newMailId,ml['uin'],ml['startTime'],ml['endTime'],ml['awardStr'],json.dumps(ml['content'] ,ensure_ascii=False))
         yield app.DBMgr.getMailDraftDB().updateStatusReaded(mailId)
         app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,ml['serverId']), redis_notify.NOTIFY_TYPE_RELOAD_MAIL%(str(ml['uin'])))
         self.write('success')
