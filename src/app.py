@@ -21,6 +21,7 @@ from handler.version import *
 from handler.award import *
 from handler.mail import *
 from handler.player import *
+from handler.design  import *
 
 from tornado.ioloop import IOLoop
 
@@ -40,6 +41,7 @@ class Application(tornado.web.Application):
             (r'/api/player_info_update',PlayerInfoUpdateHandler),
             (r'/api/player_ban',PlayerBanHandler),
             (r'/api/player_unban',PlayerUnBanHandler),
+            (r'/api/reload_design_data' ,DesignReload),
 
 
 
