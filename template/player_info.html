@@ -105,15 +105,17 @@
 
             <li class="clearfix ui-lists-item">
                 <span class="ui-items-cell col-sm-2 control-label">vip值:</span>
-                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " disabled id="op-vipValue" value="{{money.vipValue}}"> </span>
-                {% if money.vipValue!=0 and money.lastPayTime!=None %}
+                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-vipValue" value="{{money.vipValue}}"> </span>
                 <span class="ui-items-cell col-sm-2 control-label">vip过期时间:</span>
                 {% if (money.lastPayTime+datetime.timedelta(days=30)-datetime.datetime.now()).days>0 %}
                 <span class="ui-items-cell col-sm-2">剩余{{ (money.lastPayTime+datetime.timedelta(days=30)-datetime.datetime.now()).days }}天</span>
                 {%else%}
                 <span class="ui-items-cell col-sm-2">已过期</span>
                 {%end%}
-                {%end%}
+            </li>
+            <li class="clearfix ui-lists-item">
+                <span class="ui-items-cell col-sm-2 control-label">最近支付时间:</span>
+                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-last-PayTime" value="{{money.lastPayTime}}"> </span>
             </li>
 
             <li class="clearfix ui-lists-item">
@@ -161,6 +163,7 @@
  var submitEl = $('.op-submit');
  var banEl=$("#btn-ban");
  var unbanEl=$("#btn-unban");
+ var lastPayTimeEl=$("#op-last-PayTime");
 
  submitEl.on('click', function(){
      var data={};
@@ -168,6 +171,7 @@
      data['gold'] =goldEl.val();
      data['gem'] =gemEl.val();
      data['vipValue'] =vipValueEl.val();
+     data['lastPayTime'] =lastPayTimeEl.val();
      data['car'] =carEl.val();
      data['watch'] =watchEl.val();
      data['house'] =houseEl.val();

@@ -46,7 +46,7 @@ class MoneyDB:
         raise gen.Return(res)
     @gen.coroutine
     def update(self,uin,gold ,gem,speaker,vipValue,kickCard,watch,car,house,boat):
-        query="update Money set gold=%d,gem=%d,speaker=%d,vipValue=%d,kickCard=%d,watch=%d,car=%d,house=%d,boat=%d  where uin=%s"%(
+        query="update Money set gold=%d,gem=%d,speaker=%d,vipValue=%d,kickCard=%d,watch=%d,car=%d,house=%d,boat=%d where uin=%s"%(
             int(gold),int(gem),int(speaker),int(vipValue),int(kickCard),int(watch),int(car),int(house),int(boat),str(uin))
         print(query)
         yield self.dbtemplate.execSql(query,db.dbtemplate.dbtemplate.Uint64Sum(int(uin)))
@@ -59,4 +59,9 @@ class MoneyDB:
             return row[0]
         res=yield self.dbtemplate.queryObject(query,mapRowVip,db.dbtemplate.dbtemplate.Uint64Sum(int(uin)))
         raise gen.Return(res)
+
+    @gen.coroutine
+    def updatelastPayTime(self,uin,lastPayTime):
+        query="update vip set lastPayTime='%s' where uin=%s"%(lastPayTime,str(uin))
+        yield self.dbtemplate.execSql(query,db.dbtemplate.dbtemplate.Uint64Sum(int(uin)))
 

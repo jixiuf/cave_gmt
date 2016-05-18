@@ -82,11 +82,13 @@ class PlayerInfoUpdateHandler(BaseHandler):
         boat     = int(self.get_argument('boat',0))
         speaker  = int(self.get_argument('speaker',0))
         kickCard = int(self.get_argument('kickCard',0))
+        lastPayTime = self.get_argument('lastPayTime',0)
         if uin==0:
             self.write("fail")
             return
 
         yield app.DBMgr.getMoneyDB(int(server)).update(uin,gold,gem,speaker,vipValue,kickCard,watch,car,house,boat)
+        yield app.DBMgr.getMoneyDB(int(server)).updatelastPayTime(uin,lastPayTime)
         time.sleep(0.03)
         app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,server), redis_notify.NOTIFY_TYPE_RELOAD_MONEY%(str(uin)))
         self.write("success")
