@@ -62,6 +62,6 @@ class MoneyDB:
 
     @gen.coroutine
     def updatelastPayTime(self,uin,lastPayTime):
-        query="update vip set lastPayTime='%s' where uin=%s"%(lastPayTime,str(uin))
+        query="update Vip set lastPayTime='%s' where uin=%s"%(lastPayTime,str(uin))
         yield self.dbtemplate.execSql(query,db.dbtemplate.dbtemplate.Uint64Sum(int(uin)))
 
