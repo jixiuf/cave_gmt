@@ -61,6 +61,7 @@ class DatabaseTemplateSingle():
     def query(self,sql,mapRow=None,sum=None):
         cur=yield self._dbPool.execute(sql)
         result=cur.fetchall()
+        yield cur.close()
         if mapRow!=None:
             raise gen.Return(map(mapRow,result))
         raise gen.Return(result)
@@ -68,6 +69,7 @@ class DatabaseTemplateSingle():
     def queryObject(self,sql,mapRow=None,sum=None):
         cur=yield self._dbPool.execute(sql)
         result=cur.fetchone()
+        yield cur.close()
         if mapRow!=None:
             if result==None:
                 raise gen.Return(None)
