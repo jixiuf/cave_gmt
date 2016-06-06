@@ -80,8 +80,7 @@ class PermissionDB:
 
     @gen.coroutine
     def update_level(self,account,level):
-        query="update permission set level=%s where account='%s' and update_time=now()"%(level,account)
-        print(query)
+        query="update permission set level=%s ,update_time=now() where account='%s' "%(level,account)
         result=yield self.dbtemplate.execSql(query)
         raise gen.Return(result)
     @gen.coroutine
