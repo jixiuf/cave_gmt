@@ -16,8 +16,8 @@ class MaintainDB:
         query = "CREATE TABLE IF NOT EXISTS maintain ("\
         "serverid int NOT NULL  COMMENT 'serverid' ,"\
         "content varchar(1024) NOT NULL  COMMENT '维护公告' default '',"\
-        "startTime timestamp not null default 0 comment '邮件开始时间',"\
-        "endTime timestamp not null default 0 comment '邮件结束时间',"\
+        "startTime timestamp not null default CURRENT_TIMESTAMP comment '邮件开始时间',"\
+        "endTime timestamp not null default CURRENT_TIMESTAMP comment '邮件结束时间',"\
         "PRIMARY KEY (serverId)) ENGINE = innodb DEFAULT CHARACTER SET utf8;"
 
         yield self.dbtemplate.execDDL(query)
