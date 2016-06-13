@@ -5,6 +5,7 @@ import os.path
 
 
 import redis
+import etcd
 import tornado.web
 import conf
 from tornado.options import  options
@@ -17,6 +18,7 @@ from handler.login import *
 from handler.account import *
 from handler.present_pack import *
 from handler.maintain import *
+from handler.server_mgr import *
 from handler.version import *
 from handler.award import *
 from handler.mail import *
@@ -27,6 +29,7 @@ from tornado.ioloop import IOLoop
 
 DBMgr=db.dbmgr.DBMgr()
 Redis=redis.Redis()
+Etcd=etcd.Client(port=4001,host="127.0.0.1")
 
 class Application(tornado.web.Application):
     """
@@ -68,6 +71,8 @@ class Application(tornado.web.Application):
 
 
 
+            (r'/server_mgr/server_mgr', ServerMgr),
+            (r'/server_mgr/server_stopping', ServerStopping),
 
             (r'/maintain/mgr', Maintain),
             (r'/maintain/mgr_post', Maintain),
@@ -107,8 +112,10 @@ class Application(tornado.web.Application):
         DBMgr.load()
         global Redis
         Redis =initRedisConfig(options.mode)
-
-
+        global Etcd
+        etcdConfig=conf.getEtcdAddr()
+        Etcd=etcd.client.Client(port=etcdConfig["port"],host=etcdConfig["ip"], allow_reconnect=True)
+        print(isServerRunning())
 
 
 
@@ -125,4 +132,28 @@ def initRedisConfig(mode):
         redis_host = value["redis"]['addr'].split(':')[0]
         redis_port = value["redis"]['addr'].split(':')[1]
         return redis.Redis(host=redis_host, port=redis_port, db=0)
+
+# [{u'processId': 1, u'startServerTime': 1465809520, u'ip': u'192.168.1.100', u'st': u'stopping', u'serverId': 1, u'port': u'2234', u'maxClientCount': 1000}
+# , {u'processId': 2, u'startServerTime': 1465814775, u'ip': u'192.168.1.100', u'currentTcpCount': 250, u'st': u'running', u'serverId': 1, u'port': u'2235', u'maxClientCount': 1000}]
+def getEtcdServerList(platform=1,server=1):
+    list=[]
+    global Etcd
+    try:
+        d =Etcd.read("/%s/logicmgr/%d/%d"%(conf.AppName,int(platform),int(server)),recursive=True)
+        for c in d.children:
+            list.append(json.loads(c.value))
+        list.sort()
+        return list
+    except etcd.EtcdKeyNotFound:
+        return list
+
+
+def isServerRunning(platform=1,server=1):
+    servers=getEtcdServerList()
+    running =False
+    for server in servers:
+        if server["st"]=="running":
+            running=True
+            break
+    return running
 

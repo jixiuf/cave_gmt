@@ -1,0 +1,80 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/maintain.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-login-form">
+    <h2 class="form-signin-heading ui-login-title">服务器管理</h2>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">服务器编号</label>
+
+            <div class="col-sm-6">
+                <select class="form-control op-serverid col-sm-2" >
+                    <option value='1'>下拉选择serverId(default 1)</option>
+                    {% for serverId in serverIdList %}
+                    <option value='{{serverId}}'>{{ serverId }}</option>
+                    {% end %}
+                </select>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default op-login-submit">预停服</button>预停服后，将逐渐关闭各房间，不再开新房间，未登录的玩家不允许登录,1 2分钟后便可进行停服操作
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">开服停服:</label>
+            <div class="col-sm-offset-2 col-sm-10">
+                    {% for serverId in supervisorAddrJson %}
+                        {{ serverId }}服：<br/>
+                        {% for etcdServer in etcdServerListMap[serverId] %}
+                                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ etcdServer["processId"] }}线:   {{etcdServer["st"]}}<br/>
+                        {% end %}
+
+                        {% for addr in supervisorAddrJson[serverId] %}
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ addr }}" target="blank">{{ addr }}</a><br/>
+                        {% end %}
+                    {% end %}
+
+            </div>
+        </div>
+
+    </form>
+</div>
+
+
+<script type="text/javascript">
+ var ajaxing = false,
+     serverIdEl = $('.op-serverid'),
+     submitEl = $('.op-login-submit'),
+     data = {};
+
+ submitEl.on('click', function() {
+     if(ajaxing) return false;
+     var serverId = serverIdEl.val().replace(/(^\s*)|(\s*$)/g, "");
+     if(serverId == '' ) {
+         serverId="1";
+     }
+     data['serverId'] = serverId;
+     ajaxing = true;
+     $.ajax({
+         url: '/server_mgr/server_stopping',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          if(data == 'success') {
+              location.href = '/server_mgr/server_mgr';
+          } else {
+              alert('无权限'+data);
+          }
+      });
+     return false;
+ });
+
+</script>
+
+{% end %}

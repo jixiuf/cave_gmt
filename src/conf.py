@@ -58,3 +58,34 @@ def getChannelPlatformMap():
     return ret
 
 
+def getSupervisorAddrList(server="1"):
+    addrs=[]
+    with open("%s/%s.json"%(CONFIG_DIR,options.mode)) as data_file:
+        value = json.load(data_file)
+        if value==None:
+            return addrs
+        addrs.append(value["supervisor"][str(server)])
+    return addrs
+
+def getAllSupervisorAddrList(): # key=server ,value =["addr"]
+    addrs=[]
+    with open("%s/%s.json"%(CONFIG_DIR,options.mode)) as data_file:
+        value = json.load(data_file)
+        if value==None:
+            return addrs
+        return value["supervisor"]
+def getEtcdAddr():
+    addrs={}                    # "ip":"ip","port":"port"
+    with open("%s/%s.json"%(CONFIG_DIR,options.mode)) as data_file:
+        value = json.load(data_file)
+        if value==None:
+            return addrs
+        if len(value["etcd"])==0:
+            return addrs
+        value["etcd"][0]=value["etcd"][0].replace("https://","")
+        value["etcd"][0]=value["etcd"][0].replace("http://","")
+        token=value["etcd"][0].split(":")
+        addrs["ip"]=token[0]
+        addrs["port"]=int(token[1])
+        return addrs
+

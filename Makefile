@@ -19,6 +19,8 @@ build-dep:
 	./virtual/bin/pip install chardet
 	./virtual/bin/pip install qiniu
 	./virtual/bin/pip install redis
+	./virtual/bin/pip install simplejson
+	./virtual/bin/pip install python-etcd
 	./virtual/bin/pip install tornado-mysql
 	cd src/tea;sh buildtea.sh
 clean:
