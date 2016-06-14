@@ -17,7 +17,7 @@ class Broadcast(BaseHandler):
     @gen.coroutine
     def self_get(self):
         serverIdList= app.DBMgr.get_all_server_id()
-        self.render("broadcast.html",title="紧急公告",serverIdList=serverIdList)
+        self.render("broadcast.html",title="紧急广播",serverIdList=serverIdList)
     @asynchronous
     @gen.coroutine
     def self_post(self):
