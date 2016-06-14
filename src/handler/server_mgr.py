@@ -30,7 +30,7 @@ class ServerStopping(BaseHandler):
     def self_post(self):
         serverIdStr=self.get_argument('serverId')
         app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,serverIdStr), redis_notify.NOTIFY_TYPE_SERVER_STOPPING)
-        time.sleep(0.01)
+        time.sleep(0.1)
         self.write('success')
 
         # maintainList=yield app.DBMgr.maintainDB.select_all()
