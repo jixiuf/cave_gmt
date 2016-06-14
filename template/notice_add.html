@@ -1,0 +1,198 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/notice_edit.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" href="../static/javascript/plugin/any_time/any_time.css">
+{% end %}
+{% block body %}
+<div class="ui-announcement-edit">
+    <h2 class="form-signin-heading ui-edit-title">公告添加</h2>
+    <form class="form-horizontal ui-edit-form" role="form">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">公告标题</label>
+            <div class="col-sm-10">
+                <input class="form-control op-ipt-title" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">公告内容</label>
+            <div class="col-sm-10">
+                <div id="sample">
+                    <div>
+                        <textarea id="editor_id" name="content" style="width:700px;height:300px;"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">时间范围</label>
+            <div class="col-sm-10">
+                <span class="ui-time-txt">起始时间</span>
+                <input class="form-control op-time-start" type="text" id="rangeDemoStart">
+                <span class="ui-time-txt">结束时间</span>
+                <input class="form-control op-time-finish" type="text" id="rangeDemoFinish">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">服务器</label>
+            <div class="col-sm-10">
+                <select class="form-control op-sel-server col-sm-2" >
+                    <option value='1'>下拉选择serverId(default 1)</option>
+                    {% for serverId in serverIdList %}
+                    <option value='{{serverId}}'>{{ serverId }}</option>
+                    {% end %}
+                </select>
+
+            </div>
+
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button class="btn btn-default op-add-submit">生成</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="../static/javascript/plugin/any_time/any_time.js"></script>
+<script src="../static/javascript/plugin/kindeditor/kindeditor.js"></script>
+<script src="../static/javascript/plugin/kindeditor/lang/zh_CN.js"></script>
+<script type="text/javascript">
+    //time
+    var oneDay = 24*60*60*1000;
+    var rangeDemoFormat = "%Y-%m-%d";
+    var rangeDemoConv = new AnyTime.Converter({format:rangeDemoFormat});
+        $("#rangeDemoToday").click(function(e) {
+            $("#rangeDemoStart").val(rangeDemoConv.format(new Date())).change();
+        });
+        $("#rangeDemoClear").click(function(e) {
+            $("#rangeDemoStart").val("").change();
+        });
+        $("#rangeDemoStart").AnyTime_picker({format:rangeDemoFormat});
+        $("#rangeDemoStart").change(function(e) {
+            try {
+                var fromDay = rangeDemoConv.parse($("#rangeDemoStart").val()).getTime();
+                var dayLater = new Date(fromDay+oneDay);
+                dayLater.setHours(0,0,0,0);
+                var ninetyDaysLater = new Date(fromDay+(90*oneDay));
+                ninetyDaysLater.setHours(23,59,59,999);
+                $("#rangeDemoFinish")
+                    .AnyTime_noPicker()
+                    .removeAttr("disabled")
+                    .val(rangeDemoConv.format(dayLater))
+                    .AnyTime_picker({
+                        earliest: dayLater,
+                        format: rangeDemoFormat,
+                        latest: ninetyDaysLater
+                    });
+            } catch(e) {
+                $("#rangeDemoFinish").val("").attr("disabled","disabled");
+            }
+        } );
+
+    var ajaxing = false,
+        submitBtnEl = $('.op-add-submit'),
+        titleEl = $('.op-ipt-title'),
+        contentEl = $('.op-txt-content'),
+        serverEl = $('.op-sel-server'),
+        startEl = $('.op-time-start'),
+        finishEl = $('.op-time-finish'),
+        data = {},
+        strFun,
+        strColorFun,
+        strSizeFun;
+
+    //editor
+    strFun = function(str, rgExp, reg, re, num) {
+        var count = str.match(reg);
+        if(count==null){
+            return str;
+        }
+        for(var i = 0, len = count.length; i < len; i++) {
+            str = str.replace(re, rgExp.exec(str)[num]);
+        }
+        return str;
+    }
+
+    strColorFun = function(str, rgExp, reg, re, num) {
+        var count = str.match(reg);
+        if(count==null){
+            return str;
+        }
+        for(var i = 0, len = count.length; i < len; i++) {
+            str = str.replace(re, 'color="'+rgExp.exec(str)[num]+'"');
+        }
+        return str;
+    }
+
+    strSizeFun = function(str, rgExp, reg, re, num) {
+        var count = str.match(reg);
+        if(count==null){
+            return str;
+        }
+        for(var i = 0, len = count.length; i < len; i++) {
+            str = str.replace(re, 'size="'+rgExp.exec(str)[num]+'"');
+        }
+        return str;
+    }
+
+
+    submitBtnEl.on('click', function() {
+        if(titleEl.val() == '' || contentEl.val() == '' || startEl.val() == '' || finishEl.val() == '') {
+            return false;
+        }
+        data['title'] = titleEl.val();
+        var htmlStr = editor.html(),
+            fStr,
+            sStr,
+            tStr,
+            rgExp,
+            re,
+            reg;
+        rgExp = /(style=")([^"]+)(")/;
+        re = /style="[^"]*"/;
+        reg = /style="[^"]*"/g;
+        fStr = strFun(htmlStr, rgExp, reg, re, 2);
+        rgExp = /(color:)(#[0-9a-zA-Z]{6})(;)/;
+        re = /color:[^;]*;/;
+        reg = /color:[^;]*;/g;
+        sStr = strColorFun(fStr, rgExp, reg, re, 2);
+        rgExp = /(font-size:)([0-9]{1,2})(px;)/;
+        re = /font-size:[^;]*;/;
+        reg = /font-size:[^;]*;/g;
+        tStr = strSizeFun(sStr, rgExp, reg, re, 2);
+        data['content'] = tStr.replace(/span/g, 'font');
+        data['serverId'] = serverEl.val();
+        data['start'] = startEl.val();
+        data['finish'] = finishEl.val();
+        if(ajaxing) return false;
+        ajaxing = true;
+        $.ajax({
+            url: '/api/notice/add',
+            type: 'post',
+            data: data
+        })
+        .done(function(data) {
+            var info = data;
+            location.href = '/notice/add';
+            ajaxing = false;
+        });
+        return false;
+    });
+
+    KindEditor.ready(function(K) {
+        window.editor = K.create('#editor_id',{
+            cssPath: '../static/javascript/plugin/kindeditor/kindeditor.css',
+            width: '403px',
+            minWidth: '403px',
+            items: ['source', '|', 'undo'],
+            <!--             items: ['source', '|', 'undo', 'fontsize', '|', 'forecolor'], -->
+            fontSizeTable: ['16px', '18px', '20px', '22px', '24px', '32px'],
+            htmlTags: {
+                font: ['color', 'size'],
+                span : ['.color', '.font-size'],
+                p: []
+            }
+        });
+    });
+</script>
+{% end %}

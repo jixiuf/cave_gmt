@@ -1,0 +1,408 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/notice_manage.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="form-group ui-announcement-manage">
+    <h2 class="form-signin-heading ui-record-title">公告管理</h2>
+    <div class="ui-channel-sel clearfix">
+            <label class="col-sm-2 control-label">服务器:</label>
+            <div class="col-sm-6">
+                <select class="form-control op-sel-server col-sm-2" >
+                    <option value='1'>下拉选择serverId(default 1)</option>
+                    {% for serverId in serverIdList %}
+                    <option value='{{serverId}}'>{{ serverId }}</option>
+                    {% end %}
+                </select>
+            </div>
+        <button class="btn btn-default ui-channel-search op-channel-search">查询</button>
+        <button class="btn btn-default ui-channel-search op-channel-add">添加</button>
+
+    </div>
+    <table class="table ui-notice-table op-notice-table">
+        <thead class="op-table-head">
+        </thead>
+        <tbody class="op-table-body">
+        </tbody>
+    </table>
+    <table class="table ui-delete-table ui-hide op-delete-table">
+        <thead>
+            <tr>
+                <th>移除的公告id</th>
+                <th>标题</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody class="op-delete-body">
+        </tbody>
+    </table>
+    <button class="btn btn-default op-submit-btn">确认修改</button>
+    <!-- Modal -->
+    <div class="modal fade op-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title op-modal-title"></h4>
+          </div>
+          <div class="modal-body op-modal-body">
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>
+<script type="text/javascript">
+    var
+        searchEl = $('.op-channel-search'),
+        addEl = $('.op-channel-add'),
+        tableEl = $('.op-notice-table'),
+        theadEl = $('.op-table-head'),
+        tbodyEl = $('.op-table-body'),
+        modalEl = $('.op-modal'),
+        modalBodyEl = $('.op-modal-body'),
+        modalListEl = $('.op-modal-list'),
+        modalTitleEl = $('.op-modal-title'),
+        deleteBodyEl = $('.op-delete-body'),
+        deleteTableEl = $('.op-delete-table'),
+        bannerEl = $('.op-banner'),
+        submitEl = $('.op-submit-btn'),
+        imgEl = $('.op-banner-img'),
+        viewCountEl,
+        ajaxing = false,
+        data = {},
+        noticeData,
+        modalData,
+        tbodyFun,
+        imgFun,
+        getDataFun,
+        dataFun,
+        addNoticeFun,
+        checkEmptyFun,
+        formDataFun,
+        viewCountFun,
+        uploadFun,
+        readerFun,
+        headStr = '<tr>' +
+                      '<th></th>' +
+                      '<th>开始时间</th>' +
+                      '<th>结束时间</th>' +
+                      '<th>公告id</th>' +
+                      '<th>标题</th>' +
+                      '<th></th>' +
+                  '</tr>';
+
+    searchEl.on('click', function() {
+        if(ajaxing) return false;
+        ajaxing = true;
+        serverEl = $('.op-sel-server');
+        data['serverId'] = serverEl.val();
+        $.ajax({
+            url: '/api/notice/info',
+            type: 'post',
+            data: data
+        })
+        .done(function(data) {
+            var info = JSON.parse(data);
+            deleteBodyEl.html('');
+            deleteTableEl.addClass('ui-hide');
+            tbodyFun(info, theadEl, tbodyEl);
+            bannerEl.removeClass('hide');
+            imgFun(info);
+            ajaxing = false;
+        });
+        return false;
+    });
+
+    imgFun = function(data) {
+        /*         $('.op-banner-1').data('channel', data[0].channel); */
+        if(data[0] && data[0].url) {
+            $('.op-banner-1').attr('src', data[0].url);
+        }
+
+        if(data[1] && data[1].url) {
+            $('.op-banner-2').attr('src', data[1].url);
+        }
+    }
+
+    dataFun = function(data) {
+        var htmlStr = '';
+        for(var i = 0, len = data.length; i < len; i++) {
+            if(!data[i]['startTime']) {
+                data[i]['startTime'] = '00-00-00';
+            }
+            if(!data[i]['endTime']) {
+                data[i]['endTime'] = '00-00-00';
+            }
+            htmlStr += '<tr class="op-list-item" data-id="' + data[i]['id'] + '" data-item="' + data[i]['sequenceId'] + '">' +
+                           '<th class="op-view-count">' + data[i]['sequenceId'] + '</th>' +
+                           '<th>' + data[i]['startTime'] + '</th>' +
+                           '<th>' + data[i]['endTime'] + '</th>' +
+                           '<th>' + data[i]['id'] + '</th>' +
+                           '<th>' + data[i]['title'] + '</th>' +
+                           '<th>' +
+                               '<button class="btn btn-default ui-item-btn op-item-delete">移除</button>' +
+                               '<button class="btn btn-default ui-item-btn op-item-down">下移</button>' +
+                               '<button class="btn btn-default ui-item-btn op-item-up">上移</button>' +
+                               '<button class="btn btn-default ui-item-btn op-item-content">内容查看</button>' +
+                           '</th>' +
+                       '</tr>';
+        }
+
+        return htmlStr;
+    }
+
+    tbodyFun = function(data, head, body) {
+        var htmlStr = dataFun(data);
+        noticeData = data;
+        head.html(headStr);
+        body.html(htmlStr);
+    }
+
+    modalEl.delegate('.op-modal-add', 'click', function(e) {
+        var id = $(e.currentTarget).parent().children().eq(0).text(),
+            itemEl = $('.op-list-item'),
+            deleteIds = $('.op-delete-id'),
+            data;
+
+        if(itemEl.length) {
+            for(var i = 0, len = itemEl.length; i < len; i++) {
+                if(id == itemEl.eq(i).data('id')) {
+                    modalEl.modal('hide');
+                    return;
+                }
+            }
+        }
+
+        if(deleteBodyEl.children().length) {
+            for(var i = 0, len = deleteIds.length; i < len; i++) {
+                if(id == deleteIds.eq(0).text()) {
+                    modalEl.modal('hide');
+                    return;
+                }
+            }
+        }
+
+        for(var i = 0, len = modalData.length; i < len; i++) {
+            if(modalData[i]['id'] == id) {
+                data = modalData[i];
+            }
+        }
+
+        tbodyEl.append(dataFun([data]));
+        modalEl.modal('hide');
+        viewCountFun();
+    });
+
+    tbodyEl.delegate('.op-item-content', 'click', function(e) {
+        var parentEl = $(e.currentTarget).parent().parent(),
+            id = parentEl.data('id'),
+            title = '',
+            content = '';
+        if(getDataFun(noticeData, id, 'content')) {
+            content = getDataFun(noticeData, id, 'content');
+        }
+        if(!content && modalData) {
+            if(getDataFun(modalData, id, 'content')) {
+                content = getDataFun(modalData, id, 'content');
+            }
+        }
+
+        if(getDataFun(noticeData, id, 'title')) {
+            title = getDataFun(noticeData, id, 'title');
+        }
+        if(!title && modalData) {
+            if(getDataFun(modalData, id, 'title')) {
+                title = getDataFun(modalData, id, 'title');
+            }
+        }
+        modalEl.modal();
+        modalBodyEl.addClass('ui-modal-content');
+        modalTitleEl.html(title);
+        modalBodyEl.html(content);
+    });
+
+    tbodyEl.delegate('.op-item-up', 'click', function(e) {
+        var parentEl = $(e.currentTarget).parent().parent();
+        parentEl.prev().before(parentEl);
+        viewCountFun();
+    });
+
+    tbodyEl.delegate('.op-item-down', 'click', function(e) {
+        var parentEl = $(e.currentTarget).parent().parent();
+        parentEl.next().after(parentEl);
+        viewCountFun();
+    });
+
+    tbodyEl.delegate('.op-item-delete', 'click', function(e) {
+        var parentEl = $(e.currentTarget).parent().parent(),
+            id = parentEl.data('id'),
+            htmlStr = '';
+        title = getDataFun(noticeData, id, 'title');
+        if(!title) {
+            title = getDataFun(modalData, id, 'title');
+        }
+        htmlStr += '<tr>' +
+                       '<th class="op-delete-id">' + id + '</th>' +
+                       '<th>' + title + '</th>' +
+                       '<th>' +
+                           '<button class="btn btn-default ui-item-btn op-restore-btn">恢复</button>' +
+                       '</th>' +
+                   '</tr>';
+        parentEl.remove();
+        deleteBodyEl.append(htmlStr);
+        viewCountFun();
+        deleteTableEl.removeClass('ui-hide');
+        checkEmptyFun();
+    });
+
+    getDataFun = function(data, id, item) {
+        var rData;
+        for(var i = 0, len = data.length; i < len; i++) {
+            if(data[i]['id'] == id) {
+                if(data[i][item]) {
+                    rData = data[i][item];
+                } else {
+                    rData = '';
+                }
+            }
+        }
+        return rData;
+    }
+
+    viewCountFun = function() {
+        viewCountEl = $('.op-view-count');
+        var el,
+            count;
+        for(var i = 0, len = viewCountEl.length; i < len; i++) {
+            el = viewCountEl.eq(i);
+            count = el.parent().prevAll().length + 1;
+            el.text(count);
+            el.parent().data('item', count);
+            el.parent().attr('data-item', count);
+        }
+    }
+
+    addEl.on('click', function() {
+        if(theadEl.children().length) {
+            if(ajaxing) return false;
+            ajaxing = true;
+            serverEl = $('.op-sel-server');
+            data['serverId'] = serverEl.val();
+
+            $.ajax({
+                url: '/api/notice/add/info',
+                type: 'post',
+                data: data
+            })
+            .done(function(data) {
+                var info = JSON.parse(data);
+                modalFun(info);
+                ajaxing = false;
+            });
+        }
+        return false;
+    });
+
+    modalFun = function(data) {
+        var htmlStr = '<li class="ui-modal-item clearfix">' +
+                          '<div class="ui-item-id">id</div>' +
+                          '<div class="ui-item-title">标题</div>' +
+                      '</li>';
+        modalData = data;
+        modalEl.modal();
+        modalBodyEl.removeClass('ui-modal-content');
+        modalTitleEl.html("选择添加公告");
+        for(var i = 0, len = data.length; i < len; i++) {
+            htmlStr += '<li class="ui-modal-item op-modal-item clearfix">' +
+                          '<div class="ui-item-id">' + data[i]['id'] + '</div>' +
+                          '<div class="ui-item-title">' + data[i]['title'] + '</div>' +
+                          '<button class="btn btn-default ui-modal-btn op-modal-add">添加</button>'
+                       '</li>'
+        }
+        htmlStr = '<ul class="ui-single-list op-modal-list">' + htmlStr + '</ul>';
+        modalBodyEl.html(htmlStr);
+    }
+
+    addNoticeFun = function(data) {
+        var htmlStr = dataFun(data);
+        tbodyEl.append(htmlStr);
+    }
+
+    deleteTableEl.delegate('.op-restore-btn', 'click', function(e) {
+        var parentEl = $(e.currentTarget).parent().parent(),
+            id = parentEl.children().eq(0).text(),
+            data;
+
+        if(noticeData) {
+            for(var i = 0, len = noticeData.length; i < len; i++) {
+                if(noticeData[i]['id'] == id) {
+                    data = noticeData[i];
+                }
+            }
+        }
+
+        if(modalData) {
+            for(var i = 0, len = modalData.length; i < len; i++) {
+                if(modalData[i]['id'] == id) {
+                    data = modalData[i];
+                }
+            }
+        }
+
+        parentEl.remove();
+        tbodyEl.append(dataFun([data]));
+        viewCountFun();
+        tableEl.removeClass('ui-hide');
+        checkEmptyFun();
+    });
+
+    checkEmptyFun = function() {
+        if(!deleteBodyEl.children().length) {
+            deleteTableEl.addClass('ui-hide');
+        }
+
+        if(!tbodyEl.children().length) {
+            tableEl.addClass('ui-hide');
+        }
+    }
+
+
+    submitEl.on('click', function() {
+        var data = {},
+            url = {},
+            update = {},
+            removeId = [];
+        url[0] = imgEl.eq(0).attr('src');
+        url[1] = imgEl.eq(1).attr('src');
+        if(tbodyEl.children().length) {
+            for(var i = 0, len = tbodyEl.children().length; i < len; i++) {
+                update[tbodyEl.children().eq(i).data('id')] = tbodyEl.children().eq(i).data('item');
+            }
+        }
+
+        if(deleteBodyEl.children().length) {
+            for(var i = 0, len = deleteBodyEl.children().length; i < len; i++) {
+                removeId.push(deleteBodyEl.children().eq(i).children().eq(0).text());
+            }
+        }
+
+        /*         data['channel'] = $('.op-banner-1').data('channel'); */
+        data['url'] = JSON.stringify(url);
+        data['update'] = JSON.stringify(update);
+        data['remove_id'] = JSON.stringify(removeId);
+
+        if(ajaxing) return false;
+        ajaxing = true;
+        submitEl.attr('disabled', 'true');
+        $.ajax({
+            url: '/api/notice/update',
+            type: 'post',
+            data: data
+        })
+        .done(function(data) {
+            location.href = '/notice/get';
+        });
+        return false;
+    });
+</script>
+{% end %}

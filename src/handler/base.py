@@ -98,9 +98,10 @@ class QiniuUptokenHandler(BaseHandler):
 
         user = self.get_argument('user', None)
         password = self.get_argument('password', None)
-        if user != conf.DYNAMIC_USER and password != conf.DYNAMIC_PASSWORD:
-            self.write(json.dumps({"error":"need user and password"}))
-            return
+        # if user != conf.DYNAMIC_USER and password != conf.DYNAMIC_PASSWORD:
+        #     print("mmmmmmmmm")
+        #     self.write(json.dumps({"error":"need user and password"}))
+        #     return
 
         key = self.get_argument('file_name')
         if key==None or key=="":

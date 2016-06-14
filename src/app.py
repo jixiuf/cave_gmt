@@ -14,6 +14,7 @@ import db.dbmgr
 
 import handler
 from handler.broadcast import *
+from handler.notice import *
 from handler.ping import PingHandler
 from handler.login import *
 from handler.account import *
@@ -80,6 +81,15 @@ class Application(tornado.web.Application):
             (r'/maintain/delete', MaintainDelete),
             (r'/broadcast/get', Broadcast),
             (r'/broadcast/post', Broadcast),
+
+            (r'/notice/get', NoticeManageRenderHandler),
+            (r'/notice/add', NoticeAddRenderHandler),
+            (r'/notice/edit', NoticeEditRenderHandler),
+            (r'/api/notice/info', NoticeInfoHandler),
+            (r'/api/notice/add/info', NoticeAddInfoHandler),
+            (r'/api/notice/add', NoticeAddHandler),
+            (r'/api/notice/update', NoticeUpdateHandler),
+
 
             (r'/game/update', GameUpdateRenderHandler),
             # (r'/game/dynamic', GameDynamicRenderHandler),

@@ -1,0 +1,64 @@
+.ui-announcement-manage .ui-channel-sel {
+  max-width: 500px;
+  padding: 0;
+  margin: 20px 0;
+}
+.ui-announcement-manage .ui-channel-sel .ui-select-option {
+  max-width: 320px;
+  float: left;
+}
+.ui-announcement-manage .ui-channel-sel .ui-channel-search {
+  float: left;
+  margin-left: 10px;
+}
+.ui-announcement-manage .ui-item-btn {
+  float: right;
+  margin-left: 5px;
+}
+.ui-announcement-manage .ui-single-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ui-announcement-manage .ui-single-list .ui-modal-item {
+  border-bottom: solid 1px #e9e9e9;
+}
+.ui-announcement-manage .ui-single-list .ui-modal-item .ui-item-id {
+  float: left;
+  width: 50px;
+  padding: 13px;
+}
+.ui-announcement-manage .ui-single-list .ui-modal-item .ui-item-title {
+  float: left;
+  padding: 13px;
+}
+.ui-announcement-manage .ui-single-list .ui-modal-item .ui-modal-btn {
+  float: right;
+  margin-top: 5px;
+}
+.ui-announcement-manage .ui-notice-table.ui-hide {
+  display: none;
+}
+.ui-announcement-manage .ui-delete-table.ui-hide {
+  display: none;
+}
+.ui-announcement-manage .ui-banner.ui-hide {
+  display: none;
+}
+.ui-announcement-manage .ui-banner .ui-upload-wrap {
+  position: relative;
+}
+.ui-announcement-manage .ui-banner .ui-upload-wrap .ui-banner-list {
+  margin-right: 15px;
+  max-width: 290px;
+  float: left;
+  margin-bottom: 20px;
+}
+.ui-announcement-manage .ui-banner .ui-upload-wrap .ui-file-ipt {
+  margin-top: 5px;
+  font-size: 16px;
+  float: left;
+}
+.ui-announcement-manage .ui-modal-content {
+  background: #999999;
+}

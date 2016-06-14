@@ -11,6 +11,7 @@ import utils
 import conf
 
 from db_maintain import MaintainDB
+from db_notice import NoticeDB
 from db_present_pack import PresentPackDB
 from db_permissions import PermissionDB
 from db_permissions import PermissionLevelDB
@@ -129,6 +130,10 @@ class DBMgr:
 
         self.maintainDB=MaintainDB(self.getProfileDB())
         yield self.maintainDB.create_table()
+
+        self.noticeDB=NoticeDB(self.getProfileDB())
+        # yield self.noticeDB.create_table()
+
 
         self.dynamicVersionUpdateDB=DynamicVersionUpdateDB(self.getProfileDB())
         yield self.dynamicVersionUpdateDB.create_table()
