@@ -1,0 +1,42 @@
+.ui-announcement-edit {
+  max-width: 490px;
+  margin: 0 auto;
+}
+.ui-announcement-edit .ui-edit-title {
+  margin-left: 175px;
+}
+.ui-announcement-edit .ui-time-width {
+  float: left;
+  max-width: 160px;
+}
+.ui-announcement-edit .ui-time-text {
+  float: left;
+  margin: 10px 20px 0 20px;
+}
+.ui-announcement-edit .ui-btn-edit {
+  margin-top: 15px;
+}
+.ui-announcement-edit .ui-content-edit {
+  min-height: 34px;
+  display: block;
+  width: 100%;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.428571429;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+  transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+}
+.ui-announcement-edit .ui-content-edit:focus {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
