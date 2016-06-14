@@ -13,6 +13,7 @@ from logger import *
 import db.dbmgr
 
 import handler
+from handler.broadcast import *
 from handler.ping import PingHandler
 from handler.login import *
 from handler.account import *
@@ -77,6 +78,8 @@ class Application(tornado.web.Application):
             (r'/maintain/mgr', Maintain),
             (r'/maintain/mgr_post', Maintain),
             (r'/maintain/delete', MaintainDelete),
+            (r'/broadcast/get', Broadcast),
+            (r'/broadcast/post', Broadcast),
 
             (r'/game/update', GameUpdateRenderHandler),
             # (r'/game/dynamic', GameDynamicRenderHandler),
