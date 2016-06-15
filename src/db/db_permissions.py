@@ -34,7 +34,7 @@ class PermissionDB:
                 "`account` varchar(255) NOT NULL DEFAULT '' COMMENT 'account'," \
                 "`password` varchar(255) NOT NULL DEFAULT '' COMMENT 'password'," \
                 "`create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," \
-                "`update_time` timestamp NOT NULL DEFAULT '0000-00-00'," \
+                "`update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," \
                 "`level` smallint(6) NOT NULL DEFAULT '0' COMMENT 'level'," \
                 "primary key(id),"\
                 "unique key `account` (`account`))"\
@@ -100,7 +100,7 @@ class PermissionLevelDB:
                 "`level` smallint(6) NOT NULL DEFAULT '0' COMMENT 'level'," \
                 "`levelDesc` varchar(255) NOT NULL DEFAULT '' COMMENT 'levelDesc'," \
                 "`create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," \
-                "`update_time` timestamp NOT NULL DEFAULT '0000-00-00'," \
+                "`update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," \
                 "`urls` varchar(1024) NOT NULL DEFAULT '' COMMENT 'urls'," \
                 "primary key(level))"\
                 "ENGINE = InnoDB CHARACTER SET = utf8"
