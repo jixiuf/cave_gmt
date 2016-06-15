@@ -7,6 +7,7 @@ from base import *
 from chardet import detect
 import datetime
 from tornado.web import asynchronous
+import redis_notify
 
 class NoticeManageRenderHandler(BaseHandler):
 
@@ -107,3 +108,6 @@ class NoticeUpdateHandler(BaseHandler):
             url_first = str(url['0'])
             url_second = str(url['1'])
             yield app.DBMgr.noticeDB.update_url( url_first, url_second)
+        app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_NOTICE)
+
+
