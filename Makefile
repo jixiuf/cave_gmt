@@ -8,6 +8,8 @@ run:
 	./virtual/bin/python src/main.py
 run-stage:
 	./virtual/bin/python src/main.py -host=0.0.0.0
+run-prod:
+	./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro
 
 test:
 	cd src;../virtual/bin/python -m runtests
