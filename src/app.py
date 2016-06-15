@@ -128,7 +128,6 @@ class Application(tornado.web.Application):
         global Etcd
         etcdConfig=conf.getEtcdAddr()
         Etcd=etcd.client.Client(port=etcdConfig["port"],host=etcdConfig["ip"], allow_reconnect=True)
-        print(isServerRunning())
 
 
 
