@@ -29,7 +29,11 @@ class ServerStopping(BaseHandler):
     @gen.coroutine
     def self_post(self):
         serverIdStr=self.get_argument('serverId')
-        app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,serverIdStr), redis_notify.NOTIFY_TYPE_SERVER_STOPPING)
+        processIdStr=self.get_argument('processId')
+        if processIdStr=='' or processIdStr=="0":
+            app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,serverIdStr), redis_notify.NOTIFY_TYPE_SERVER_STOPPING)
+        else:
+            app.Redis.publish(redis_notify.get_process_redis_notify_channel(conf.PLATFORM,serverIdStr,processIdStr), redis_notify.NOTIFY_TYPE_SERVER_STOPPING)
         time.sleep(0.1)
         self.write('success')
 

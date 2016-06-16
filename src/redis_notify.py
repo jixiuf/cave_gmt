@@ -5,6 +5,10 @@ import conf
 
 REDIS_NOTIFY_CHANNEL="%s_notify_channel"%(conf.AppName)
 
+# 通知指定的服的指定进程
+def get_process_redis_notify_channel(platform,server,process):
+    return "%s_%d_%d_%d"%(REDIS_NOTIFY_CHANNEL,int(platform),int(server),int(process))
+
 # 通知指定的服
 def get_server_redis_notify_channel(platform,server):
     return "%s_%d_%d"%(REDIS_NOTIFY_CHANNEL,int(platform),int(server))
