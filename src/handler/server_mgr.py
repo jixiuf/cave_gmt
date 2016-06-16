@@ -39,3 +39,27 @@ class ServerStopping(BaseHandler):
 
         # maintainList=yield app.DBMgr.maintainDB.select_all()
         # self.render("maintain.html",title="维护公告",maintainList=maintainList)
+class KickUser(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+        serverIdStr=self.get_argument('serverId')
+        if serverIdStr=='':
+            serverIdStr='0'
+        processIdStr=self.get_argument('processId')
+        if processIdStr=='':
+            processIdStr="0"
+        uin=self.get_argument('uin') # 0表示踢所有人
+        if  serverIdStr=="0":
+            redisChan=redis_notify.get_platform_redis_notify_channel(conf.PLATFORM)
+        elif processIdStr=="0":
+            redisChan=redis_notify.get_server_redis_notify_channel(conf.PLATFORM,serverIdStr)
+        elif int(processIdStr)!=0:
+            redisChan=redis_notify.get_process_redis_notify_channel(conf.PLATFORM,serverIdStr,processIdStr)
+        else:
+            redisChan=redis_notify.get_platform_redis_notify_channel(conf.PLATFORM)
+
+        app.Redis.publish(redisChan, redis_notify.NOTIFY_TYPE_KICK_USER%uin)
+        time.sleep(0.1)
+        self.write('success')
+

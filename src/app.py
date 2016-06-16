@@ -47,6 +47,7 @@ class Application(tornado.web.Application):
             (r'/api/player_ban',PlayerBanHandler),
             (r'/api/player_unban',PlayerUnBanHandler),
             (r'/api/reload_design_data' ,DesignReload),
+            (r'/player/kick' ,KickUser),
 
 
 
