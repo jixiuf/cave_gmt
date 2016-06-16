@@ -43,13 +43,13 @@ class KickUser(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_post(self):
-        serverIdStr=self.get_argument('serverId')
+        serverIdStr=self.get_argument('serverId','0')
         if serverIdStr=='':
             serverIdStr='0'
-        processIdStr=self.get_argument('processId')
+        processIdStr=self.get_argument('processId','0')
         if processIdStr=='':
             processIdStr="0"
-        uin=self.get_argument('uin') # 0表示踢所有人
+        uin=self.get_argument('uin','0') # 0表示踢所有人
         if  serverIdStr=="0":
             redisChan=redis_notify.get_platform_redis_notify_channel(conf.PLATFORM)
         elif processIdStr=="0":

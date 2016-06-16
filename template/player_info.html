@@ -11,6 +11,7 @@
     {%else%}
     <button type="button" class="btn btn-default op-unban " id='btn-unban'>解封</button>
     {% end %}
+    <button type="button" class="btn btn-default op-ban " id='btn-kick'>踢人</button>
     <ul class=" list-unstyled ui-content-lists">
         {% if user != None %}
         <li class="clearfix ui-lists-item">
@@ -164,6 +165,7 @@
  var banEl=$("#btn-ban");
  var unbanEl=$("#btn-unban");
  var lastPayTimeEl=$("#op-last-PayTime");
+ var btnKickEl=$("#btn-kick");
 
  submitEl.on('click', function(){
      var data={};
@@ -232,9 +234,28 @@
           window.location.reload();
       });
      return false;
-
-
  });
+btnKickEl.on('click',function(){
+     var data={};
+     data['uin'] = uinEl.val();
+     data['serverId'] = serverEl.val();
+     data['processId'] = '0';
+     ajaxing = true;
+     $.ajax({
+         url: '/player/kick',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          if(data!="success"){
+              alert(data);
+          }
+          window.location.reload();
+      });
+     return false;
+ });
+
 
 </script>
 
