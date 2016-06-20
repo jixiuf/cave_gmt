@@ -102,7 +102,6 @@ class DynamicHandler(tornado.web.RequestHandler):
             'status': 'success'
         }
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
-        time.sleep(1)
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION_LOGIC)
         self.write(res)
         if isRedirect:
@@ -149,7 +148,6 @@ class VersionUpdateHandler(BaseHandler):
                     yield app.DBMgr.dynamicVersionUpdateDB.update(info)
             action = 'success'
             app.Redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
-            time.sleep(1)
             app.Redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION_LOGIC)
 
         except:
@@ -197,7 +195,6 @@ class GameAddressHandler(BaseHandler):
 
         yield app.DBMgr.versionUpdateDB.add(info)
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
-        time.sleep(1)
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION_LOGIC)
 
         self.write(json.dumps({ 'action': 'success' }))
@@ -271,7 +268,6 @@ class ServerVersionHandler(BaseHandler):
 
 
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
-        time.sleep(1)
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION_LOGIC)
 
 #       for i in a:
