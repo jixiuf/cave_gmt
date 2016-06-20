@@ -102,6 +102,8 @@ class DynamicHandler(tornado.web.RequestHandler):
             'status': 'success'
         }
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
+        time.sleep(1)
+        app.Redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION_LOGIC)
         self.write(res)
         if isRedirect:
             self.redirect(r'/game/server_version_update')
@@ -147,6 +149,9 @@ class VersionUpdateHandler(BaseHandler):
                     yield app.DBMgr.dynamicVersionUpdateDB.update(info)
             action = 'success'
             app.Redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
+            time.sleep(1)
+            app.Redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION_LOGIC)
+
         except:
             tuple = sys.exc_info()
             if tuple[1][0] == 1062:
@@ -192,6 +197,9 @@ class GameAddressHandler(BaseHandler):
 
         yield app.DBMgr.versionUpdateDB.add(info)
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
+        time.sleep(1)
+        app.Redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION_LOGIC)
+
         self.write(json.dumps({ 'action': 'success' }))
 
 # class CacheDynamicHandler(BaseHandler):
@@ -263,6 +271,9 @@ class ServerVersionHandler(BaseHandler):
 
 
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
+        time.sleep(1)
+        app.Redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION_LOGIC)
+
 #       for i in a:
 #           app.Redis.publish('centerserver_notify_queue', '{"type":7, "time":%s}'%(int(time.time()*1000)))
 #       app.Redis.publish('centerserver_notify_queue', '{"type":9, "time":%s}'%(int(time.time()*1000)))
