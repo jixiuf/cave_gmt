@@ -36,7 +36,7 @@ class DynamicVersionUpdateDB:
                 "comment varchar(1024) default '',"\
                 "note varchar(128) default '',"\
                 "svnVersion int default 0,"\
-                "create_time timestamp not null default 0,"\
+                "create_time timestamp not null default CURRENT_TIMESTAMP,"\
                 "primary key (channel ,version))"\
                 "ENGINE = innodb DEFAULT CHARACTER SET utf8;"
 
