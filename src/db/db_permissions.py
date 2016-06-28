@@ -48,7 +48,7 @@ class PermissionDB:
     @gen.coroutine
     def init_data(self):
         defaultAccount=yield self.select_all()
-        if defaultAccount==None:
+        if defaultAccount==None or defaultAccount==[]:
             yield self.add('admin',hashlib.sha1('admin').hexdigest())
             yield self.update_level('admin',1)
 
