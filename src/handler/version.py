@@ -254,6 +254,7 @@ class ServerVersionHandler(BaseHandler):
     @gen.coroutine
     def self_post(self):
         version = int(self.get_argument('version'))
+        showVersion = self.get_argument('showVersion')
         platform=int(self.get_argument('platform'))
 
         sv=yield app.DBMgr.serverVersionDB.select(platform)
@@ -261,6 +262,7 @@ class ServerVersionHandler(BaseHandler):
         sv.maxVesion=version/(1000*1000)
         sv.midVersion=(version/(1000) -sv.maxVesion*1000)
         sv.minVersion=version%1000
+        sv.showVersion=showVersion
         yield app.DBMgr.serverVersionDB.update(sv)
 
 

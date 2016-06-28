@@ -10,10 +10,11 @@
 <script src="../static/javascript/base/base.js"></script>
 <script type="text/javascript">
     var data = {% raw result %},
-        defaultChannelName = data.defaultChannelName,
-        platformGroupEl;
+    defaultChannelName = data.defaultChannelName,
+    platformGroupEl,
+    showVersionEl=$('.op-showVersion');
 
-    var addGroup = function(platform,platformVersion) {
+    var addGroup = function(platform,platformVersion,showVersion) {
         var groupStr = '<div class="ui-platform-group op-platform-group op-platform-' + platform + '" data-version="0" data-platform="' + platform + '">' +
                            '<div class="ui-server-platform">平台号:' + platform + '</div>' +
                            '<div class="ui-server-version">当前版本:'+platformVersion+'</div>' +
@@ -25,18 +26,20 @@
                                    '<div class="ui-cell-channel-url">最新动态更新包地址</div>' +
                                '</li>' +
                            '</ul>' +
+                           '显示版本号:<input  class="op-showVersion" value="'+showVersion+'"></input><br/> ' +
                            '<button class="btn btn-default ui-update-btn op-update-btn">更新版本</button> 只有当所有渠道版本号一致时，更新才有效' +
                        '</div>';
 
         $('.op-center').append(groupStr);
 
         platformGroupEl = $('.op-platform-group');
+        showVersionEl=$('.op-showVersion');
     }
 
     for(var i in data.channels) {
         if(!$('.op-platform-' + data.channels[i]).length) {
             var platformVersion=data.versionData[data.channels[i]].maxVersion*1000*1000+data.versionData[data.channels[i]].midVersion*1000+data.versionData[data.channels[i]].minVersion;
-            addGroup(data.channels[i],platformVersion);
+            addGroup(data.channels[i],platformVersion,data.versionData[data.channels[i]].showVersion);
         }
     }
 
@@ -82,8 +85,10 @@
 
     $('.op-update-btn').on('click', function() {
         var groupEl = $(this).parent('.op-platform-group');
+        var showVersionEl = groupEl.find('.op-showVersion');
         var data = {
             'version': groupEl.data().version,
+            'showVersion': showVersionEl.val(),
             'platform': groupEl.data().platform
         }
 
