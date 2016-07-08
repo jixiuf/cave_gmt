@@ -26,6 +26,7 @@ from handler.award import *
 from handler.mail import *
 from handler.player import *
 from handler.design  import *
+from handler.zjh_room_ai_control import *
 
 from tornado.ioloop import IOLoop
 
@@ -48,6 +49,9 @@ class Application(tornado.web.Application):
             (r'/api/player_unban',PlayerUnBanHandler),
             (r'/api/reload_design_data' ,DesignReload),
             (r'/player/kick' ,KickUser),
+
+            (r'/zjh_room_ai_control/get' ,ZJHRoomAIControl),
+            (r'/zjh_room_ai_control/post' ,ZJHRoomAIControlUpdate),
 
 
 

@@ -25,6 +25,7 @@ from db_version_update import VersionUpdateDB
 from db_server_version import ServerVersionDB
 from db_dynamic_version_update import DynamicVersionUpdateDB
 from db_award_type import AwardDB
+from db_design_room import BRoomDB
 
 class DBConfigList:
     def __init__(self,dbConfigObjList):
@@ -159,6 +160,8 @@ class DBMgr:
         return self.mailDraftDB
     def getMoneyDB(self,server=1):
         return MoneyDB(self.getGameDB(server))
+    def getBRoomDB(self,server=1):
+        return BRoomDB(self.getDesignDB(server))
 
 
 

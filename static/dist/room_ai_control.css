@@ -1,0 +1,63 @@
+.ui-room-ai-option {
+    max-width: 1024px;
+    margin: 0 auto;
+}
+.ui-room-ai-option .ui-room-ai-list {
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 20px;
+}
+.ui-room-ai-option .ui-room-ai-list .ui-room-ai-item {
+    text-align:center;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 5px 0;
+}
+.ui-room-ai-option .ui-room-ai-list .ui-room-ai-item .ui-room-ai-cell {
+    text-align:center;
+    width: 17%;
+    float: left;
+    word-wrap: break-word;
+}
+.ui-room-ai-option .ui-room-ai-list .ui-room-ai-item .ui-room-ai-cell-title {
+    text-align:center;
+    width: 12%;
+    float: left;
+    word-wrap: break-word;
+}
+.ui-room-ai-option .ui-room-ai-list .ui-room-ai-item .ui-room-ai-cell-content {
+    text-align:center;
+    width: 16%;
+    float: left;
+    word-wrap: break-word;
+    padding-right:5px;
+}
+
+.ui-room-ai-option .ui-room-ai-list .ui-room-ai-item .ui-room-ai-cell-status {
+    text-align:center;
+    width: 6%;
+    float: left;
+}
+.ui-room-ai-option .ui-room-ai-list .ui-room-ai-item .ui-room-ai-cell-operation {
+    text-align:center;
+    width: 10%;
+    float: left;
+}
+.ui-room-ai-option .ui-room-ai-list .ui-room-ai-item .ui-room-ai-cell-sender {
+    text-align:center;
+    width: 10%;
+    float: left;
+}
+.ui-room-ai-option .ui-room-ai-list .ui-room-ai-item .ui-room-ai-cell-startTime {
+    text-align:center;
+    width: 8%;
+    float: left;
+}
+.ui-room-ai-option .ui-room-ai-list .ui-room-ai-item .ui-room-ai-cell .ui-item-btn {
+    float: left;
+    margin-right: 5px;
+}
+.ui-room-ai-option .ui-modal-body {
+    background: #9c9c9c;
+}
