@@ -22,7 +22,7 @@
                 <br/>
                         {% for etcdServer in etcdServerListMap[serverId] %}
                                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ etcdServer["processId"] }} 线:   状态:{{etcdServer["st"]}}
-                               玩家总数:{{etcdServer["currentTcpCount"]}} AI数:{{etcdServer.get("ai_cnt",0)}}
+                               玩家总数:{{etcdServer["currentTcpCount"]}} &nbsp;&nbsp;AI数:{{etcdServer.get("ai_cnt",0)}}
                             {% if etcdServer["st"] =='stopping' %}
                                <button type="submit" data-server-id='{{serverId}}'  data-process-id='{{etcdServer["processId"]}}' disabled class="btn disabled btn-default op-stopping-submit">预停{{ etcdServer["processId"] }}线</button>
                                {%else%}
