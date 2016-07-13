@@ -80,6 +80,7 @@ class Application(tornado.web.Application):
 
             (r'/server_mgr/server_mgr', ServerMgr),
             (r'/server_mgr/server_stopping', ServerStopping),
+            (r'/server_mgr/server_switch', ServerSwitch),
 
             (r'/maintain/mgr', Maintain),
             (r'/maintain/mgr_post', Maintain),
@@ -158,11 +159,24 @@ def getEtcdServerList(platform=1,server=1):
     try:
         d =Etcd.read("/%s/logicmgr/%d/%d"%(conf.AppName,int(platform),int(server)),recursive=True)
         for c in d.children:
-            list.append(json.loads(c.value))
+            if c!=None and c.value!=None:
+                list.append(json.loads(c.value))
+
+
         list.sort()
         return list
     except etcd.EtcdKeyNotFound:
         return list
+def getEtcdServerProcess(platform=1,server=1,process=1):
+    global Etcd
+    try:
+        v =Etcd.get("/%s/logicmgr/%d/%d/%d"%(conf.AppName,int(platform),int(server),int(process)))
+        return json.loads(v.value)
+    except etcd.EtcdKeyNotFound:
+        return None
+def putEtcdServerProcess(platform=1,server=1,process=1,value={}):
+    global Etcd
+    Etcd.set("/%s/logicmgr/%d/%d/%d"%(conf.AppName,int(platform),int(server),int(process)),json.dumps(value))
 
 
 def isServerRunning(platform=1,server=1):

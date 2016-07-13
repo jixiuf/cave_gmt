@@ -37,6 +37,30 @@ class ServerStopping(BaseHandler):
         time.sleep(0.1)
         self.write('success')
 
+
+        time.sleep(0.1)
+        self.write('success')
+class ServerSwitch(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+        serverIdStr=self.get_argument('serverId')
+        processIdStr=self.get_argument('processId')
+        if processIdStr=='' or processIdStr=="0" or serverIdStr=='' or serverIdStr=='0':
+            self.write('params wrong')
+            return
+        serverInfo=app.getEtcdServerProcess(conf.PLATFORM,serverIdStr,processIdStr)
+        if serverInfo==None:
+            self.write('server not running')
+            return
+
+        serverInfo['st']='stopping'
+        app.putEtcdServerProcess(conf.PLATFORM,serverIdStr,processIdStr,serverInfo)
+        time.sleep(0.1)
+        self.write('success')
+
+
+
         # maintainList=yield app.DBMgr.maintainDB.select_all()
         # self.render("maintain.html",title="维护公告",maintainList=maintainList)
 class KickUser(BaseHandler):

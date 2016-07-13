@@ -12,6 +12,8 @@
         running:正常运行的服务器<br/>
         stopping:点击 预停 按钮之后 将会进入此状态，此状态下，游戏中的玩家可以正常玩完本局，不允许登录<br/>
         stopped:彻底停掉的服（线），此状态不会进行显示<br/>
+        切线与预停按扭的区别是，预停之后，各房间会关闭，而切线仅仅是不允许新的玩家登录<br/>
+        切线按扭主要作用是：让玩家逐渐从此条线上退出(会在别的线上登录)，然后重启此线，以实现玩家无感重新服务器<br/>
 
         <div class="form-group op-modal">
             <label class="col-sm-2 control-label">开服停服:</label>
@@ -28,6 +30,12 @@
                                {%else%}
                                <button type="submit" data-server-id='{{serverId}}' data-process-id='{{etcdServer["processId"]}}' class="btn btn-default op-stopping-submit">预停{{ etcdServer["processId"] }}线</button>
                             {% end %}
+                            {% if etcdServer["st"] =='stopping' %}
+                               <button type="submit" data-server-id='{{serverId}}'  data-process-id='{{etcdServer["processId"]}}' disabled class="btn disabled btn-default op-switch-submit">切线{{ etcdServer["processId"] }}线</button>
+                               {%else%}
+                               <button type="submit" data-server-id='{{serverId}}' data-process-id='{{etcdServer["processId"]}}' class="btn btn-default op-switch-submit">切线{{ etcdServer["processId"] }}线</button>
+                            {% end %}
+
                                <button type="submit" data-server-id='{{serverId}}' data-process-id='{{etcdServer["processId"]}}' class="btn btn-default op-kick-submit">踢人{{ etcdServer["processId"] }}线</button>
                                <br/>
                         {% end %}
@@ -75,6 +83,34 @@
       });
      return false;
  });
+ modalEl.delegate('.op-switch-submit', 'click', function(e) {
+     var el = $(e.currentTarget);
+     var processId=el.data('process-id');
+     var serverId=el.data('server-id');
+     if(ajaxing) return false;
+     if(serverId == '' ) {
+         serverId="1";
+     }
+     data['serverId'] = serverId;
+     data['processId'] = processId;
+     ajaxing = true;
+     $.ajax({
+         url: '/server_mgr/server_switch',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          if(data == 'success') {
+              location.href = '/server_mgr/server_mgr';
+          } else {
+              alert('无权限'+data);
+          }
+      });
+     return false;
+ });
+
+
 
  modalEl.delegate('.op-kick-submit', 'click', function(e) {
      var el = $(e.currentTarget);
