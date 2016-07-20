@@ -62,11 +62,12 @@
           if(data['result']!=""){
               alert(data['result']);
           }else{
-              if(data.length==0){
-                  alert("无数据")；
+              if(data['data'].length==0){
+                  alert("no data");
+                  return
               }
-              for(var i = 0, len = data.length; i < len; i++) {
-                  addRow(data[i])
+              for(var i = 0, len = data['data'].length; i < len; i++) {
+                  addRow(data['data'][i])
               }
           }
       });
