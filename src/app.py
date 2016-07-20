@@ -160,7 +160,7 @@ class Application(tornado.web.Application):
                 # result[0]=="key"
                 # result[1]=="value"
                 print(result[1])
-                self.logger.Info(result[1])
+                self.logger.info(result[1])
                 e=yield DBMgr.getGMToolDB().execSql(result[1])
         print("keepReadFromRedis_exit")
 

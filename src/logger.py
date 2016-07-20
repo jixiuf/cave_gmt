@@ -9,7 +9,7 @@ import logging.handlers as handlers
 LOGGING_MSG_FORMAT  = '%(asctime)s %(levelname)s %(message)s'
 LOGGING_DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
 
-def get_logger(name, filepath, with_pid=True):
+def get_logger(name, filepath, with_pid=False):
     """ get logger """
 
     logger = logging.getLogger(name)
