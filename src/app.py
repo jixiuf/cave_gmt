@@ -5,6 +5,7 @@ import threading
 import os.path
 import sys
 import signal
+import traceback
 
 
 import redis
@@ -166,7 +167,15 @@ class Application(tornado.web.Application):
                 # result[1]=="value"
                 print(result[1])
                 self.logger.info(result[1])
-                e=yield DBMgr.getGMToolDB().execSql(result[1])
+
+                try:
+                    e=yield DBMgr.getGMToolDB().execSql(result[1])
+                except Exception, error:
+                    self.logger.warning('errorarg\t%s\t%s\t%s' % (self.request.headers.get('channel','xxx'),self.request.headers.get('User-Agent','xxx'),str(self.request.arguments)))
+                    self.logger.warning('errormsg\t%s' % (str(error),))
+                    self.logger.warning('errortrace\t%s' % (str(traceback.format_exc()),))
+
+
         print("keepReadFromRedis_exit")
 
 
