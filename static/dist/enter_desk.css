@@ -1,0 +1,24 @@
+.ui-desk-form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+.ui-desk-form .ui-desk-title {
+  margin-left: 200px;
+}
+.ui-desk-option {
+    max-width: 1024px;
+    margin: 0 auto;
+}
+.ui-desk-option .ui-desk-list {
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 20px;
+}
+.ui-desk-cell {
+    text-align:center;
+    width: 17%;
+    float: left;
+    word-wrap: break-word;
+}

@@ -17,6 +17,7 @@ import db.dbmgr
 
 import handler
 from handler.broadcast import *
+from handler.zjh_enter_desk import *
 from handler.notice import *
 from handler.ping import PingHandler
 from handler.login import *
@@ -52,6 +53,10 @@ class Application(tornado.web.Application):
             (r'/api/player_unban',PlayerUnBanHandler),
             (r'/api/reload_design_data' ,DesignReload),
             (r'/player/kick' ,KickUser),
+
+
+            (r'/zjh_enter_desk_bi/get' ,ZjhEnterDeskDayPlayerCntRender),
+            (r'/zjh_enter_desk_bi/post' ,ZjhEnterDeskDayPlayerCnt),
 
             (r'/zjh_room_ai_control/get' ,ZJHRoomAIControl),
             (r'/zjh_room_ai_control/post' ,ZJHRoomAIControlUpdate),

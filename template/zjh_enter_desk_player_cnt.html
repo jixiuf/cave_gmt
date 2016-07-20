@@ -1,0 +1,69 @@
+{% extends base.html %}
+{% block css%}
+<link rel="stylesheet" href="../static/javascript/plugin/any_time/any_time.css">
+<link href="../static/dist/enter_desk.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-desk-option">
+    <h2 class="form-signin-heading ui-desk-title">统计每天各房间玩家数</h2>
+    <ul class="ui-desk-list op-desk-list">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">选择时间</label>
+            <div class="col-sm-2">
+                <input class="form-control op-time-start" type="text" id="timeId">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-default op-submit ui-sumbit" >查询</button>不要频繁查询
+            </div>
+        </div>
+    </ul>
+</div>
+</br>
+</br>
+<div class="ui-server-version-update op-data">
+</div>
+</br>
+
+
+<script type="text/javascript" src="../static/javascript/plugin/any_time/any_time.js"></script>
+
+<script type="text/javascript">
+ var btnEl = $('.op-submit');
+ var data ={};
+ var dateFormat = "%Y-%m-%d";
+ $("#timeId").AnyTime_picker({format:dateFormat});
+ addRow=function(roomInfo){
+     str='<div class="ui-desk-cell">\n'+
+         roomInfo['roomName']+
+         '</div>'+
+         '<div class="ui-desk-cell">'+
+         roomInfo['cnt']+
+         '</div></br>';
+     $('.op-data').append(str);
+ }
+
+
+ btnEl.on('click', function(e) {
+     var el = $(e.currentTarget);
+     data['time'] =  $("#timeId").val();
+     ajaxing = true;
+     $.ajax({
+         url: '/zjh_enter_desk_bi/post',
+         type: 'post',
+         data: data,
+         el: el
+     })
+      .done(function(data) {
+           ajaxing = false;
+                 $('.op-data').empty();
+           data = JSON.parse(data);
+          for(var i = 0, len = data.length; i < len; i++) {
+              addRow(data[i])
+          }
+      });
+ });
+
+</script>
+{% end %}
