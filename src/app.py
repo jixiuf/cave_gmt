@@ -1,7 +1,10 @@
 # -*- coding:utf-8 -*-
 __author__ = 'jixiufeng'
 
+import threading
 import os.path
+import sys
+import signal
 
 
 import redis
@@ -134,6 +137,32 @@ class Application(tornado.web.Application):
         global Etcd
         etcdConfig=conf.getEtcdAddr()
         Etcd=etcd.client.Client(port=etcdConfig["port"],host=etcdConfig["ip"], allow_reconnect=True)
+
+        signal.signal(signal.SIGINT, self.handlerSignal)
+        signal.signal(signal.SIGTERM, self.handlerSignal)
+        self.keepRunning =True
+        t=threading.Thread(target=self.keepReadFromRedis)
+        t.start()
+        # t.join()
+
+    def handlerSignal(self,signum, frame):
+        self.keepRunning=False
+        sys.exit()
+        os._exit()
+
+    @gen.coroutine
+    def keepReadFromRedis(self):
+        global Redis
+        global DBMgr
+        while self.keepRunning:
+            result=Redis.brpop("zjh_redis_log",2) # timeout 2seconds
+            if result!=None:
+                # result[0]=="key"
+                # result[1]=="value"
+                print(result[1])
+                self.logger.Info(result[1])
+                e=yield DBMgr.getGMToolDB().execSql(result[1])
+        print("keepReadFromRedis_exit")
 
 
 

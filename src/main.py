@@ -2,6 +2,7 @@
 
 __author__ = 'jixiufeng'
 
+import signal
 import init
 import os
 import os.path
@@ -10,10 +11,10 @@ import tornado.ioloop
 import tornado.httpserver
 from tornado.options import options
 
-
 def main():
     """entry point for process"""
     print "you could run this :python main.py -host=localhost -mode=dev -port=8000"
+
     tornado.options.parse_command_line()
     # if not os.path.exists(conf.LOCAL_UPLOAD_DIR):
     #     os.mkdir(conf.LOCAL_UPLOAD_DIR)
