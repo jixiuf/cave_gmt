@@ -57,10 +57,17 @@
      })
       .done(function(data) {
            ajaxing = false;
-                 $('.op-data').empty();
+          $('.op-data').empty();
            data = JSON.parse(data);
-          for(var i = 0, len = data.length; i < len; i++) {
-              addRow(data[i])
+          if(data['result']!=""){
+              alert(data['result']);
+          }else{
+              if(data.length==0){
+                  alert("无数据")；
+              }
+              for(var i = 0, len = data.length; i < len; i++) {
+                  addRow(data[i])
+              }
           }
       });
  });

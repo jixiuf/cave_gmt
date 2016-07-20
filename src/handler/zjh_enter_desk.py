@@ -4,6 +4,7 @@ __author__ = 'jixiufeng'
 #  -*- coding:utf-8 -*-
 __author__ = 'jixiufeng'
 
+import traceback
 import tornado
 from tornado import  gen
 from tornado.web import asynchronous
@@ -34,17 +35,28 @@ class ZjhEnterDeskDayPlayerCnt(BaseHandler):
     @gen.coroutine
     def self_post(self):
         tStr = self.get_argument('time','')
+        print("tStr",tStr)
+        if tStr=='':
+            self.write(json.dumps({"result":"请选择日期"}))
+            return
+
         t=time.strptime(tStr,"%Y-%m-%d")
         startTime=datetime(*t[:3])
         endTime=startTime+timedelta(days=1)
 
         roomList= yield app.DBMgr.getBRoomDB().select_all()
-        result=[]
-        for roomInfo in roomList:
-            sql="select count( distinct uin) as cnt from ZJHDeskEnterLog where RoomId=%d and Time>'%s' and Time<'%s' "%(
-                roomInfo['roomId'],startTime.strftime("%Y-%m-%d %H:%M:%S"), endTime.strftime("%Y-%m-%d %H:%M:%S"))
-            cnt=yield app.DBMgr.getGMToolDB().query(sql,self.mapRow)
-            roomInfo['cnt']=cnt
-            result.append(roomInfo)
-        print(result)
-        self.write(json.dumps(result))
+        try:
+            result=[]
+            for roomInfo in roomList:
+                sql="select count( distinct uin) as cnt from ZJHDeskEnterLog where RoomId=%d and Time>'%s' and Time<'%s' "%(
+                    roomInfo['roomId'],startTime.strftime("%Y-%m-%d %H:%M:%S"), endTime.strftime("%Y-%m-%d %H:%M:%S"))
+                cnt=yield app.DBMgr.getGMToolDB().query(sql,self.mapRow)
+                roomInfo['cnt']=cnt
+                result.append(roomInfo)
+            self.write(json.dumps({'result':'',"data":result}))
+        except Exception, error:
+            self.application.logger.warning('errorarg\t%s\t%s\t%s' % (self.request.headers.get('channel','xxx'),self.request.headers.get('User-Agent','xxx'),str(self.request.arguments)))
+            self.application.logger.warning('errormsg\t%s' % (str(error),))
+            self.application.logger.warning('errortrace\t%s' % (str(traceback.format_exc()),))
+            self.write(json.dumps({"result":"err"}))
+
