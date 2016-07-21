@@ -156,8 +156,8 @@ class Application(tornado.web.Application):
         sys.exit()
         os._exit()
 
-    @gen.coroutine
     def keepReadFromRedis(self):
+
         global Redis
         global DBMgr
         while self.keepRunning:
@@ -165,11 +165,11 @@ class Application(tornado.web.Application):
             if result!=None:
                 # result[0]=="key"
                 # result[1]=="value"
-                print(result[1])
                 self.logger.info(result[1])
 
                 try:
-                    e=yield DBMgr.getGMToolDB().execSql(result[1])
+                    # e=yield DBMgr.getGMToolDB().execSql(result[1])
+                    DBMgr.getGMToolDB().execSql(result[1])
                 except Exception, error:
                     self.logger.warning('errormsg\t%s' % (str(error),))
                     self.logger.warning('errortrace\t%s' % (str(traceback.format_exc()),))
