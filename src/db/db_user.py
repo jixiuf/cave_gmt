@@ -110,7 +110,6 @@ CREATE TABLE if not exists `user` (
     @gen.coroutine
     def update_attr_nickname_and_desc(self,uin,nickName,desc):
         query="update UserAttr set description='%s',nickName='%s' where uin=%s"%(desc,nickName,uin)
-        print(query)
         res=yield self.dbtemplate.execSql(query,self.mapRowAttr)
         raise gen.Return(res)
 
