@@ -66,7 +66,7 @@
         </li>
         <li class="clearfix ui-lists-item">
             <span class="ui-items-cell col-sm-2">渠道:</span>
-            <span class="ui-items-cell col-sm-9">{{ channelMap[str(user.channel)]  }} </span>
+            <span class="ui-items-cell col-sm-9">{{ channelMap.get(str(user.channel))  }} </span>
         </li>
         <li class="clearfix ui-lists-item">
             <span class="ui-items-cell col-sm-2">设备号:</span>
