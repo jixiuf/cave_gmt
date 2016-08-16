@@ -58,10 +58,7 @@
      str+= '</div></br>';
      $('.op-data').append(str);
  }
-
-
-
- submitEl.on('click', function() {
+ handler=function(){
      if(playerSIdEl.val()=="" ) {
          alert("请输入玩家短id");
          return false;
@@ -98,6 +95,14 @@
       })
 
      return false;
- });
+ };
+
+ $("#playerSId").keydown(
+     function(e) {
+         if(e.which == 13) {
+             handler();
+         }
+     });
+ submitEl.on('click', function(){handler();} );
 </script>
 {% end %}
