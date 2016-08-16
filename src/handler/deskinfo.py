@@ -33,12 +33,12 @@ class DeskInfoHandler(BaseHandler):
         if suin!='':
             uin=yield self.suin2uin(suin)
             if uin==None:
-                self.write({'result':'player not found'})
+                self.write(json.dumps({'result':'player not found'}))
                 raise gen.Return("")
 
             yield self.doSearch(uin,int(sleepSeconds))
         else:
-            self.write({'result':'player not found'})
+            self.write(json.dumps({'result':'player not found'}))
             raise gen.Return("")
 
 
