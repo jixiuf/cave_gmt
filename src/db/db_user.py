@@ -107,6 +107,12 @@ CREATE TABLE if not exists `user` (
         query="select uin,nickName,gender,avatar,description from UserAttr where uin=%s"%(uin)
         res=yield self.dbtemplate.queryObject(query,self.mapRowAttr)
         raise gen.Return(res)
+    @gen.coroutine
+    def update_attr_nickname_and_desc(self,uin,nickName,desc):
+        query="update UserAttr set description='%s',nickName='%s' where uin=%s"%(desc,nickName,uin)
+        res=yield self.dbtemplate.execSql(query,self.mapRowAttr)
+        raise gen.Return(res)
+
 
     @gen.coroutine
     def select_uin_by_suin(self,suin):

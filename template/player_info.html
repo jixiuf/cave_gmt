@@ -29,7 +29,7 @@
         {% if userAttr != None %}
         <li class="clearfix ui-lists-item">
             <span class="ui-items-cell col-sm-2">昵称:</span>
-            <span class="ui-items-cell col-sm-9">{{ userAttr.nickName}} </span>
+            <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-nickname" value="{{userAttr.nickName}}"> </span>
         </li>
         <li class="clearfix ui-lists-item">
             <span class="ui-items-cell col-sm-2">性别:</span>
@@ -41,7 +41,7 @@
         </li>
         <li class="clearfix ui-lists-item">
             <span class="ui-items-cell col-sm-2">个性签名:</span>
-            <span class="ui-items-cell col-sm-9">{{userAttr.desc}} </span>
+            <span class="ui-items-cell col-sm-9"><input type="text" class="form-control " id="op-desc" value="{{userAttr.desc}}"> </span>
         </li>
 
         {% end %}
@@ -66,7 +66,7 @@
         </li>
         <li class="clearfix ui-lists-item">
             <span class="ui-items-cell col-sm-2">渠道:</span>
-            <span class="ui-items-cell col-sm-9">{{ channelMap[str(user.channel)]  }} </span>
+            <span class="ui-items-cell col-sm-9">{{ channelMap.get(str(user.channel))  }} </span>
         </li>
         <li class="clearfix ui-lists-item">
             <span class="ui-items-cell col-sm-2">设备号:</span>
@@ -108,10 +108,12 @@
                 <span class="ui-items-cell col-sm-2 control-label">vip值:</span>
                 <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-vipValue" value="{{money.vipValue}}"> </span>
                 <span class="ui-items-cell col-sm-2 control-label">vip过期时间:</span>
-                {% if (money.lastPayTime+datetime.timedelta(days=30)-datetime.datetime.now()).days>0 %}
+                {% if (money==None or money.lastPayTime==None) %}
+                <span class="ui-items-cell col-sm-2">已过期</span>
+                {%elif  (money.lastPayTime+datetime.timedelta(days=30)-datetime.datetime.now()).days>0 %}
                 <span class="ui-items-cell col-sm-2">剩余{{ (money.lastPayTime+datetime.timedelta(days=30)-datetime.datetime.now()).days }}天</span>
                 {%else%}
-                <span class="ui-items-cell col-sm-2">已过期</span>
+                <span class="ui-items-cell col-sm-2">未知</span>
                 {%end%}
             </li>
             <li class="clearfix ui-lists-item">
@@ -166,6 +168,8 @@
  var unbanEl=$("#btn-unban");
  var lastPayTimeEl=$("#op-last-PayTime");
  var btnKickEl=$("#btn-kick");
+ var nickNameEl=$("#op-nickname");
+ var descEl=$("#op-desc");
 
  submitEl.on('click', function(){
      var data={};
@@ -181,6 +185,8 @@
      data['speaker'] =speakerEl.val();
      data['kickCard'] =kickCardEl.val();
      data['server']=serverEl.val();
+     data['nickName']=nickNameEl.val();
+     data['desc']=descEl.val();
      ajaxing = true;
      $.ajax({
          url: '/api/player_info_update',
