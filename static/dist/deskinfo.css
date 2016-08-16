@@ -1,4 +1,15 @@
+.ui-desk-form .ui-desk-title {
+    margin-left: 300px;
+}
+.ui-desk-form .ui-desk-fiele {
+    margin-left: 220px;
+}
+
+.ui-desk-row-title {
+    font-size: 18px;
+}
 .ui-desk-row {
+    margin-left: 100px;
     text-align:center;
     width: 100%;
     float: left;

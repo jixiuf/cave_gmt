@@ -25,26 +25,34 @@ class DeskInfoHandler(BaseHandler):
     def self_post(self):
 
         suin = self.get_argument('suin','')
+        sleepSeconds = self.get_argument('sleepSeconds','')
+        if len(suin)>16:
+            self.doSearch(suin,int(sleepSeconds))
+            raise gen.Return("")
+
         if suin!='':
             uin=yield self.suin2uin(suin)
-            yield self.doSearch(uin)
+            yield self.doSearch(uin,int(sleepSeconds))
         else:
             self.write({'result':'player not found'})
 
 
     @gen.coroutine
-    def doSearch(self,uin):
+    def doSearch(self,uin,sleepSeconds):
         if uin==None:
             self.write({'result':'player not found'})
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_DESKINFO%(uin))
-        time.sleep(2)
+        print("sleepSeconds",sleepSeconds)
+        if sleepSeconds>0:
+            time.sleep(sleepSeconds)
+
         kv=app.Redis.hgetall("zjh_desk")
         result=[]
         for k in kv:
             result.append(json.loads(kv[k]))
             app.Redis.hdel("zjh_desk",k)
 
-        print({'result':'',"data":result})
+            print("rrr",result)
         self.write(json.dumps({'result':'',"data":result}))
 
     @gen.coroutine
