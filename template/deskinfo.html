@@ -1,0 +1,89 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/deskinfo.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-search-form">
+    <h2 class="form-signin-heading ui-search-title">查询玩家所在牌桌信息</h2>
+    <form class="form-horizontal" role="form" action="javascript:return false;" method="get">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">PlayerSID</label>
+            <div class="col-sm-2">
+                <input class="form-control op-player-id" id="playerSId" name="playerSId" placeholder="玩家短id">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="button" class="btn btn-default op-submit">查询</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="ui-data op-data">
+</div>
+
+<script type="text/javascript">
+ var playerSIdEl = $('#playerSId');
+ var submitEl = $('.op-submit');
+ var ajaxing = false;
+ var data = {};
+
+ addRow=function(desk){
+     str='<div class="ui-desk">\n'+
+         desk['RoomName']+ desk['DeskId']+
+         '</div>';
+     str+='<div class="ui-desk-row">';
+     str+= '<div class="ui-desk-cell">'+"昵称</div>";
+     str+= '<div class="ui-desk-cell">'+"ID</div>";
+     str+= '<div class="ui-desk-cell">'+"手牌</div>";
+     str+= '<div class="ui-desk-cell">'+"牌型</div></div>";
+     for(var i = 0, len = desk['SeatList'].length; i < len; i++) {
+         str+='<div class="ui-desk-row">';
+         str+= '<div class="ui-desk-cell"><span>'+desk['SeatList'][i]['NickName']+"</span></div>";
+         str+= '<div class="ui-desk-cell"><span>'+desk['SeatList'][i]['SUin']+"</span></div>";
+         str+= '<div class="ui-desk-cell"><span>'+desk['SeatList'][i]['PokerHuman']+"</span></div>";
+         str+= '<div class="ui-desk-cell"><span>'+desk['SeatList'][i]['PokerKind']+"<span></div></div>";
+     }
+     str+= '</div></br>';
+     $('.op-data').append(str);
+ }
+
+
+
+ submitEl.on('click', function() {
+     if(playerSIdEl.val()=="" ) {
+         alert("请输入玩家短id");
+         return false;
+     }
+     ajaxing = true;
+     data['suin'] = playerSIdEl.val();
+     $('.op-data').empty();
+     $('.op-data').append("waiting......")
+     $.ajax({
+         url: '/api/deskinfo',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          $('.op-data').empty();
+          data = JSON.parse(data);
+          if(data['result']!=""){
+              alert(data['result']);
+          }else{
+              if(data['data'].length==0){
+                  alert("no data");
+                  return
+              }
+              for(var i = 0, len = data['data'].length; i < len; i++) {
+                  addRow(data['data'][i])
+              }
+          }
+
+
+      })
+
+     return false;
+ });
+</script>
+{% end %}

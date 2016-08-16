@@ -17,6 +17,7 @@ from logger import *
 import db.dbmgr
 
 import handler
+from handler.deskinfo import *
 from handler.broadcast import *
 from handler.zjh_enter_desk import *
 from handler.notice import *
@@ -54,6 +55,9 @@ class Application(tornado.web.Application):
             (r'/api/player_unban',PlayerUnBanHandler),
             (r'/api/reload_design_data' ,DesignReload),
             (r'/player/kick' ,KickUser),
+
+            (r'/player/deskinfo' ,DeskInfoHandler),
+            (r'/api/deskinfo' ,DeskInfoHandler),
 
 
             (r'/zjh_enter_desk_bi/get' ,ZjhEnterDeskDayPlayerCntRender),
