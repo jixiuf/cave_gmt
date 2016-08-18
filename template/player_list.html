@@ -1,0 +1,75 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/player_list.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-player-list-option">
+    <h2 class="form-signin-heading ui-player-list-title">玩家列表</h2>
+    <ul class="ui-player-list-list op-player-list-list">
+        <li class="ui-player-list-item clearfix">
+            <div class="ui-player-list-cell">
+                ID
+            </div>
+            <div class="ui-player-list-cell">
+                昵称
+            </div>
+            <div class="ui-player-list-cell">
+                渠道
+            </div>
+            <div class="ui-player-list-cell">
+                VIP值
+            </div>
+            <div class="ui-player-list-cell">
+                金币
+            </div>
+            <div class="ui-player-list-cell">
+                钻石
+            </div>
+            <div class="ui-player-list-cell">
+                充值
+            </div>
+            <div class="ui-player-list-assets">
+                资产
+            </div>
+
+        </li>
+        {% for info in result %}
+        <li class="ui-player-list-item clearfix">
+            <div class="ui-player-list-cell">
+                <a href='/api/player_search?playerId={{info.get("uin")}}'>
+                {{ info.get('suin')}}
+                </a>
+            </div>
+            <div class="ui-player-list-cell">
+                <a href='/api/player_search?playerId={{info.get("uin")}}'>
+                {% if info.get('isAI',False) %}
+                <span style="color:red">{{ info.get('nickname')}}</span>
+                {% else %}
+                {{ info.get('nickname')}}
+                {% end %}
+                </a>
+            </div>
+            <div class="ui-player-list-cell">
+                {{ info.get('channel')}}
+            </div>
+            <div class="ui-player-list-cell">
+                {{ info.get('vipValue')}}
+            </div>
+            <div class="ui-player-list-cell">
+                {{ info.get('gold')}}
+            </div>
+            <div class="ui-player-list-cell">
+                {{ info.get('gem')}}
+            </div>
+            <div class="ui-player-list-cell">
+                {{ info.get('rmb')}}
+            </div>
+            <div class="ui-player-list-assets">
+                车:{{ info.get('car')}},船:{{ info.get('boat')}}, 表:{{ info.get('watch')}}, 房:{{ info.get('house')}}
+            </div>
+        </li>
+        {% end %}
+    </ul>
+</div>
+
+{% end %}

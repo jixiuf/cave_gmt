@@ -121,3 +121,70 @@ class PlayerUnBanHandler(BaseHandler):
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_BAN)
         self.write("success")
         return
+cachedAIUinMap={}
+class PlayerListHandler(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+        self.self_get()
+
+    @asynchronous
+    @gen.coroutine
+    def self_get(self):
+        aiUinMap=yield self.select_all_ai_uinlist()
+        moneyList=yield app.DBMgr.getMoneyDB().select_all()
+        userList=yield app.DBMgr.getUserDB().select_all_channel()
+        nickNameList=yield app.DBMgr.getUserDB().select_all_nickname()
+        result={}
+        for money in moneyList:
+            rec={}
+            rec['uin']=money.uin
+            rec['gold']=money.gold
+            rec['gem']=money.gem
+            rec['speaker']=money.speaker
+            rec['vipValue']=money.vipValue
+            rec['kickCard']=money.kickCard
+            rec['watch']=money.watch
+            rec['car']=money.car
+            rec['boat']=money.boat
+            rec['rmb']=money.rmb
+            rec['house']=money.house
+            rec['lastPayTime']=money.lastPayTime
+            if money.uin in aiUinMap:
+                rec['isAI']=True
+            else:
+                rec['isAI']=False
+            result[money.uin]=rec
+        for userInfo in userList:
+            if userInfo['uin'] in result:
+                rec=result.get(userInfo['uin'])
+                rec['suin']=userInfo['suin']
+                rec['channel']=userInfo['channel']
+                print("aaa",rec.get('suin'))
+                result[userInfo['uin']]=rec
+        for nickNameInfo in nickNameList:
+            if nickNameInfo['uin'] in result:
+                rec=result.get(nickNameInfo['uin'])
+                rec['nickname']=nickNameInfo['nickname']
+                result[nickNameInfo['uin']]=rec
+                #
+
+        list=[]
+        for info in result:
+            list.append(result[info])
+        print(list)
+        self.render("player_list.html", title="玩家列表",result=list)
+
+
+
+    @gen.coroutine
+    def select_all_ai_uinlist(self):
+        global cachedAIUinMap
+        if len(cachedAIUinMap)!=0:
+            raise gen.Return(cachedAIUinMap)
+        list=yield app.DBMgr.getUserDB().select_all_ai_uinlist()
+        for v in list:
+            cachedAIUinMap[v]=v
+        raise gen.Return(cachedAIUinMap)
+
+
