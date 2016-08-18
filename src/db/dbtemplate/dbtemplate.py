@@ -137,7 +137,13 @@ class DatabaseTemplateSharding():
     @gen.coroutine
     def query(self, sql,mapRow=None,sum=None ): #
         if sum == None :                        # 暂不支持在所有分库上支持查询，
-            raise gen.Return(None)
+            result=[]
+            for dt in self._databaseTemplateList:
+                result1= yield dt.query(sql,mapRow,sum)
+                if result1!=None:
+                    result.extend(result1)
+
+            raise gen.Return(result)
         elif sum.sum_len()==1:  # 暂只支持根据sum 在某个特定的分库上执行查询
             result=yield self.getDatabaseTemplateShardingBySum(sum).query(sql,mapRow,sum)
             raise gen.Return(result)
@@ -147,6 +153,10 @@ class DatabaseTemplateSharding():
     @gen.coroutine
     def queryObject(self,sql,mapRow=None,sum=None): #  (self,[], error)
         if sum == None :                        # 暂不支持在所有分库上支持查询，
+            for dt in self._databaseTemplateList:
+                result1= yield dt.queryObject(sql,mapRow,sum)
+                if result1!=None:
+                    raise gen.Return(result1)
             raise gen.Return(None)
         elif sum.sum_len()==1:  # 暂只支持根据sum 在某个特定的分库上执行查询
             result=yield self.getDatabaseTemplateShardingBySum(sum).queryObject(sql,mapRow,sum)

@@ -67,9 +67,18 @@ class DBTemplateShardingTestCase(tornado.testing.AsyncTestCase):
         self.assertEqual(1,len(result))
         self.assertEqual(2,result[0])
 
+        result=yield self.dbtemplate.query("select id from test_python_conn_shard ",mapRow)
+        self.assertEqual(2,len(result))
+        self.assertEqual(2,result[0])
+        self.assertEqual(1,result[1])
+
 
         result=yield self.dbtemplate.queryObject("select id from test_python_conn_shard where id=1",mapRow,dbtemplate.Uint64Sum(1))
         self.assertEqual(1,result)
         result=yield self.dbtemplate.queryObject("select id from test_python_conn_shard where id=2",mapRow,dbtemplate.Uint64Sum(2))
         self.assertEqual(2,result)
 
+        result=yield self.dbtemplate.queryObject("select id from test_python_conn_shard where id=1",mapRow)
+        self.assertEqual(1,result)
+        result=yield self.dbtemplate.queryObject("select id from test_python_conn_shard where id=2",mapRow)
+        self.assertEqual(2,result)
