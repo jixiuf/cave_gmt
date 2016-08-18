@@ -34,34 +34,20 @@ class MoneyDB:
         money.car      =row[ 7 ]
         money.house    =row[ 8 ]
         money.boat     =row[ 9 ]
+        money.lastPayTime     =row[ 10 ]
         return money
 
     @gen.coroutine
     def select_by_uin(self,uin):
-        query="select uin, gold, gem, speaker, vipValue, kickCard, watch, car, house, boat from Money where uin=%s"%(uin)
+        query="select uin, gold, gem, speaker, vipValue, kickCard, watch, car, house, boat,lastPayTime from Money where uin=%s"%(uin)
         res=yield self.dbtemplate.queryObject(query,self.mapRow,db.dbtemplate.dbtemplate.Uint64Sum(int(uin)))
-        if res!=None:
-            lastPayTime=yield self.select_lastPayTime(uin)
-            res.lastPayTime=lastPayTime
         raise gen.Return(res)
     @gen.coroutine
-    def update(self,uin,gold ,gem,speaker,vipValue,kickCard,watch,car,house,boat):
-        query="update Money set gold=%d,gem=%d,speaker=%d,vipValue=%d,kickCard=%d,watch=%d,car=%d,house=%d,boat=%d where uin=%s"%(
-            int(gold),int(gem),int(speaker),int(vipValue),int(kickCard),int(watch),int(car),int(house),int(boat),str(uin))
+    def update(self,uin,gold ,gem,speaker,vipValue,kickCard,watch,car,house,boat,lastPayTime):
+        query="update Money set gold=%d,gem=%d,speaker=%d,vipValue=%d,kickCard=%d,watch=%d,car=%d,house=%d,boat=%d ,lastPayTime='%s' where uin=%s"%(
+            int(gold),int(gem),int(speaker),int(vipValue),int(kickCard),int(watch),int(car),int(house),int(boat),lastPayTime,str(uin))
         print(query)
         yield self.dbtemplate.execSql(query,db.dbtemplate.dbtemplate.Uint64Sum(int(uin)))
 
 
-    @gen.coroutine
-    def select_lastPayTime(self,uin):
-        query="select lastPayTime from Vip where uin=%s"%(str(uin))
-        def mapRowVip(row):
-            return row[0]
-        res=yield self.dbtemplate.queryObject(query,mapRowVip,db.dbtemplate.dbtemplate.Uint64Sum(int(uin)))
-        raise gen.Return(res)
-
-    @gen.coroutine
-    def updatelastPayTime(self,uin,lastPayTime):
-        query="update Vip set lastPayTime='%s' where uin=%s"%(lastPayTime,str(uin))
-        yield self.dbtemplate.execSql(query,db.dbtemplate.dbtemplate.Uint64Sum(int(uin)))
 
