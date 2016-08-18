@@ -97,11 +97,35 @@ CREATE TABLE if not exists `user` (
         yield self.dbtemplate.execSql(query)
 
     @gen.coroutine
+    def select_all_channel(self):
+        query="select uin,autoIncrementId,channel from user "
+        def mapRow(row):
+            result={}
+            result['uin']=row[0]
+            result['suin']=row[1]
+            result['channel']=row[2]
+            return result
+        res=yield self.dbtemplate.query(query,mapRow)
+        raise gen.Return(res)
+
+    @gen.coroutine
     def select_by_uin(self,uin):
         query="select uin,autoIncrementId,accountId,password,accountType,platform,server,channel,uuid,ip,os,osVersion,deviceModel,createTime from user where uin=%s"%(uin)
         print(query)
         res=yield self.dbtemplate.queryObject(query,self.mapRow)
         raise gen.Return(res)
+    @gen.coroutine
+    def select_all_nickname(self):
+        query="select uin,nickName from UserAttr"
+        def mapRow(row):
+            result={}
+            result['uin']=row[0]
+            result['nickname']=row[1]
+            return result
+
+        res=yield self.dbtemplate.query(query,mapRow)
+        raise gen.Return(res)
+
     @gen.coroutine
     def select_attr_by_uin(self,uin):
         query="select uin,nickName,gender,avatar,description from UserAttr where uin=%s"%(uin)
@@ -139,6 +163,15 @@ CREATE TABLE if not exists `user` (
         return row[0]
     def mapRowUinAsStr(self,row):
         return str(row[0])
+
+
+    # select
+    @gen.coroutine
+    def select_all_ai_uinlist(self):
+        query="select uin from AI"
+        res=yield self.dbtemplate.query(query,self.mapRowUinAsInt)
+        raise gen.Return(res)
+
 
     # select
     @gen.coroutine

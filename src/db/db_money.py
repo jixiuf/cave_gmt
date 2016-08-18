@@ -34,12 +34,13 @@ class MoneyDB:
         money.car      =row[ 7 ]
         money.house    =row[ 8 ]
         money.boat     =row[ 9 ]
-        money.lastPayTime     =row[ 10 ]
+        money.rmb     =row[ 10 ]
+        money.lastPayTime     =row[ 11 ]
         return money
 
     @gen.coroutine
     def select_by_uin(self,uin):
-        query="select uin, gold, gem, speaker, vipValue, kickCard, watch, car, house, boat,lastPayTime from Money where uin=%s"%(uin)
+        query="select uin, gold, gem, speaker, vipValue, kickCard, watch, car, house, boat,nB,lastPayTime from Money where uin=%s"%(uin)
         res=yield self.dbtemplate.queryObject(query,self.mapRow,db.dbtemplate.dbtemplate.Uint64Sum(int(uin)))
         raise gen.Return(res)
     @gen.coroutine
@@ -49,5 +50,10 @@ class MoneyDB:
         print(query)
         yield self.dbtemplate.execSql(query,db.dbtemplate.dbtemplate.Uint64Sum(int(uin)))
 
+    @gen.coroutine
+    def select_all(self):
+        query="select uin, gold, gem, speaker, vipValue, kickCard, watch, car, house, boat,nB,lastPayTime from Money"
+        res=yield self.dbtemplate.query(query,self.mapRow)
+        raise gen.Return(res)
 
 
