@@ -89,8 +89,7 @@ class PlayerInfoUpdateHandler(BaseHandler):
             self.write("fail")
             return
 
-        yield app.DBMgr.getMoneyDB(int(server)).update(uin,gold,gem,speaker,vipValue,kickCard,watch,car,house,boat)
-        yield app.DBMgr.getMoneyDB(int(server)).updatelastPayTime(uin,lastPayTime)
+        yield app.DBMgr.getMoneyDB(int(server)).update(uin,gold,gem,speaker,vipValue,kickCard,watch,car,house,boat,lastPayTime)
         yield app.DBMgr. getUserDB().update_attr_nickname_and_desc(uin,nickName,desc)
         time.sleep(0.03)
         app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,server), redis_notify.NOTIFY_TYPE_RELOAD_MONEY%(str(uin)))
