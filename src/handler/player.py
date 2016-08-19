@@ -183,7 +183,7 @@ class PlayerListHandler(BaseHandler):
 
 
 
-        pageCnt=100
+        pageCnt=500
         list=sorted(list,cmp=sortFunc,reverse=reverse)
         totalPages=len(list)/pageCnt
         len(list)%pageCnt>0
