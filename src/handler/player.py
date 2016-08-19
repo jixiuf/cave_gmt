@@ -179,7 +179,7 @@ class PlayerListHandler(BaseHandler):
         for info in result:
             list.append(result[info])
         def sortFunc(e1 ,e2 ):
-            return e1.get(sortField)-e2.get(sortField)
+            return e1.get(sortField,0)-e2.get(sortField,0)
 
 
 
