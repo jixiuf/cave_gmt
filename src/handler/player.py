@@ -131,6 +131,13 @@ class PlayerListHandler(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
+        sortField  = self.get_argument('sort',"gold")
+        page  = int(self.get_argument('page',1))
+        reverse  = self.get_argument('reverse',"True")
+        if reverse=="True":
+            reverse=True
+        else:
+            reverse=False
         aiUinMap=yield self.select_all_ai_uinlist()
         moneyList=yield app.DBMgr.getMoneyDB().select_all()
         userList=yield app.DBMgr.getUserDB().select_all_channel()
@@ -160,7 +167,6 @@ class PlayerListHandler(BaseHandler):
                 rec=result.get(userInfo['uin'])
                 rec['suin']=userInfo['suin']
                 rec['channel']=userInfo['channel']
-                print("aaa",rec.get('suin'))
                 result[userInfo['uin']]=rec
         for nickNameInfo in nickNameList:
             if nickNameInfo['uin'] in result:
@@ -172,8 +178,19 @@ class PlayerListHandler(BaseHandler):
         list=[]
         for info in result:
             list.append(result[info])
-        print(list)
-        self.render("player_list.html", title="玩家列表",result=list)
+        def sortFunc(e1 ,e2 ):
+            return e1.get(sortField)-e2.get(sortField)
+
+
+
+        pageCnt=100
+        list=sorted(list,cmp=sortFunc,reverse=reverse)
+        totalPages=len(list)/pageCnt
+        len(list)%pageCnt>0
+        totalPages=totalPages+1
+        list=list[pageCnt*(page-1):pageCnt*(page)]
+
+        self.render("player_list.html", title="玩家列表",result=list,sortField=sortField,page=page,totalPages=totalPages,reverse=reverse)
 
 
 
