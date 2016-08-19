@@ -33,11 +33,12 @@ class UserDB:
 
     def mapRowAttr(self,row):
         d=UserAttr()
-        d.uin         =row[ 0 ]
-        d.nickName    =row[ 1 ]
-        d.gender      =row[ 2 ]
-        d.avatar      =row[ 3 ]
-        d.desc        =row[ 4 ]
+        d.uin           =row[ 0 ]
+        d.nickName      =row[ 1 ]
+        d.gender        =row[ 2 ]
+        d.avatar        =row[ 3 ]
+        d.desc          =row[ 4 ]
+        d.lastLoginTime =row[ 5 ]
         return d
 
 
@@ -128,13 +129,13 @@ CREATE TABLE if not exists `user` (
 
     @gen.coroutine
     def select_attr_by_uin(self,uin):
-        query="select uin,nickName,gender,avatar,description from UserAttr where uin=%s"%(uin)
+        query="select uin,nickName,gender,avatar,description,lastLoginTime from UserAttr where uin=%s"%(uin)
         res=yield self.dbtemplate.queryObject(query,self.mapRowAttr)
         raise gen.Return(res)
     @gen.coroutine
     def update_attr_nickname_and_desc(self,uin,nickName,desc):
         query="update UserAttr set description='%s',nickName='%s' where uin=%s"%(desc,nickName,uin)
-        res=yield self.dbtemplate.execSql(query,self.mapRowAttr)
+        res=yield self.dbtemplate.execSql(query)
         raise gen.Return(res)
 
 
