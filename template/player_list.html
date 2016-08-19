@@ -5,10 +5,31 @@
 {% block body %}
 <div class="ui-player-list-option">
     <h2 class="form-signin-heading ui-player-list-title">玩家列表</h2>
+    <div style="margin-left:40px">
+        {% for p in range(0,totalPages) %}
+        {%if p+1 == page %}
+        <a style="background-color:cyan" href='/player/list?sort={{sortField}}&page={{p+1}}&reverse={{reverse}}' >{{p+1}}</a>&nbsp;&nbsp;
+        {%else%}
+        <a href='/player/list?sort={{sortField}}&page={{p+1}}&reverse={{reverse}}' >{{p+1}}</a>&nbsp;&nbsp;
+        {%end%}
+        {%end%}
+    </div>
+
     <ul class="ui-player-list-list op-player-list-list">
         <li class="ui-player-list-item clearfix">
             <div class="ui-player-list-cell">
-                ID
+                序号
+            </div>
+
+            <div class="ui-player-list-cell">
+                <a href='/player/list?sort=suin&reverse=False' class='op-sort-href'>
+                    ⬆️
+                </a>
+                    ID
+                <a href='/player/list?sort=suin&reverse=True' class='op-sort-href'>
+                    ⬇️
+                </a>
+
             </div>
             <div class="ui-player-list-cell">
                 昵称
@@ -17,24 +38,56 @@
                 渠道
             </div>
             <div class="ui-player-list-cell">
-                VIP值
+                <a href='/player/list?sort=vipValue&reverse=False' class='op-sort-href'>
+                    ⬆️
+                </a>
+                    VIP值
+                <a href='/player/list?sort=vipValue&reverse=True' class='op-sort-href'>
+                    ⬇️
+                </a>
+
             </div>
             <div class="ui-player-list-cell">
-                金币
+                <a href='/player/list?sort=gold&reverse=False' class='op-sort-href'>
+                    ⬆️
+                </a>
+                    金币
+                <a href= '/player/list?sort=gold&reverse=True' class='op-sort-href'>
+                    ⬇️
+                </a>
+
+                </a>
             </div>
             <div class="ui-player-list-cell">
-                钻石
+                <a href='/player/list?sort=gem&reverse=False' class='op-sort-href'>
+                    ⬆️
+                </a>
+
+                    钻石
+                <a href= '/player/list?sort=gem&reverse=True' class='op-sort-href'>
+                    ⬇️
+                </a>
             </div>
             <div class="ui-player-list-cell">
-                充值
+                <a href= '/player/list?sort=rmb&reverse=False' class='op-sort-href'>
+                    ⬆️
+                </a>
+                    充值
+                <a href= '/player/list?sort=rmb&reverse=True' class='op-sort-href'>
+                    ⬇️
+                </a>
             </div>
             <div class="ui-player-list-assets">
                 资产
             </div>
 
         </li>
-        {% for info in result %}
+        {% for index,info in enumerate(result) %}
         <li class="ui-player-list-item clearfix">
+            <div class="ui-player-list-cell">
+                {{index+1}}
+            </div>
+
             <div class="ui-player-list-cell">
                 <a href='/api/player_search?playerId={{info.get("uin")}}'>
                 {{ info.get('suin')}}
@@ -71,5 +124,7 @@
         {% end %}
     </ul>
 </div>
-
+<script>
+ /*     $('.op-sort-href').click( function(e) {e.preventDefault(); alert(e.target.href); return false; } );*/
+    </script>
 {% end %}
