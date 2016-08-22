@@ -17,6 +17,7 @@ from logger import *
 import db.dbmgr
 
 import handler
+from handler.ad import *
 from handler.deskinfo import *
 from handler.broadcast import *
 from handler.zjh_enter_desk import *
@@ -61,6 +62,8 @@ class Application(tornado.web.Application):
             (r'/player/deskinfo' ,DeskInfoHandler),
             (r'/api/deskinfo' ,DeskInfoHandler),
 
+            (r'/ad/get' ,AdHandler),
+            (r'/api/ad' ,AdHandler),
 
             (r'/zjh_enter_desk_bi/get' ,ZjhEnterDeskDayPlayerCntRender),
             (r'/zjh_enter_desk_bi/post' ,ZjhEnterDeskDayPlayerCnt),

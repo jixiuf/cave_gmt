@@ -1,0 +1,75 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/deskinfo.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-desk-form">
+    <h2 class="form-signin-heading ui-desk-title">修改定时广告内容</h2>
+    <div class="ui-desk-fiele">
+    <form class="form-horizontal" role="form" action="javascript:return false;" method="get">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">玩家ID</label>
+            <div class="col-sm-3">
+                <input class="form-control op-uin" id="uin" name="uin" placeholder="玩家ID" value='{{data.get("uin","")}}'>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">广告内容</label>
+            <div class="col-sm-5">
+                <input class="form-control op-content" id="content" name="content" placeholder="广告内容" value='{{data.get("content","")}}'>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="button" class="btn btn-default op-submit">更新</button>
+            </div>
+        </div>
+    </form>
+    </div>
+</div>
+<div class="ui-data op-data">
+</div>
+
+<script type="text/javascript">
+ var contentEl = $('#content');
+ var uinEl = $('#uin');
+ var submitEl = $('.op-submit');
+ var ajaxing = false;
+ var data = {};
+ handler=function(){
+     if(contentEl.val()=="" ) {
+         alert("请输入内容");
+         return false;
+     }
+     if(uinEl.val()=="" ) {
+         alert("请输入玩家ID");
+         return false;
+     }
+
+     ajaxing = true;
+     data['content'] = contentEl.val();
+     data['uin'] = uinEl.val();
+     $.ajax({
+         url: '/api/ad',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          alert(data);
+          window.location.reload();
+      })
+     return false;
+ };
+
+ $("#content").keydown(
+     function(e) {
+         if(e.which == 13) {
+             handler();
+         }
+     });
+ submitEl.on('click', function(){handler();} );
+</script>
+{% end %}
