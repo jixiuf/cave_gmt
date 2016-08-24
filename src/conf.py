@@ -10,10 +10,8 @@ AppName="zjh"
 CONFIG_DIR="/data/%s/config/"%(AppName)
 def getConfigFile():
     filename="%s%s_%s.json"%(CONFIG_DIR,options.mode,options.locale)
-    print(filename)
     if not os.path.exists(filename)   :
         filename="%s%s.json"%(CONFIG_DIR,options.mode)
-    print("filename",filename)
     return filename
 
 
