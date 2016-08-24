@@ -9,7 +9,9 @@ run:
 run-stage:
 	./virtual/bin/python src/main.py -host=0.0.0.0
 run-pro:
-	./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro
+	./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=zh
+run-pro-en:
+	./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=en
 
 test:
 	cd src;../virtual/bin/python -m runtests

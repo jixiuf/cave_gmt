@@ -4,9 +4,18 @@ __author__ = 'jixiufeng'
 import json
 import db.db_permissions
 from tornado.options import  options
+import os.path
 
 AppName="zjh"
 CONFIG_DIR="/data/%s/config/"%(AppName)
+def getConfigFile():
+    filename="%s%s_%s.json"%(CONFIG_DIR,options.mode,options.locale)
+    print(filename)
+    if not os.path.exists(filename)   :
+        filename="%s%s.json"%(CONFIG_DIR,options.mode)
+    print("filename",filename)
+    return filename
+
 
 initPermissionLevel=[db.db_permissions.NewGmToolAccountPermissionLevel(1,"管理员",''),
 db.db_permissions.NewGmToolAccountPermissionLevel(0,"浏览权限",
@@ -32,7 +41,7 @@ PLATFORM_NAME="默认平台"
 
 def getChannelList():
     channels = []
-    with open("%s/%s.json"%(CONFIG_DIR,options.mode)) as data_file:
+    with open(getConfigFile()) as data_file:
         value = json.load(data_file)
         if value==None:
             return channels
@@ -43,7 +52,7 @@ def getChannelList():
 
 # key=渠道号，value =渠道名
 def getChannelNameMap():
-    with open("%s/%s.json"%(CONFIG_DIR,options.mode)) as data_file:
+    with open(getConfigFile()) as data_file:
         value = json.load(data_file)
         if value==None:
             return {}
@@ -60,7 +69,7 @@ def getChannelPlatformMap():
 
 def getSupervisorAddrList(server="1"):
     addrs=[]
-    with open("%s/%s.json"%(CONFIG_DIR,options.mode)) as data_file:
+    with open(getConfigFile()) as data_file:
         value = json.load(data_file)
         if value==None:
             return addrs
@@ -69,14 +78,14 @@ def getSupervisorAddrList(server="1"):
 
 def getAllSupervisorAddrList(): # key=server ,value =["addr"]
     addrs=[]
-    with open("%s/%s.json"%(CONFIG_DIR,options.mode)) as data_file:
+    with open(getConfigFile()) as data_file:
         value = json.load(data_file)
         if value==None:
             return addrs
         return value["supervisor"]
 def getEtcdAddr():
     addrs={}                    # "ip":"ip","port":"port"
-    with open("%s/%s.json"%(CONFIG_DIR,options.mode)) as data_file:
+    with open(getConfigFile()) as data_file:
         value = json.load(data_file)
         if value==None:
             return addrs
