@@ -194,7 +194,7 @@ class Application(tornado.web.Application):
 
 
 def initRedisConfig(mode):
-    with open(conf.CONFIG_DIR+"%s.json"%(mode)) as data_file:
+    with open(conf.getConfigFile()) as data_file:
         value = json.load(data_file)
         if value==None:
             return None
