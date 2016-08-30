@@ -87,3 +87,18 @@ class KickUser(BaseHandler):
         time.sleep(0.1)
         self.write('success')
 
+class DelUser(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+        uin= self.get_argument('uin','0')
+        accountId= self.get_argument('accountId','')
+        now=datetime.now()
+        index=accountId.find("|||")
+        if index>0:
+            accountId=accountId[:index]+"|||"+now.strftime("%Y%m%d%H%M%S")
+        else:
+            accountId=accountId+"|||"+now.strftime("%Y%m%d%H%M%S")
+        app.DBMgr.getUserDB().updateAccountId(uin,accountId)
+        self.write('success')
+

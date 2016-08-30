@@ -205,6 +205,11 @@ CREATE TABLE if not exists `user` (
         query="delete from ban where content='%s'"%(str(uin))
         yield self.dbtemplate.execSql(query)
     @gen.coroutine
+    def updateAccountId(self,uin,accountId):
+        query="update user set sessionInfo='' ,accountId='%s' where uin=%s"%(str(accountId),str(uin))
+        print(query)
+        yield self.dbtemplate.execSql(query)
+    @gen.coroutine
     def isbanned(self,uin):
         query="select content from ban where content='%s' and Type=2 and now()<endBanTime and now()>startBanTime"%(str(uin))
         def mapRowIsBanned(row):
