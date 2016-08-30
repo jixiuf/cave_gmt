@@ -57,6 +57,7 @@ class Application(tornado.web.Application):
             (r'/api/reload_design_data' ,DesignReload),
             (r'/player/kick' ,KickUser),
             (r'/player/list' ,PlayerListHandler),
+            (r'/player/del' ,DelUser),
 
 
             (r'/player/deskinfo' ,DeskInfoHandler),
