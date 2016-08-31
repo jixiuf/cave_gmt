@@ -206,7 +206,7 @@ CREATE TABLE if not exists `user` (
         yield self.dbtemplate.execSql(query)
     @gen.coroutine
     def updateAccountId(self,uin,accountId):
-        query="update user set sessionInfo='' ,accountId='%s' where uin=%s"%(str(accountId),str(uin))
+        query="update user set sessionInfo='' ,uuid='' ,accountId='%s' where uin=%s"%(str(accountId),str(uin))
         print(query)
         yield self.dbtemplate.execSql(query)
     @gen.coroutine
