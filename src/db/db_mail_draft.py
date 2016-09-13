@@ -43,7 +43,6 @@ class MailDraftDB:
     @gen.coroutine
     def add(self,mailId,uin,startTime,endTime,awardStr,awardDesc,content,serverId):
         query="insert into MailDraft (mailId,uin,fromUin,serverId,mailType,startTime,endTime,awardStr,awardDesc,content,reason,createTime,status) values(%d,%s,0,%d,0,'%s','%s','%s','%s','%s','system',now(),0)"%(mailId,uin,serverId,startTime,endTime,awardStr,awardDesc,content)
-        print(query)
         yield self.dbtemplate.execSql(query,db.dbtemplate.dbtemplate.Uint64Sum(uin))
     def mapRow(self,row):
         d={}
