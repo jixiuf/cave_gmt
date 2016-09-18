@@ -226,6 +226,7 @@ CREATE TABLE if not exists `user` (
             raise gen.Return(False)
         raise gen.Return(True)
 
+    @gen.coroutine
     def isbannedUUID(self,uin):
         query="select content from ban where content='%s' and Type=4 and now()<endBanTime and now()>startBanTime"%(str(uin))
         def mapRowIsBanned(row):
