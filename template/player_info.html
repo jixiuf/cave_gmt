@@ -11,7 +11,12 @@
     {%else%}
     <button type="button" class="btn btn-default op-unban " id='btn-unban'>解封</button>
     {% end %}
+    {% if not isBanned %}
     <button type="button" class="btn btn-default op-ban-uuid " id='btn-ban-uuid'>封设备</button>
+    {%else%}
+    <button type="button" class="btn btn-default op-unban" id='btn-unban--uuid'>解封设备</button>
+    {% end %}
+
     <button type="button" class="btn btn-default op-kick " id='btn-kick'>踢人</button>
     <button type="button" class="btn btn-default op-del " id='btn-del'>删号</button>
     <ul class=" list-unstyled ui-content-lists">
@@ -174,7 +179,7 @@
  var kickCardEl= $('#op-kickCard');
  var submitEl = $('.op-submit');
  var banEl=$("#btn-ban");
- var unbanEl=$("#btn-unban");
+ var unbanEl=$(".op-unban");
  var lastPayTimeEl=$("#op-last-PayTime");
  var btnKickEl=$("#btn-kick");
  var btnBanUUIDEl=$("#btn-ban-uuid");

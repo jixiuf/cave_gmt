@@ -226,5 +226,15 @@ CREATE TABLE if not exists `user` (
             raise gen.Return(False)
         raise gen.Return(True)
 
+    def isbannedUUID(self,uin):
+        query="select content from ban where content='%s' and Type=4 and now()<endBanTime and now()>startBanTime"%(str(uin))
+        def mapRowIsBanned(row):
+            return row[0]
+        res=yield self.dbtemplate.query(query,mapRowIsBanned)
+        if res==None or len(res)==0:
+            raise gen.Return(False)
+        raise gen.Return(True)
+
+
 
 
