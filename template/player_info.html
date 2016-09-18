@@ -286,7 +286,7 @@
  });
  unbanUUIDEl.on('click',function(){
      var data={};
-     data['uuid'] = uuidEl.val();
+     data['uin'] = uuidEl.val();
      ajaxing = true;
      $.ajax({
          url: '/api/player_unban',
