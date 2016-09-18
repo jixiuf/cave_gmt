@@ -49,7 +49,7 @@ class PlayerSearchHandler(BaseHandler):
         userAttr=yield app.DBMgr.getUserDB().select_attr_by_uin(uin)
         money=yield app.DBMgr.getMoneyDB(user.server).select_by_uin(uin)
         isBanned=yield app.DBMgr.getUserDB().isbanned(uin)
-        isBannedUUID=yield app.DBMgr.getUserDB().isbannedUUID(uin)
+        isBannedUUID=yield app.DBMgr.getUserDB().isbannedUUID(user.uuid)
 
         self.render("player_info.html", title="玩家信息" ,user=user,userAttr=userAttr,money=money,channelMap=conf.getChannelNameMap(),isBanned=isBanned,isBannedUUID=isBannedUUID)
     @gen.coroutine
