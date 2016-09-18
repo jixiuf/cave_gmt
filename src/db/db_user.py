@@ -205,6 +205,13 @@ CREATE TABLE if not exists `user` (
         query="delete from ban where content='%s'"%(str(uin))
         yield self.dbtemplate.execSql(query)
     @gen.coroutine
+    def banUuid(self,uuid):
+        now=datetime.now()+timedelta(days=-1)
+        end= datetime.now()+ timedelta(days=365)
+        query="insert into ban(Type,content,reason,startBanTime,endBanTime) values(4,'%s','gmt','%s','%s')"%(uuid,now,end)
+        yield self.dbtemplate.execSql(query)
+
+    @gen.coroutine
     def updateAccountId(self,uin,accountId):
         query="update user set sessionInfo='' ,uuid='' ,accountId='%s' where uin=%s"%(str(accountId),str(uin))
         print(query)

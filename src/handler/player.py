@@ -121,6 +121,20 @@ class PlayerUnBanHandler(BaseHandler):
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_BAN)
         self.write("success")
         return
+class PlayerBanUUIDHandler(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+        uuid  = int(self.get_argument('uuid',''))
+        if uuid=='':
+            self.write("fail")
+            return
+        yield app.DBMgr.getUserDB().banUuid(uuid)
+        time.sleep(0.03)
+        app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_BAN)
+        self.write("success")
+        return
+
 cachedAIUinMap={}
 class PlayerListHandler(BaseHandler):
     @asynchronous

@@ -11,7 +11,8 @@
     {%else%}
     <button type="button" class="btn btn-default op-unban " id='btn-unban'>解封</button>
     {% end %}
-    <button type="button" class="btn btn-default op-ban " id='btn-kick'>踢人</button>
+    <button type="button" class="btn btn-default op-ban-uuid " id='btn-ban-uuid'>封设备</button>
+    <button type="button" class="btn btn-default op-kick " id='btn-kick'>踢人</button>
     <button type="button" class="btn btn-default op-del " id='btn-del'>删号</button>
     <ul class=" list-unstyled ui-content-lists">
         {% if user != None %}
@@ -19,6 +20,7 @@
             <span class="ui-items-cell col-sm-2">PlayerID:</span>
             <span class="ui-items-cell col-sm-9">{{ user.uin  }} </span>
             <input type="hidden" id='uin' value='{{ user.uin  }}' >
+            <input type="hidden" id='uuid' value='{{ user.uuid  }}' >
             <input type="hidden" id='accountId' value='{{ user.accountId  }}' >
             <input type="hidden" id='server' value='{{ user.server  }}' >
         </li>
@@ -159,6 +161,7 @@
 </div>
 <script type="text/javascript">
  var uinEl = $('#uin');
+ var uuidEl = $('#uuid');
  var serverEl = $('#server');
  var goldEl = $('#op-gold');
  var gemEl = $('#op-gem');
@@ -174,6 +177,8 @@
  var unbanEl=$("#btn-unban");
  var lastPayTimeEl=$("#op-last-PayTime");
  var btnKickEl=$("#btn-kick");
+ var btnBanUUIDEl=$("#btn-ban-uuid");
+
  var nickNameEl=$("#op-nickname");
  var descEl=$("#op-desc");
  var delEl=$("#btn-del");
@@ -233,6 +238,27 @@
 
 
  });
+ btnBanUUIDEl.on('click',function(){
+     var data={};
+     data['uuid'] = uuidEl.val();
+     ajaxing = true;
+     $.ajax({
+         url: '/api/player_ban_uuid',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          if(data!="success"){
+              alert(data);
+          }
+          window.location.reload();
+      });
+     return false;
+
+
+ });
+
  unbanEl.on('click',function(){
      var data={};
      data['uin'] = uinEl.val();
