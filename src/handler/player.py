@@ -113,8 +113,8 @@ class PlayerUnBanHandler(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_post(self):
-        uin  = int(self.get_argument('uin',0))
-        if uin==0:
+        uin  = self.get_argument('uin','')
+        if uin==0 or uin=='':
             self.write("fail")
             return
         yield app.DBMgr.getUserDB().unbanUin(uin)
