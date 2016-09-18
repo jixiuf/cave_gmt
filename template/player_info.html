@@ -14,7 +14,7 @@
     {% if not isBannedUUID %}
     <button type="button" class="btn btn-default op-ban-uuid " id='btn-ban-uuid'>封设备</button>
     {%else%}
-    <button type="button" class="btn btn-default op-unban" id='btn-unban--uuid'>解封设备</button>
+    <button type="button" class="btn btn-default op-unban" id='btn-unban-uuid'>解封设备</button>
     {% end %}
 
     <button type="button" class="btn btn-default op-kick " id='btn-kick'>踢人</button>
@@ -179,7 +179,9 @@
  var kickCardEl= $('#op-kickCard');
  var submitEl = $('.op-submit');
  var banEl=$("#btn-ban");
- var unbanEl=$(".op-unban");
+ var unbanEl=$("#btn-unban");
+ var unbanUUIDEl=$("#btn-unban-uuid");
+
  var lastPayTimeEl=$("#op-last-PayTime");
  var btnKickEl=$("#btn-kick");
  var btnBanUUIDEl=$("#btn-ban-uuid");
@@ -282,6 +284,25 @@
       });
      return false;
  });
+ unbanUUIDEl.on('click',function(){
+     var data={};
+     data['uuid'] = uuidEl.val();
+     ajaxing = true;
+     $.ajax({
+         url: '/api/player_unban',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          if(data!="success"){
+              alert(data);
+          }
+          window.location.reload();
+      });
+     return false;
+ });
+
 btnKickEl.on('click',function(){
      var data={};
      data['uin'] = uinEl.val();
