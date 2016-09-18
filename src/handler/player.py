@@ -125,7 +125,7 @@ class PlayerBanUUIDHandler(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_post(self):
-        uuid  = int(self.get_argument('uuid',''))
+        uuid  = self.get_argument('uuid','')
         if uuid=='':
             self.write("fail")
             return
