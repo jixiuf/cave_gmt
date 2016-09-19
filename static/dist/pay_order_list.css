@@ -1,18 +1,18 @@
 .ui-pay-order-list-option {
-    max-width: 1024px;
+    /* max-width: 1024px; */
     margin: 0 auto;
 }
 .ui-pay-order-list-option .ui-pay-order-list-list {
     width: 100%;
     list-style: none;
-    margin: 0;
+    margin: 0px;
     padding: 0;
     margin-bottom: 20px;
 }
 .ui-pay-order-list-option .ui-pay-order-list-list .ui-pay-order-list-item {
     text-align:center;
     border-bottom: 1px solid #e5e5e5;
-    padding: 5px 0;
+    padding-right: 5px 0;
 }
 .ui-pay-order-list-option .ui-pay-order-list-list .ui-pay-order-list-item .ui-pay-order-list-cell {
     text-align:center;
