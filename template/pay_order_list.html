@@ -1,0 +1,75 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/pay_order_list.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-pay-order-list-option">
+    <h2 class="form-signin-heading ui-pay-order-list-title">定单列表</h2>
+
+    <ul class="ui-pay-order-list-list op-pay-order-list-list">
+        <li class="ui-pay-order-list-item clearfix">
+            <div class="ui-pay-order-list-cell-id">
+                    ID
+            </div>
+            <div class="ui-pay-order-list-cell-small">
+                <a href='/pay_order/list?sort=channel ,create_time desc' class='op-sort-href'>
+                渠道号
+                </a>
+            </div>
+            <div class="ui-pay-order-list-cell-small">
+                支付类型
+            </div>
+            <div class="ui-pay-order-list-cell-big">
+                定单号
+            </div>
+            <div class="ui-pay-order-list-cell-big">
+               sdk定单号
+            </div>
+            <div class="ui-pay-order-list-cell-big">
+                ProductId
+            </div>
+            <div class="ui-pay-order-list-cell-small">
+                    货币
+            </div>
+            <div class="ui-pay-order-list-cell">
+                <a href='/pay_order/list?sort=create_time desc' class='op-sort-href'>
+                时间
+                </a>
+            </div>
+        </li>
+        {% for index,info in enumerate(payOrderList) %}
+        <li class="ui-pay-order-list-item clearfix">
+            <div class="ui-pay-order-list-cell-id">
+                <a href='/api/pay-order_search?pay-orderId={{info.uin}}'>
+                {{ info.uin}}
+                </a>
+            </div>
+            <div class="ui-pay-order-list-cell-small">
+                {{ info.channel}}
+            </div>
+            <div class="ui-pay-order-list-cell-small">
+                {{ info.payType}}
+            </div>
+            <div class="ui-pay-order-list-cell-big">
+                {{ info.order_id}}
+            </div>
+            <div class="ui-pay-order-list-cell-big">
+                {{ info.sdk_order_id}}
+            </div>
+            <div class="ui-pay-order-list-cell-big">
+                {{ info.product_id}}
+            </div>
+            <div class="ui-pay-order-list-cell-small">
+                {{ info.money}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ info.create_time}}
+            </div>
+        </li>
+        {% end %}
+    </ul>
+</div>
+<script>
+ /*     $('.op-sort-href').click( function(e) {e.preventDefault(); alert(e.target.href); return false; } );*/
+    </script>
+{% end %}

@@ -19,6 +19,8 @@ from db_permissions import PermissionLevelDB
 # from db_design_leader import DesignBLeaderDB
 # from db_design_hero import DesignBHeroDB
 from db_user import UserDB
+from db_pay import PayOrderDB
+
 from db_mail import MailDB
 from db_mail_draft import MailDraftDB
 from db_money import MoneyDB
@@ -155,6 +157,9 @@ class DBMgr:
 
     def getUserDB(self):
         return UserDB(self.getProfileDB())
+    def getPayOrderDB(self):
+        return PayOrderDB(self.getProfileDB())
+
     def getMailDB(self,server=1):
         return MailDB(self.getGameDB(server))
     def getMailDraftDB(self):

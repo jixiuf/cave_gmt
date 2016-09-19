@@ -1,0 +1,44 @@
+.ui-pay-order-list-option {
+    max-width: 1024px;
+    margin: 0 auto;
+}
+.ui-pay-order-list-option .ui-pay-order-list-list {
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 20px;
+}
+.ui-pay-order-list-option .ui-pay-order-list-list .ui-pay-order-list-item {
+    text-align:center;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 5px 0;
+}
+.ui-pay-order-list-option .ui-pay-order-list-list .ui-pay-order-list-item .ui-pay-order-list-cell {
+    text-align:center;
+    width: 12%;
+    float: left;
+    word-wrap: break-word;
+}
+.ui-pay-order-list-option .ui-pay-order-list-list .ui-pay-order-list-item .ui-pay-order-list-cell-id {
+    text-align:center;
+    width: 15%;
+    float: left;
+    word-wrap: break-word;
+}
+.ui-pay-order-list-option .ui-pay-order-list-list .ui-pay-order-list-item .ui-pay-order-list-cell-small {
+    text-align:center;
+    width: 5%;
+    float: left;
+    word-wrap: break-word;
+}
+.ui-pay-order-list-option .ui-pay-order-list-list .ui-pay-order-list-item .ui-pay-order-list-cell-big {
+    text-align:center;
+    width: 19%;
+    float: left;
+    word-wrap: break-word;
+}
+
+.ui-pay-order-list-option .ui-modal-body {
+    background: #9c9c9c;
+}

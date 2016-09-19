@@ -17,6 +17,7 @@ from logger import *
 import db.dbmgr
 
 import handler
+from handler.pay_order import *
 from handler.ad import *
 from handler.deskinfo import *
 from handler.broadcast import *
@@ -59,6 +60,9 @@ class Application(tornado.web.Application):
             (r'/player/kick' ,KickUser),
             (r'/player/list' ,PlayerListHandler),
             (r'/player/del' ,DelUser),
+
+            (r'/pay_order/list' ,PayOrderHandler),
+
 
 
             (r'/player/deskinfo' ,DeskInfoHandler),
