@@ -25,10 +25,10 @@ class ZJHRoomAIControl(BaseHandler):
         result=[]
         for roomInfo in roomList:
             redisV=redisKV.get(str(roomInfo['roomId']),None)
-            if redisV==None or redisV=="true":
-                roomInfo['allowAI']="true"
-            else:
+            if redisV==None or redisV=="false":
                 roomInfo['allowAI']="false"
+            else:
+                roomInfo['allowAI']="true"
             result.append(roomInfo)
 
 
