@@ -41,7 +41,7 @@
         {% if userAttr != None %}
         <li class="clearfix ui-lists-item">
             <span class="ui-items-cell col-sm-2">昵称:</span>
-            <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-nickname" value="{{userAttr.nickName}}"> </span>
+            <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " readonly="readonly"  id="op-nickname" value="{{userAttr.nickName}}"> </span>
         </li>
         <li class="clearfix ui-lists-item">
             <span class="ui-items-cell col-sm-2">性别:</span>
@@ -53,7 +53,7 @@
         </li>
         <li class="clearfix ui-lists-item">
             <span class="ui-items-cell col-sm-2">个性签名:</span>
-            <span class="ui-items-cell col-sm-9"><input type="text" class="form-control " id="op-desc" value="{{userAttr.desc}}"> </span>
+            <span class="ui-items-cell col-sm-9"><input type="text" class="form-control " readonly="readonly" id="op-desc" value="{{userAttr.desc}}"> </span>
         </li>
 
         {% end %}
@@ -114,15 +114,15 @@
         <h3 class="">资产信息</h2>
             <li class="clearfix ui-lists-item">
                 <span class="ui-items-cell col-sm-2 control-label">金币:</span>
-                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-gold" value="{{money.gold}}"> </span>
+                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " readonly="readonly" id="op-gold" value="{{money.gold}}"> </span>
 
                 <span class="ui-items-cell col-sm-2 control-label">钻石:</span>
-                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-gem" value="{{money.gem}}"> </span>
+                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " readonly="readonly" id="op-gem" value="{{money.gem}}"> </span>
             </li>
 
             <li class="clearfix ui-lists-item">
                 <span class="ui-items-cell col-sm-2 control-label">vip值:</span>
-                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-vipValue" value="{{money.vipValue}}"> </span>
+                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " readonly="readonly" id="op-vipValue" value="{{money.vipValue}}"> </span>
                 <span class="ui-items-cell col-sm-2 control-label">vip过期时间:</span>
                 {% if (money==None or money.lastPayTime==None) %}
                 <span class="ui-items-cell col-sm-2">已过期</span>
@@ -134,34 +134,35 @@
             </li>
             <li class="clearfix ui-lists-item">
                 <span class="ui-items-cell col-sm-2 control-label">最近支付时间:</span>
-                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-last-PayTime" value="{{money.lastPayTime}}"> </span>
+                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " readonly="readonly" id="op-last-PayTime" value="{{money.lastPayTime}}"> </span>
             </li>
 
             <li class="clearfix ui-lists-item">
                 <span class="ui-items-cell col-sm-2 control-label">表:</span>
-                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-watch" value="{{money.watch}}"> </span>
+                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-watch" readonly="readonly"  value="{{money.watch}}"> </span>
 
                 <span class="ui-items-cell col-sm-2 control-label">车:</span>
-                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-car" value="{{money.car}}"> </span>
+                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-car" readonly="readonly" value="{{money.car}}"> </span>
             </li>
             <li class="clearfix ui-lists-item">
                 <span class="ui-items-cell col-sm-2 control-label">房:</span>
-                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-house" value="{{money.house}}"> </span>
+                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-house" readonly="readonly" alue="{{money.house}}"> </span>
 
                 <span class="ui-items-cell col-sm-2 control-label">船:</span>
-                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-boat" value="{{money.boat}}"> </span>
+                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-boat" readonly="readonly" alue="{{money.boat}}"> </span>
             </li>
 
 
             <li class="clearfix ui-lists-item">
                 <span class="ui-items-cell col-sm-2 control-label">小喇叭:</span>
-                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-speaker" value="{{money.speaker}}"> </span>
+                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-speaker" readonly="readonly" alue="{{money.speaker}}"> </span>
 
                 <span class="ui-items-cell col-sm-2 control-label">踢人卡:</span>
-                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-kickCard" value="{{money.kickCard}}"> </span>
+                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-kickCard" readonly="readonly" alue="{{money.kickCard}}"> </span>
             </li>
 
             <div class="ui-sumbit">
+                <button type="submit" class="btn btn-default op-edit ui-sumbit" >编辑</button>
                 <button type="submit" class="btn btn-default op-submit ui-sumbit" >保存</button>
             </div>
     </ul>
@@ -183,33 +184,69 @@
  var dateFormat = "%Y-%m-%d";
  $("#timeId").AnyTime_picker({format:dateFormat});
 
- var uinEl = $('#uin');
- var uuidEl = $('#uuid');
- var serverEl = $('#server');
- var goldEl = $('#op-gold');
- var gemEl = $('#op-gem');
- var vipValueEl = $('#op-vipValue');
- var carEl = $('#op-car');
- var watchEl = $('#op-watch');
- var houseEl = $('#op-house');
- var boatEl= $('#op-boat');
- var speakerEl= $('#op-speaker');
- var kickCardEl= $('#op-kickCard');
- var submitEl = $('.op-submit');
- var banEl=$("#btn-ban");
- var unbanEl=$("#btn-unban");
- var unbanUUIDEl=$("#btn-unban-uuid");
+ var uinEl         = $('#uin');
+ var uuidEl        = $('#uuid');
+ var serverEl      = $('#server');
+ var goldEl        = $('#op-gold');
+ var gemEl         = $('#op-gem');
+ var vipValueEl    = $('#op-vipValue');
+ var carEl         = $('#op-car');
+ var watchEl       = $('#op-watch');
+ var houseEl       = $('#op-house');
+ var boatEl        = $('#op-boat');
+ var speakerEl     = $('#op-speaker');
+ var kickCardEl    = $('#op-kickCard');
+ var submitEl      = $('.op-submit');
+ var editEl        = $('.op-edit');
+ var banEl         =$("#btn-ban");
+ var unbanEl       =$("#btn-unban");
+ var unbanUUIDEl   =$("#btn-unban-uuid");
 
- var lastPayTimeEl=$("#op-last-PayTime");
- var btnKickEl=$("#btn-kick");
- var btnBanUUIDEl=$("#btn-ban-uuid");
+ var lastPayTimeEl =$("#op-last-PayTime");
+ var btnKickEl     =$("#btn-kick");
+ var btnBanUUIDEl  =$("#btn-ban-uuid");
 
- var nickNameEl=$("#op-nickname");
- var descEl=$("#op-desc");
- var delEl=$("#btn-del");
- var accountIdEl=$("#accountId");
+ var nickNameEl    =$("#op-nickname");
+ var descEl        =$("#op-desc");
+ var delEl         =$("#btn-del");
+ var accountIdEl   =$("#accountId");
 
  var btnQueryAssetsLogEl=$(".op-query-assets-log");
+
+ editEl.on('click', function(){
+     if(goldEl.attr("readonly")=="readonly"){
+         descEl.removeAttr("readonly");
+         nickNameEl.removeAttr("readonly");
+
+         goldEl.removeAttr("readonly");
+         gemEl.removeAttr("readonly");
+         vipValueEl.removeAttr("readonly");
+         carEl.removeAttr("readonly");
+         watchEl.removeAttr("readonly");
+         houseEl.removeAttr("readonly");
+         boatEl.removeAttr("readonly");
+         speakerEl.removeAttr("readonly");
+         kickCardEl.removeAttr("readonly");
+         lastPayTimeEl.removeAttr("readonly");
+     }else{
+         nickNameEl.attr("readonly","readonly");
+         descEl.attr("readonly","readonly");
+         goldEl.attr("readonly","readonly");
+         gemEl.attr("readonly","readonly");
+         vipValueEl.attr("readonly","readonly");
+         carEl.attr("readonly","readonly");
+         watchEl.attr("readonly","readonly");
+         houseEl.attr("readonly","readonly");
+         boatEl.attr("readonly","readonly");
+         speakerEl.attr("readonly","readonly");
+         kickCardEl.attr("readonly","readonly");
+         lastPayTimeEl.attr("readonly","readonly");
+     }
+
+     /* 　$('input').attr("readonly","readonly")//将input元素设置为readonly
+      * 　　$('input').removeAttr("readonly");//去除input元素的readonly属性
+      * 　　 if($('input').attr("readonly")==true)//判断input元素是否已经设置了readonly属性     */
+ });
 
  submitEl.on('click', function(){
      var data={};
