@@ -2,6 +2,7 @@
 {% block css%}
 <link href="../static/dist/player_info.css" rel="stylesheet" type="text/css"/>
 <link href="../static/dist/block_list.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" href="../static/javascript/plugin/any_time/any_time.css">
 {% end %}
 {% block body %}
 <div class="ui-info-option">
@@ -164,9 +165,24 @@
                 <button type="submit" class="btn btn-default op-submit ui-sumbit" >保存</button>
             </div>
     </ul>
+
+
+    <h5 class="form-signin-heading ui-desk-title">查询玩家资产流水</h5>
+    <ul class="">
+        <label class="col-sm-2 control-label">选择时间:</label>
+        <div class="col-sm-2">
+            <input class="form-control op-time-start" type="text" id="timeId">
+        </div>
+        <button type="submit" class="btn btn-default op-query-assets-log ui-sumbit" >查询</button>
+    </ul>
+
     {% end %}
 </div>
+<script type="text/javascript" src="../static/javascript/plugin/any_time/any_time.js"></script>
 <script type="text/javascript">
+ var dateFormat = "%Y-%m-%d";
+ $("#timeId").AnyTime_picker({format:dateFormat});
+
  var uinEl = $('#uin');
  var uuidEl = $('#uuid');
  var serverEl = $('#server');
@@ -193,6 +209,7 @@
  var delEl=$("#btn-del");
  var accountIdEl=$("#accountId");
 
+ var btnQueryAssetsLogEl=$(".op-query-assets-log");
 
  submitEl.on('click', function(){
      var data={};
@@ -344,6 +361,17 @@ delEl.on('click',function(){
       });
      return false;
  });
+
+btnQueryAssetsLogEl.on('click',function(){
+     time=  $("#timeId").val();
+     if(time==""){
+         alert("请选择时间");
+         return false;
+     }
+     uin = uinEl.val();
+     location.href = '/assets_log/list?uin='+uin+"&time="+time;
+ });
+
 
 
 

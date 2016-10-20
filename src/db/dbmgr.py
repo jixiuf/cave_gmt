@@ -12,6 +12,7 @@ import utils
 import conf
 
 from db_maintain import MaintainDB
+from db_assets_log import AssetsLogDB
 from db_notice import NoticeDB
 from db_present_pack import PresentPackDB
 from db_permissions import PermissionDB
@@ -159,6 +160,9 @@ class DBMgr:
         return UserDB(self.getProfileDB())
     def getPayOrderDB(self):
         return PayOrderDB(self.getProfileDB())
+    def getAssetsLogDB(self):
+        return AssetsLogDB(self.getGMToolDB())
+
 
     def getMailDB(self,server=1):
         return MailDB(self.getGameDB(server))

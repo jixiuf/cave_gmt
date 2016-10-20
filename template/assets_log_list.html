@@ -1,0 +1,65 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/assets_log_list.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-assets-log-list-option">
+    <h2 class="form-signin-heading ui-assets-log-list-title">资产流水日志</h2>
+
+    <ul class="ui-assets-log-list-list op-assets-log-list-list">
+        <li class="ui-assets-log-list-item clearfix">
+            <div class="ui-assets-log-list-cell-id">
+                    ID
+            </div>
+            <div class="ui-assets-log-list-cell-small">
+                资产类型
+            </div>
+            <div class="ui-assets-log-list-cell-big">
+                变化前
+            </div>
+            <div class="ui-assets-log-list-cell-big">
+                变化后
+            </div>
+            <div class="ui-assets-log-list-cell-small">
+               改更值
+            </div>
+            <div class="ui-assets-log-list-cell-big">
+                原因
+            </div>
+            <div class="ui-assets-log-list-cell-big">
+                时间
+            </div>
+        </li>
+        {% for index,info in enumerate(assetsLogList) %}
+        <li class="ui-assets-log-list-item clearfix">
+            <div class="ui-assets-log-list-cell-id">
+                <a href='/api/player_search?playerId={{info.uin}}'>
+                {{ info.SUin}}
+                </a>
+            </div>
+            <div class="ui-assets-log-list-cell-small">
+                {{ info.AssetsType}}
+            </div>
+            <div class="ui-assets-log-list-cell-big">
+                {{ info.BeforeValue}}
+            </div>
+            <div class="ui-assets-log-list-cell-big">
+                {{ info.AfterValue}}
+            </div>
+            <div class="ui-assets-log-list-cell-small">
+                {{ info.ChangeValue}}
+            </div>
+            <div class="ui-assets-log-list-cell-big">
+                {{ info.Reason}}
+            </div>
+            <div class="ui-assets-log-list-cell-big">
+                {{ info.Time}}
+            </div>
+        </li>
+        {% end %}
+    </ul>
+</div>
+<script>
+ /*     $('.op-sort-href').click( function(e) {e.preventDefault(); alert(e.target.href); return false; } );*/
+    </script>
+{% end %}

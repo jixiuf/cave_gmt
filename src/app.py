@@ -35,6 +35,7 @@ from handler.mail import *
 from handler.player import *
 from handler.design  import *
 from handler.zjh_room_ai_control import *
+from handler.assets_log import *
 
 from tornado.ioloop import IOLoop
 
@@ -62,6 +63,8 @@ class Application(tornado.web.Application):
             (r'/player/del' ,DelUser),
 
             (r'/pay_order/list' ,PayOrderHandler),
+            (r'/assets_log/list' ,AssetsLogHandler),
+
 
 
 
