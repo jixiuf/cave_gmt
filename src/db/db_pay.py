@@ -48,8 +48,12 @@ class PayOrderDB:
         yield self.dbtemplate.execDDL(query)
 
     @gen.coroutine
-    def select_all(self,sort):
-        query="select `uin`, `account_id`, `order_id`, `sdk_order_id`, `product_id`, `product_name`, `money`, `channel`, `payType`, `server`, `status`, `order_type`, `receipt_data`, `create_time` from pay_order  order by %s "%(sort)
+    def select_all(self,sort,where):
+        query="select `uin`, `account_id`, `order_id`, `sdk_order_id`, `product_id`, `product_name`, `money`, `channel`, `payType`, `server`, `status`, `order_type`, `receipt_data`, `create_time` from pay_order "
+        if where!="":
+            query+=" where "+where
+
+        query+="  order by %s "%(sort)
         print(query)
         res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)

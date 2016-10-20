@@ -105,7 +105,7 @@ class PlayerBanHandler(BaseHandler):
             self.write("fail")
             return
         yield app.DBMgr.getUserDB().banUin(uin)
-        time.sleep(0.03)
+        time.sleep(0.13)
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_BAN)
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_CLEAR_RANK_USER%uin)
         self.write("success")
@@ -119,7 +119,7 @@ class PlayerUnBanHandler(BaseHandler):
             self.write("fail")
             return
         yield app.DBMgr.getUserDB().unbanUin(uin)
-        time.sleep(0.03)
+        time.sleep(0.13)
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_BAN)
         self.write("success")
         return

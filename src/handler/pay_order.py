@@ -18,9 +18,10 @@ class PayOrderHandler(BaseHandler):
     @gen.coroutine
     def self_get(self):
         sort = self.get_argument('sort','')
+        where= self.get_argument('where','')
         if sort=="":
             sort="create_time desc"
 
-        payOrderList=yield app.DBMgr.getPayOrderDB().select_all(sort)
+        payOrderList=yield app.DBMgr.getPayOrderDB().select_all(sort,where)
         self.render("pay_order_list.html", title="定单信息列表",payOrderList=payOrderList,channelMap=conf.getChannelNameMap())
 

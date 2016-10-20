@@ -19,6 +19,8 @@
 
     <button type="button" class="btn btn-default op-kick " id='btn-kick'>踢人</button>
     <button type="button" class="btn btn-default op-del " id='btn-del'>删号</button>
+    <a class="btn btn-default"  href="/pay_order/list?where=uin%3D{{ userAttr.uin  }}">定单列表</a>
+
     <ul class=" list-unstyled ui-content-lists">
         {% if user != None %}
         <li class="clearfix ui-lists-item">
