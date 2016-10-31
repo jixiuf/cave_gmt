@@ -12,7 +12,6 @@ import utils
 import conf
 
 from db_maintain import MaintainDB
-from db_assets_log import AssetsLogDB
 from db_notice import NoticeDB
 from db_present_pack import PresentPackDB
 from db_permissions import PermissionDB
@@ -25,7 +24,6 @@ from db_bi_user import  BIUserDB
 
 from db_mail import MailDB
 from db_mail_draft import MailDraftDB
-from db_money import MoneyDB
 from db_version_update import VersionUpdateDB
 from db_server_version import ServerVersionDB
 from db_dynamic_version_update import DynamicVersionUpdateDB
@@ -166,18 +164,12 @@ class DBMgr:
         return UserDB(self.getProfileDB())
     def getPayOrderDB(self):
         return PayOrderDB(self.getProfileDB())
-    def getAssetsLogDB(self):
-        return AssetsLogDB(self.getGMToolDB())
 
 
     def getMailDB(self,server=1):
         return MailDB(self.getGameDB(server))
     def getMailDraftDB(self):
         return self.mailDraftDB
-    def getMoneyDB(self,server=1):
-        return MoneyDB(self.getGameDB(server))
-    def getBRoomDB(self,server=1):
-        return BRoomDB(self.getDesignDB(server))
 
 
 
