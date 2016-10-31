@@ -6,7 +6,7 @@ import db.db_permissions
 from tornado.options import  options
 import os.path
 
-AppName="zjh"
+AppName="cave"
 CONFIG_DIR="/data/%s/config/"%(AppName)
 def getConfigFile():
     filename="%s%s_%s.json"%(CONFIG_DIR,options.mode,options.locale)

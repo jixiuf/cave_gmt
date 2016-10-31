@@ -4,7 +4,7 @@ import os
 import os.path
 
 from app import Application
-define("port", default=8000, help="run on the given port", type=int)
+define("port", default=3002, help="run on the given port", type=int)
 define("host", default="127.0.0.1", help="host or ip", type=str)
 define("mode", default="dev", help="mode (dev or pro)", type=str)
 define("locale", default="zh", help="locale (default chi)", type=str)

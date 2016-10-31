@@ -13,7 +13,7 @@ from tornado.options import options
 
 def main():
     """entry point for process"""
-    print "you could run this :python main.py -host=localhost -mode=dev -port=8000"
+    print "you could run this :python main.py -host=localhost -mode=dev -port=3002"
 
     tornado.options.parse_command_line()
     # if not os.path.exists(conf.LOCAL_UPLOAD_DIR):
