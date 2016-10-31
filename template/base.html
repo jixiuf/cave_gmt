@@ -67,7 +67,6 @@
                   <li><a href="/game/update">动态更新demo</a></li>
                   <li><a href="/game/address">下载地址</a></li>
                   <li><a href="/game/server_version_update">服务器版本</a></li>
-                  <li><a href="/api/reload_design_data">reload策划数据</a></li>
                 </ul>
             </li>
             <li class="dropdown">
@@ -79,7 +78,10 @@
                   <li><a href="">---------------</a></li>
                   <li><a href="/notice/add">公告添加</a></li>
                   <li><a href="/notice/get">公告管理</a></li>
-                  <li><a href="/ad/get">广告内容修改</a></li>
+                  <li><a href="">---------------</a></li>
+                  <li><a href="/pay_order/list">定单列表</a></li>
+                  <li><a href="">---------------</a></li>
+                  <li><a href="/api/reload_design_data">reload策划数据</a></li>
                 </ul>
             </li>
             <li class="dropdown">
@@ -87,39 +89,6 @@
                 <ul class="dropdown-menu">
                     <li><a href="/mail/edit">邮件编辑</a></li>
                     <li><a href="/mail/draft_list">邮件草稿列表</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">AI控制<b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    <li><a href="/zjh_room_ai_control/get">AI控制</a></li>
-                </ul>
-            </li>
-            {% end %}
-            <!-- <li class="dropdown">
-                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">礼包<b class="caret"></b></a>
-                 <ul class="dropdown-menu">
-                 <li><a href="/present_pack/list">礼包列表</a></li>
-                 <li><a href="/present_pack/add">礼包打包</a></li>
-                 </ul>
-                 </li> -->
-            <li class="dropdown">
-                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">玩家信息<b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    <li><a href="/player/search">玩家信息查询</a></li>
-                    {% if Account!=None and Account.channel=='0' %}
-                    <li><a href="/player/deskinfo">查询玩家所在牌桌信息</a></li>
-                    {% end %}
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">统计<b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    {% if Account!=None and Account.channel=='0' %}
-                    <li><a href="/zjh_enter_desk_bi/get">每日各桌玩家数</a></li>
-                    {% end %}
-                    <li><a href="/pay_order/list">定单列表</a></li>
-                    <li><a href="/bi/player_bi_get">用户信息统计(新增-活跃-付费)</a></li>
                 </ul>
             </li>
         </ul>

@@ -18,10 +18,7 @@ import db.dbmgr
 
 import handler
 from handler.pay_order import *
-from handler.ad import *
-from handler.deskinfo import *
 from handler.broadcast import *
-from handler.zjh_enter_desk import *
 from handler.notice import *
 from handler.ping import PingHandler
 from handler.login import *
@@ -34,9 +31,6 @@ from handler.award import *
 from handler.mail import *
 from handler.player import *
 from handler.design  import *
-from handler.zjh_room_ai_control import *
-from handler.assets_log import *
-from handler.zjh_player_bi import *
 
 from tornado.ioloop import IOLoop
 
@@ -64,26 +58,6 @@ class Application(tornado.web.Application):
             (r'/player/del' ,DelUser),
 
             (r'/pay_order/list' ,PayOrderHandler),
-            (r'/assets_log/list' ,AssetsLogHandler),
-
-
-
-
-            (r'/player/deskinfo' ,DeskInfoHandler),
-            (r'/api/deskinfo' ,DeskInfoHandler),
-
-            (r'/ad/get' ,AdHandler),
-            (r'/api/ad' ,AdHandler),
-
-            (r'/zjh_enter_desk_bi/get' ,ZjhEnterDeskDayPlayerCntRender),
-            (r'/zjh_enter_desk_bi/post' ,ZjhEnterDeskDayPlayerCnt),
-
-            (r'/bi/player_bi_get' ,BIPlayerRender),
-            (r'/bi/player_bi_post' ,BIPlayer),
-
-            (r'/zjh_room_ai_control/get' ,ZJHRoomAIControl),
-            (r'/zjh_room_ai_control/post' ,ZJHRoomAIControlUpdate),
-
 
 
             (r'/ping', PingHandler),
@@ -214,7 +188,7 @@ class Application(tornado.web.Application):
         global Redis
         global DBMgr
         while self.keepRunning:
-            result=Redis.brpop("zjh_redis_log",2) # timeout 2seconds
+            result=Redis.brpop("cave_redis_log",2) # timeout 2seconds
             if result!=None:
                 # result[0]=="key"
                 # result[1]=="value"
