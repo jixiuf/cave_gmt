@@ -16,7 +16,9 @@ class PresentPackList(BaseHandler):
         # playerInfo=yield app.DBMgr.getUserDB().select_by_uin(144150423530676224)
         # playerInfo=yield app.DBMgr.getUserAttrDB(1).select_by_uin(144150423530676224)
         packs=yield app.DBMgr.presentPackDB.select_all()
-        self.render("present_pack_list.html",title="礼包列表",packs=packs)
+        self.render("present_pack_list.html",title="礼包列表",
+                    Account=self.gmAccount,
+                    packs=packs)
 class PresentPackHideShow(BaseHandler):
     @asynchronous
     @gen.coroutine
@@ -30,7 +32,9 @@ class PresentPackAdd(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
-        self.render("present_pack_add.html",title="礼包打包")
+        self.render("present_pack_add.html",
+                    Account=self.gmAccount,
+                    title="礼包打包")
     @asynchronous
     @gen.coroutine
     def self_post(self):

@@ -25,7 +25,9 @@ class ZjhEnterDeskDayPlayerCntRender(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
-        self.render("zjh_enter_desk_player_cnt.html",title="统计每天各房间玩家数")
+        self.render("zjh_enter_desk_player_cnt.html",
+                    Account=self.gmAccount,
+                    title="统计每天各房间玩家数")
 
 class ZjhEnterDeskDayPlayerCnt(BaseHandler):
     def mapRow(self,row):

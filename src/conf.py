@@ -18,12 +18,17 @@ def getConfigFile():
 initPermissionLevel=[db.db_permissions.NewGmToolAccountPermissionLevel(1,"管理员",''),
 db.db_permissions.NewGmToolAccountPermissionLevel(0,"浏览权限",
                                                   ','.join(['/ping',
-                                                       '/game/address',
-                                                       '/account/manage',
-                                                       'game/server_version_update',
-                                                       '/maintain/mgr',
-                                                       '/award/sub_id_list',
-                                                       '/award/id_list',])
+                                                            '/game/address',
+                                                            '/account/manage',
+                                                            '/player/search',
+                                                            '/api/player_search',
+                                                            '/pay_order/list',
+                                                            '/assets_log/list',
+                                                            '/player/deskinfo',
+                                                            'game/server_version_update',
+                                                            '/maintain/mgr',
+                                                            '/award/sub_id_list',
+                                                            '/award/id_list',])
 )]
 
 DYNAMIC_USER='najaplus'

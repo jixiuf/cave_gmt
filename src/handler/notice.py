@@ -13,17 +13,23 @@ class NoticeManageRenderHandler(BaseHandler):
 
     def get(self):
         serverIdList= app.DBMgr.get_all_server_id()
-        self.render("notice_manage.html",title="公告管理",serverIdList=serverIdList)
+        self.render("notice_manage.html",title="公告管理",
+                    Account=self.gmAccount,
+                    serverIdList=serverIdList)
 
 class NoticeAddRenderHandler(BaseHandler):
     def get(self):
         serverIdList= app.DBMgr.get_all_server_id()
-        self.render("notice_add.html",title="公告添加",serverIdList=serverIdList)
+        self.render("notice_add.html",title="公告添加",
+                    Account=self.gmAccount,
+                    serverIdList=serverIdList)
 
 class NoticeEditRenderHandler(BaseHandler):
 
     def get(self):
-        self.render("notice_edit.html",title="公告发布")
+        self.render("notice_edit.html",
+                    Account=self.gmAccount,
+                    title="公告发布")
 
 class NoticeInfoHandler(BaseHandler):
 

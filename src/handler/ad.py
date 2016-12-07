@@ -22,7 +22,10 @@ class AdHandler(BaseHandler):
         else:
             data={}
         print("sss",content)
-        self.render("adinfo.html", title="修改广告内容",data=data)
+        self.render("adinfo.html", title="修改广告内容",
+                    Account=self.gmAccount,
+
+                    data=data)
 
     @asynchronous
     @gen.coroutine

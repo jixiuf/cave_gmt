@@ -22,7 +22,9 @@ class ServerMgr(BaseHandler):
         etcdServerListMap={}
         for serverId in serverIdList:
             etcdServerListMap[str(serverId)]=app.getEtcdServerList(conf.PLATFORM,serverId)
-        self.render("server_mgr.html",title="服务器管理",serverIdList=serverIdList,supervisorAddrJson=supervisorAddrJson,etcdServerListMap=etcdServerListMap)
+        self.render("server_mgr.html",
+                    Account=self.gmAccount,
+                    title="服务器管理",serverIdList=serverIdList,supervisorAddrJson=supervisorAddrJson,etcdServerListMap=etcdServerListMap)
 
 class ServerStopping(BaseHandler):
     @asynchronous

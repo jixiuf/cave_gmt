@@ -47,6 +47,7 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
+          {% if Account!=None and Account.isAdmin() %}
             <li class="dropdown">
                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">权限管理<b class="caret"></b></a>
                 <ul class="dropdown-menu">
@@ -85,6 +86,13 @@
                     <li><a href="/mail/draft_list">邮件草稿列表</a></li>
                 </ul>
             </li>
+            <li class="dropdown">
+                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">AI控制<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="/zjh_room_ai_control/get">AI控制</a></li>
+                </ul>
+            </li>
+            {% end %}
             <!-- <li class="dropdown">
                  <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">礼包<b class="caret"></b></a>
                  <ul class="dropdown-menu">
@@ -96,20 +104,18 @@
                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">玩家信息<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li><a href="/player/search">玩家信息查询</a></li>
+                    {% if Account!=None and Account.channel==0 %}
                     <li><a href="/player/deskinfo">查询玩家所在牌桌信息</a></li>
-                    <li><a href="/pay_order/list">定单列表</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">AI控制<b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    <li><a href="/zjh_room_ai_control/get">AI控制</a></li>
+                    {% end %}
                 </ul>
             </li>
             <li class="dropdown">
                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">统计<b class="caret"></b></a>
                 <ul class="dropdown-menu">
+                    {% if Account!=None and Account.channel==0 %}
                     <li><a href="/zjh_enter_desk_bi/get">每日各桌玩家数</a></li>
+                    {% end %}
+                    <li><a href="/pay_order/list">定单列表</a></li>
                 </ul>
             </li>
         </ul>

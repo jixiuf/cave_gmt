@@ -21,7 +21,9 @@ class MailEdit(BaseHandler):
     @gen.coroutine
     def self_get(self):
         serverIdList=app.DBMgr.get_all_server_id()
-        self.render("mail_edit.html",title="邮件编辑",serverIdList=serverIdList)
+        self.render("mail_edit.html",title="邮件编辑",
+                    Account=self.gmAccount,
+                    serverIdList=serverIdList)
     @asynchronous
     @gen.coroutine
     def self_post(self):
@@ -102,7 +104,9 @@ class MailDraftList(BaseHandler):
     @gen.coroutine
     def self_get(self):
         mailList=yield app.DBMgr.getMailDraftDB().select_all()
-        self.render("mail_draft_list.html",title="邮件草稿列表",mailList=mailList)
+        self.render("mail_draft_list.html",
+                    Account=self.gmAccount,
+                    title="邮件草稿列表",mailList=mailList)
 class MailDraftSend(BaseHandler):
 
     @asynchronous

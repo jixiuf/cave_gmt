@@ -15,15 +15,20 @@ class AccountManageRenderHandler(BaseHandler):
         msg = self.get_argument('msg','')
         gmAccountList = yield app.DBMgr.permissionDB.select_all()
         permissionLevelList=yield app.DBMgr.permissionLevelDB.select()
+        gmAccount2 =  yield app.DBMgr.permissionDB.select(self.account)
         self.render("account_manage.html",
                     title="账号管理",
+                    Account=gmAccount2,
                     msg=msg,
                     gmAccountList=gmAccountList,
                     permissionLevelList=permissionLevelList)
 
 class AccountRegistrationRenderHandler(BaseHandler):
     def self_get(self):
-        self.render("account_registration.html",title="账号开通")
+        channelMap=conf.getChannelNameMap()
+        self.render("account_registration.html",title="账号开通",
+                    Account=self.gmAccount,
+                    channelMap=channelMap)
 
 class AccountCreateHandler(BaseHandler):
 
@@ -32,13 +37,14 @@ class AccountCreateHandler(BaseHandler):
     def self_post(self):
         account = self.get_argument('account')
         password = self.get_argument('password')
+        channel = int(self.get_argument('channel'))
         hpassword = hashlib.sha1(password).hexdigest()
         gmAccount = yield app.DBMgr.permissionDB.select(account)
 
         if gmAccount!=None:
             self.write(json.dumps({ 'action': 'have account'}))
         else:
-            yield app.DBMgr.permissionDB.add(account,hpassword)
+            yield app.DBMgr.permissionDB.add(account,channel,hpassword)
             self.write(json.dumps({ 'action': 'success'}))
 
 

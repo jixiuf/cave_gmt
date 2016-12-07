@@ -31,5 +31,8 @@ class AssetsLogHandler(BaseHandler):
         uin = self.get_argument('uin','')
 
         assetsLogList=yield app.DBMgr.getAssetsLogDB().select_all(uin,startTime,endTime)
-        self.render("assets_log_list.html", title="资产流水日志",assetsLogList=assetsLogList,channelMap=conf.getChannelNameMap())
+        self.render("assets_log_list.html", title="资产流水日志",assetsLogList=assetsLogList,
+                    Account=self.gmAccount,
+
+                    channelMap=conf.getChannelNameMap())
 

@@ -18,12 +18,12 @@
                 <input class="form-control op-player-id" id="playerSId" name="playerSId" placeholder="玩家短id">
             </div>
         </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label">昵称</label>
-            <div class="col-sm-10">
-                <input class="form-control op-player-id" id="nickName" name="nickName"  placeholder="玩家昵称">
-            </div>
-        </div>
+        <!-- <div class="form-group">
+             <label class="col-sm-2 control-label">昵称</label>
+             <div class="col-sm-10">
+             <input class="form-control op-player-id" id="nickName" name="nickName"  placeholder="玩家昵称">
+             </div>
+             </div> -->
 
 
         <div class="form-group">
@@ -45,12 +45,12 @@
 <script type="text/javascript">
  var playerIdEl = $('#playerId');
  var playerSIdEl = $('#playerSId');
- var nickNameEl = $('#nickName');
+ /*  var nickNameEl = $('#nickName');*/
  var submitEl = $('.op-submit');
 
 
  submitEl.on('click', function() {
-     if(playerIdEl.val()==""&&playerSIdEl.val()=="" &&nickNameEl.val()=="") {
+     if(playerIdEl.val()==""&&playerSIdEl.val()=="" ) {
          alert("请输入一个查询条件");
          return false;
      }

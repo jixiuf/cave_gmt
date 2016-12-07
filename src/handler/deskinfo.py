@@ -18,7 +18,10 @@ class DeskInfoHandler(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
-        self.render("deskinfo.html", title="玩家所在牌桌信息查询")
+        self.render("deskinfo.html",
+                    Account=self.gmAccount,
+
+                    title="玩家所在牌桌信息查询")
 
     @asynchronous
     @gen.coroutine

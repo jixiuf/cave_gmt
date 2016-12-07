@@ -35,6 +35,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def permission_verify(self):
         self.account = self.get_secure_cookie('user')
         gmAccount =  yield app.DBMgr.permissionDB.select(self.account)
+        self.gmAccount=gmAccount
         if gmAccount==None:
             self.no_permissions()
         else:

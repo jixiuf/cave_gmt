@@ -32,7 +32,9 @@ class ZJHRoomAIControl(BaseHandler):
             result.append(roomInfo)
 
 
-        self.render("zjh_room_ai_control.html",title="动态更新",result=result)
+        self.render("zjh_room_ai_control.html",title="动态更新",
+                    Account=self.gmAccount,
+                    result=result)
 
 
 class ZJHRoomAIControlUpdate(BaseHandler):

@@ -6,6 +6,7 @@
 {% end %}
 {% block body %}
 <div class="ui-info-option">
+{% if Account!=None and Account.channel==0 %}
     <h2 class="form-signin-heading ui-info-title">玩家信息</h2>
     {% if not isBanned %}
     <button type="button" class="btn btn-default op-ban " id='btn-ban'>封号</button>
@@ -20,6 +21,7 @@
 
     <button type="button" class="btn btn-default op-kick " id='btn-kick'>踢人</button>
     <button type="button" class="btn btn-default op-del " id='btn-del'>删号</button>
+    {% end %}
     <a class="btn btn-default"  href="/pay_order/list?where=uin%3D{{ userAttr.uin  }}">定单列表</a>
 
     <ul class=" list-unstyled ui-content-lists">
@@ -161,10 +163,12 @@
                 <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-kickCard" readonly="readonly" value="{{money.kickCard}}"> </span>
             </li>
 
+            {% if Account!=None and Account.channel==0 %}
             <div class="ui-sumbit">
                 <button type="submit" class="btn btn-default op-edit ui-sumbit" >编辑</button>
                 <button type="submit" class="btn btn-default op-submit ui-sumbit" >保存</button>
             </div>
+            {% end %}
     </ul>
 
 

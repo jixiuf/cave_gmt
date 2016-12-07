@@ -17,7 +17,9 @@ class PlayerSearchRenderHandler(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
-        self.render("player_search.html", title="玩家信息查询")
+        self.render("player_search.html",
+                    Account=self.gmAccount,
+                    title="玩家信息查询")
 
 class PlayerSearchHandler(BaseHandler):
     @asynchronous
@@ -46,12 +48,18 @@ class PlayerSearchHandler(BaseHandler):
             return
 
         user=yield app.DBMgr.getUserDB().select_by_uin(uin)
+        if user==None:
+            self.write("player_user not found")
+            return
+
         userAttr=yield app.DBMgr.getUserDB().select_attr_by_uin(uin)
         money=yield app.DBMgr.getMoneyDB(user.server).select_by_uin(uin)
         isBanned=yield app.DBMgr.getUserDB().isbanned(uin)
         isBannedUUID=yield app.DBMgr.getUserDB().isbannedUUID(user.uuid)
 
-        self.render("player_info.html", title="玩家信息" ,user=user,userAttr=userAttr,money=money,channelMap=conf.getChannelNameMap(),isBanned=isBanned,isBannedUUID=isBannedUUID)
+        self.render("player_info.html",
+                    Account=self.gmAccount,
+                    title="玩家信息" ,user=user,userAttr=userAttr,money=money,channelMap=conf.getChannelNameMap(),isBanned=isBanned,isBannedUUID=isBannedUUID)
     @gen.coroutine
     def suin2uin(self,suin): #
         if suin=="":
@@ -206,7 +214,9 @@ class PlayerListHandler(BaseHandler):
         totalPages=totalPages+1
         list=list[pageCnt*(page-1):pageCnt*(page)]
 
-        self.render("player_list.html", title="玩家列表",result=list,sortField=sortField,page=page,totalPages=totalPages,reverse=reverse)
+        self.render("player_list.html",
+                    Account=self.gmAccount,
+                    title="玩家列表",result=list,sortField=sortField,page=page,totalPages=totalPages,reverse=reverse)
 
 
 
