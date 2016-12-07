@@ -1,0 +1,27 @@
+.ui-bi-player-form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+.ui-bi-player-form .ui-bi-player-title {
+  margin-left: 200px;
+}
+.ui-bi-player-option {
+    max-width: 1024px;
+    margin: 0 auto;
+}
+.ui-bi-player-option .ui-bi-player-list {
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 20px;
+}
+.ui-data{
+    margin-left: 300px;
+}
+.ui-bi-player-cell {
+    text-align:center;
+    width: 15%;
+    float: left;
+    word-wrap: break-word;
+}

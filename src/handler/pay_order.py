@@ -30,8 +30,6 @@ class PayOrderHandler(BaseHandler):
             print("channel",channel)
 
 
-        print("ww",where)
-
         if sort=="":
             sort="create_time desc"
 

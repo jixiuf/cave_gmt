@@ -26,6 +26,8 @@ db.db_permissions.NewGmToolAccountPermissionLevel(0,"浏览权限",
                                                             '/assets_log/list',
                                                             '/player/deskinfo',
                                                             'game/server_version_update',
+                                                            '/bi/player_bi_get' ,
+                                                            '/bi/player_bi_post',
                                                             '/maintain/mgr',
                                                             '/award/sub_id_list',
                                                             '/award/id_list',])

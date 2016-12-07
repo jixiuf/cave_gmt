@@ -36,6 +36,7 @@ from handler.player import *
 from handler.design  import *
 from handler.zjh_room_ai_control import *
 from handler.assets_log import *
+from handler.zjh_player_bi import *
 
 from tornado.ioloop import IOLoop
 
@@ -76,6 +77,9 @@ class Application(tornado.web.Application):
 
             (r'/zjh_enter_desk_bi/get' ,ZjhEnterDeskDayPlayerCntRender),
             (r'/zjh_enter_desk_bi/post' ,ZjhEnterDeskDayPlayerCnt),
+
+            (r'/bi/player_bi_get' ,BIPlayerRender),
+            (r'/bi/player_bi_post' ,BIPlayer),
 
             (r'/zjh_room_ai_control/get' ,ZJHRoomAIControl),
             (r'/zjh_room_ai_control/post' ,ZJHRoomAIControlUpdate),

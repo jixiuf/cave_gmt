@@ -1,5 +1,6 @@
 #  -*- coding:utf-8 -*-
 from tornado import  gen
+import time
 from datetime import datetime, timedelta
 class PayOrder:
     def __init__(self):
@@ -23,6 +24,8 @@ class PayOrderDB:
     def __init__(self,dbtemplate):
         self.dbtemplate=dbtemplate
 
+    def mapOne(self,row):
+        return row[0]           # cnt
 
     def mapRow(self,row):
         d=PayOrder()
@@ -56,5 +59,33 @@ class PayOrderDB:
         query+="  order by %s "%(sort)
         print(query)
         res=yield self.dbtemplate.query(query,self.mapRow)
+        raise gen.Return(res)
+
+
+    @gen.coroutine
+    def select_user_cnt(self,startTime ,endTime,channel):
+        query="select count(`uin`) as user_cnt from pay_order where create_time>'%s' and create_time<'%s'"%(startTime.strftime("%Y-%m-%d %H:%M:%S"), endTime.strftime("%Y-%m-%d %H:%M:%S"))
+        if channel!='0' and channel!=None:
+            query+= " and channel=%s"%(channel)
+
+        print(query)
+
+        res=yield self.dbtemplate.query(query,self.mapOne)
+        raise gen.Return(res)
+
+# 新增付费用户（指定渠道 选日期） 当天
+    @gen.coroutine
+    def select_new_user_cnt(self,startTime ,endTime,channel):
+        channelCheck=' '
+        if channel!='0' and channel!=None:
+            channelCheck= "  and p1.channel=%s"%(channel)
+
+
+        query="select count(distinct p1.uin ) from pay_order p1    where p1.create_time>'%s' and p1.create_time<'%s' %s and not exists(select   `uin`  from pay_order p2 where p2.create_time<'%s'  and p2.uin=p1.uin)"%(
+            startTime.strftime("%Y-%m-%d %H:%M:%S"), endTime.strftime("%Y-%m-%d %H:%M:%S"),channelCheck,startTime.strftime("%Y-%m-%d %H:%M:%S"))
+
+        print(query)
+
+        res=yield self.dbtemplate.query(query,self.mapOne)
         raise gen.Return(res)
 

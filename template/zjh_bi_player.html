@@ -1,0 +1,99 @@
+{% extends base.html %}
+{% block css%}
+<link rel="stylesheet" href="../static/javascript/plugin/any_time/any_time.css">
+<link href="../static/dist/bi_player.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-bi-player-option">
+    <h2 class="form-signin-heading ui-bi-player-title">用户信息统计(新增-活跃-付费)</h2>
+    <form class="form-horizontal" role="form">
+    <ul class="ui-bi-player-list op-bi-player-list">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">选择时间</label>
+            <div class="col-sm-3">
+                <input class="form-control op-time-start" type="text" id="timeId">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">渠道</label>
+            <div class="col-sm-3">
+
+                <select class="form-control op-channel" id="channel"  placeholder="渠道">
+                    {% if Account!=None and Account.channel==0 %}
+                        <option value='0'>下拉选择渠道(默认全渠道)</option>
+                        {% for channel in channelMap %}
+                        <option value='{{ escape(channel) }}'>{{ escape(channelMap.get(channel)) }}:{{ channel}}</option>
+                        {% end %}
+                    {%else%}
+                        <option value='{{Account.channel}}'>{{ channelMap.get(str(Account.channel)) }}: {{ Account.channel}}</option>
+                    {%end%}
+                </select>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label"></label>
+            <div class="col-sm-4">
+                <button type="submit" class="center btn btn-default op-submit ui-sumbit" >查询</button>不要频繁查询
+            </div>
+        </div>
+    </ul>
+    </form>
+</div>
+</br>
+</br>
+<div class="ui-data op-data">
+</div>
+</br>
+
+
+<script type="text/javascript" src="../static/javascript/plugin/any_time/any_time.js"></script>
+
+<script type="text/javascript">
+ var btnEl = $('.op-submit');
+ var data ={};
+ var dateFormat = "%Y-%m-%d";
+ $("#timeId").AnyTime_picker({format:dateFormat});
+ addRow=function(row){
+     str='<div class="ui-bi-player-cell">\n'+
+         row['name']+ ':</div>'+
+         '<div class="ui-bi-player-cell">'+
+         row['cnt']+
+         '</div></br>';
+     $('.op-data').append(str);
+ }
+
+
+ btnEl.on('click', function(e) {
+     var el = $(e.currentTarget);
+     data['time'] =  $("#timeId").val();
+     data['channel'] =  $("#channel").val();
+     ajaxing = true;
+     $.ajax({
+         url: '/bi/player_bi_post',
+         type: 'post',
+         data: data,
+         el: el
+     })
+      .done(function(data) {
+           ajaxing = false;
+          $('.op-data').empty();
+           data = JSON.parse(data);
+          if(data['result']!=""){
+              alert(data['result']);
+          }else{
+              if(data['data'].length==0){
+                  alert("no data");
+                  return
+              }
+              for(var i = 0, len = data['data'].length; i < len; i++) {
+                  addRow(data['data'][i])
+              }
+          }
+          return false;
+      });
+     return false
+ });
+
+</script>
+{% end %}
