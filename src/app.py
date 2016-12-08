@@ -172,11 +172,19 @@ class Application(tornado.web.Application):
         t=threading.Thread(target=self.keepReadFromRedis)
         t.start()
         # t.join()
+        delay=utils.secondDiff("3:10:0") # 每天3:10执行
+        self.biTimer=utils.RepeatTimer(delay,60*60*24,handler.zjh_player_bi.update_data)
+        self.biTimer.start()
+
+
 
     def handlerSignal(self,signum, frame):
         self.keepRunning=False
+        self.biTimer.cancel()
         sys.exit()
         os._exit()
+
+
 
     def keepReadFromRedis(self):
 
@@ -251,4 +259,5 @@ def isServerRunning(platform=1,server=1):
             running=True
             break
     return running
+
 

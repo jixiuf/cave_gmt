@@ -17,11 +17,25 @@
     margin-bottom: 20px;
 }
 .ui-data{
-    margin-left: 300px;
+    width: 100%;
+    list-style: none;
+    /* margin-left: 300px; */
 }
-.ui-bi-player-cell {
+.ui-bi-player-cell-big {
     text-align:center;
-    width: 15%;
+    width: 11%;
     float: left;
     word-wrap: break-word;
+}
+
+.ui-bi-player-cell {
+    text-align:center;
+    width: 8%;
+    float: left;
+    word-wrap: break-word;
+}
+.ui-bi-player-item {
+    text-align:center;
+    border-bottom: 1px solid #e5e5e5;
+    padding-right: 5px 0;
 }

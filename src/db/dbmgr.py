@@ -21,6 +21,7 @@ from db_permissions import PermissionLevelDB
 # from db_design_hero import DesignBHeroDB
 from db_user import UserDB
 from db_pay import PayOrderDB
+from db_bi_user import  BIUserDB
 
 from db_mail import MailDB
 from db_mail_draft import MailDraftDB
@@ -151,6 +152,11 @@ class DBMgr:
 
         self.mailDraftDB=MailDraftDB(self.getGMToolDB())
         yield self.mailDraftDB.create_table()
+
+        self.mailDraftDB=MailDraftDB(self.getGMToolDB())
+        yield self.mailDraftDB.create_table()
+        self.biUserDB=BIUserDB(self.getGMToolDB())
+        yield self.biUserDB.create_table()
 
 
         print "after load application"

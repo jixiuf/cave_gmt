@@ -2,6 +2,7 @@
 __author__ = 'zhangjunkai'
 
 import ConfigParser
+import threading
 
 from datetime import datetime
 
@@ -42,3 +43,34 @@ class DateEncoder(json.JSONEncoder ):
     if isinstance(obj, datetime):
       return obj.__str__()
     return json.JSONEncoder.default(self, obj)
+
+
+def secondDiff(endTime ="0:0:00"):
+    """
+    当前时至到 endTime 需要多少秒
+    """
+
+    now=datetime.now()
+    start_dt = datetime.strptime("%d:%d:%d"%(now.hour,now.minute,now.second), '%H:%M:%S')
+    end_dt = datetime.strptime(endTime, '%H:%M:%S')
+    diff = (end_dt - start_dt)
+    return diff.seconds
+# t=RepeatTimer(5,5,callback)
+# t.start()
+class RepeatTimer():
+    def __init__(self,delay,interval,hFunction):
+        self.delay=delay
+        self.interval=interval
+        self.hFunction = hFunction
+        self.thread = threading.Timer(self.delay,self.handle_function)
+
+    def handle_function(self):
+        self.hFunction()
+        self.thread = threading.Timer(self.interval,self.handle_function)
+        self.thread.start()
+
+    def start(self):
+        self.thread.start()
+
+    def cancel(self):
+        self.thread.cancel()

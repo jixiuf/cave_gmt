@@ -9,12 +9,6 @@
     <form class="form-horizontal" role="form">
     <ul class="ui-bi-player-list op-bi-player-list">
         <div class="form-group">
-            <label class="col-sm-3 control-label">选择时间</label>
-            <div class="col-sm-3">
-                <input class="form-control op-time-start" type="text" id="timeId">
-            </div>
-        </div>
-        <div class="form-group">
             <label class="col-sm-3 control-label">渠道</label>
             <div class="col-sm-3">
 
@@ -42,31 +36,75 @@
 </div>
 </br>
 </br>
-<div class="ui-data op-data">
-</div>
+<ul class="ui-bi-player-list-list op-bi-player-list-list">
+    <div class="ui-data">
+        <li class="ui-bi-player-item clearfix">
+            <div class="ui-bi-player-cell">
+                日期
+            </div>
+            <div class="ui-bi-player-cell">
+                新增用户
+            </div>
+            <div class="ui-bi-player-cell">
+                活跃用户
+            </div>
+            <div class="ui-bi-player-cell">
+                付费用户
+            </div>
+            <div class="ui-bi-player-cell">
+                新增付费用户
+            </div>
+            <div class="ui-bi-player-cell">
+                平均付费
+            </div>
+            <div class="ui-bi-player-cell-big">
+                平均付费玩家付费
+            </div>
+            <div class="ui-bi-player-cell">
+                总收入
+            </div>
+        </li>
+    </div>
+    <div class="ui-data op-data">
+        </div>
+</ul>
 </br>
 
 
-<script type="text/javascript" src="../static/javascript/plugin/any_time/any_time.js"></script>
 
 <script type="text/javascript">
  var btnEl = $('.op-submit');
  var data ={};
- var dateFormat = "%Y-%m-%d";
- $("#timeId").AnyTime_picker({format:dateFormat});
  addRow=function(row){
-     str='<div class="ui-bi-player-cell">\n'+
-         row['name']+ ':</div>'+
+     str='<li class="ui-bi-player-item clearfix"><div class="ui-bi-player-cell">\n'+
+         row['day']+ '</div>'+
          '<div class="ui-bi-player-cell">'+
-         row['cnt']+
-         '</div></br>';
+         row['newUserCnt']+
+         '</div>'+
+         '<div class="ui-bi-player-cell">'+
+         row['activeUserCnt']+
+         '</div>'+
+         '<div class="ui-bi-player-cell">'+
+         row['payUserCnt']+
+         '</div>'+
+         '<div class="ui-bi-player-cell">'+
+         row['payNewUserCnt']+
+         '</div>'+
+         '<div class="ui-bi-player-cell">'+
+         row['avgMoney']+
+         '</div>'+
+         '<div class="ui-bi-player-cell-big">'+
+         row['avgMoneyOfPayed']+
+         '</div>'+
+         '<div class="ui-bi-player-cell">'+
+         row['money']+
+         '</div></li>';
      $('.op-data').append(str);
  }
 
 
  btnEl.on('click', function(e) {
      var el = $(e.currentTarget);
-     data['time'] =  $("#timeId").val();
      data['channel'] =  $("#channel").val();
      ajaxing = true;
      $.ajax({
@@ -94,6 +132,7 @@
       });
      return false
  });
+ btnEl.click()
 
 </script>
 {% end %}

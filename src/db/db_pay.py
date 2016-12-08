@@ -57,7 +57,6 @@ class PayOrderDB:
             query+=" where "+where
 
         query+="  order by %s "%(sort)
-        print(query)
         res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)
 
@@ -68,9 +67,8 @@ class PayOrderDB:
         if channel!='0' and channel!=None:
             query+= " and channel=%s"%(channel)
 
-        print(query)
 
-        res=yield self.dbtemplate.query(query,self.mapOne)
+        res=yield self.dbtemplate.queryObject(query,self.mapOne)
         raise gen.Return(res)
 
 # 新增付费用户（指定渠道 选日期） 当天
@@ -84,8 +82,16 @@ class PayOrderDB:
         query="select count(distinct p1.uin ) from pay_order p1    where p1.create_time>'%s' and p1.create_time<'%s' %s and not exists(select   `uin`  from pay_order p2 where p2.create_time<'%s'  and p2.uin=p1.uin)"%(
             startTime.strftime("%Y-%m-%d %H:%M:%S"), endTime.strftime("%Y-%m-%d %H:%M:%S"),channelCheck,startTime.strftime("%Y-%m-%d %H:%M:%S"))
 
-        print(query)
-
-        res=yield self.dbtemplate.query(query,self.mapOne)
+        res=yield self.dbtemplate.queryObject(query,self.mapOne)
         raise gen.Return(res)
+
+
+    @gen.coroutine
+    def select_sum(self,startTime ,endTime,channel):
+        query="select ifnull(sum(`money`),0) as money from pay_order where create_time>'%s' and create_time<'%s'"%(startTime.strftime("%Y-%m-%d %H:%M:%S"), endTime.strftime("%Y-%m-%d %H:%M:%S"))
+        if channel!='0' and channel!=None:
+            query+= " and channel=%s"%(channel)
+
+        res=yield self.dbtemplate.queryObject(query,self.mapOne)
+        raise gen.Return(int(res))
 

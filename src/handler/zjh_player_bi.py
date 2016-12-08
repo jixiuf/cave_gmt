@@ -18,7 +18,57 @@ import conf
 from db.db_dynamic_version_update import DynamicVersionUpdate
 from db.db_version_update import VersionUpdate
 from db.db_server_version import ServerVersion
+from db.db_bi_user import BIUser
 import app
+
+@gen.coroutine
+def fetch_data(dayStr,channelStr):
+    t=time.strptime(dayStr,"%Y-%m-%d")
+    startTime=datetime(*t[:3])
+    endTime=startTime+timedelta(days=1)
+
+    biUser=BIUser()
+    biUser.channel=int(channelStr)
+    biUser.day=dayStr
+    def mapRow(row):
+        return row[0]           # cnt
+
+    try:
+        result=[]
+        sql="select count(uin) as new_user_cnt from LoginLog where IsNew=1 and Time>'%s' and Time<'%s' "%(startTime.strftime("%Y-%m-%d %H:%M:%S"), endTime.strftime("%Y-%m-%d %H:%M:%S"))
+        if channelStr!='0':
+            sql+= " and channel=%s"%(channelStr)
+
+        biUser.newUserCnt=yield app.DBMgr.getGMToolDB().queryObject(sql,mapRow)
+
+
+        sql="select count(distinct uin) as active_user_cnt from LoginLog where Time>'%s' and Time<'%s' "%(startTime.strftime("%Y-%m-%d %H:%M:%S"), endTime.strftime("%Y-%m-%d %H:%M:%S"))
+        if channelStr!='0':
+            sql+= " and channel=%s"%(channelStr)
+        biUser.activeUserCnt=yield app.DBMgr.getGMToolDB().queryObject(sql,mapRow)
+
+        biUser.payUserCnt=yield app.DBMgr.getPayOrderDB().select_user_cnt(startTime,endTime,channelStr)
+
+        biUser.payNewUserCnt=yield app.DBMgr.getPayOrderDB().select_new_user_cnt(startTime,endTime,channelStr)
+        biUser.money=yield app.DBMgr.getPayOrderDB().select_sum(startTime,endTime,channelStr)
+
+    except Exception, error:
+        print('errormsg\t%s' % (str(error),))
+        print('errortrace\t%s' % (str(traceback.format_exc()),))
+    raise gen.Return(biUser)
+
+@gen.coroutine
+def update_data():
+    now=datetime.now()
+    dayStr = "%d-%0.2d-%0.2d"%(now.year,now.month,now.day)
+
+    biUser=yield fetch_data(dayStr,'0')
+    yield app.DBMgr.biUserDB.add(biUser)
+    for channel in conf.getChannelList():
+        biUser=yield fetch_data(dayStr,str(channel))
+        yield app.DBMgr.biUserDB.add(biUser)
+
+    raise gen.Return("")
 
 #
 class BIPlayerRender(BaseHandler):
@@ -39,59 +89,40 @@ class BIPlayerRender(BaseHandler):
 
 # 定单列表 按渠道
 class BIPlayer(BaseHandler):
-    def mapRow(self,row):
-        return row[0]           # cnt
-
     @asynchronous
     @gen.coroutine
     def self_post(self):
-        tStr = self.get_argument('time','')
+
+        now=datetime.now()
+        dayStr = "%d-%0.2d-%0.2d"%(now.year,now.month,now.day)
+
         channelStr = self.get_argument('channel','0')
         if self.gmAccount.channel!=0 and channelStr!=str(self.gmAccount.channel):
             self.write(json.dumps({"result":"wrong channel"+str(self.gmAccount.channel)}))
             return
 
+        biUser=yield fetch_data(dayStr,channelStr)
+        list=yield app.DBMgr.biUserDB.select_all(channelStr)
+        if len(list)>0:
+            if list[0].day!=biUser.day:
+                list.insert(0,biUser)
+        else:
+            list.insert(0,biUser)
 
-        if tStr=='':
-            self.write(json.dumps({"result":"请选择日期"}))
-            return
+        result=[]
+        biUserTotal=BIUser()
+        biUserTotal.channel=int(channelStr)
+        biUserTotal.day="合计"
 
-        t=time.strptime(tStr,"%Y-%m-%d")
-        startTime=datetime(*t[:3])
-        endTime=startTime+timedelta(days=1)
-
-        try:
-            result=[]
-            sql="select count(uin) as new_user_cnt from LoginLog where IsNew=1 and Time>'%s' and Time<'%s' "%(startTime.strftime("%Y-%m-%d %H:%M:%S"), endTime.strftime("%Y-%m-%d %H:%M:%S"))
-            if channelStr!='0':
-                sql+= " and channel=%s"%(channelStr)
-
-            print(sql)
-            newUserCnt=yield app.DBMgr.getGMToolDB().query(sql,self.mapRow)
-            result.append({'name':'当日新增玩家','cnt':newUserCnt})
-
-
-            sql="select count(distinct uin) as active_user_cnt from LoginLog where Time>'%s' and Time<'%s' "%(startTime.strftime("%Y-%m-%d %H:%M:%S"), endTime.strftime("%Y-%m-%d %H:%M:%S"))
-            if channelStr!='0':
-                sql+= " and channel=%s"%(channelStr)
-            activeUserCnt=yield app.DBMgr.getGMToolDB().query(sql,self.mapRow)
-            result.append({'name':'当日活跃玩家',"cnt":activeUserCnt})
-            print(sql)
-
-            payUserCnt=yield app.DBMgr.getPayOrderDB().select_user_cnt(startTime,endTime,channelStr)
-            result.append({'name':'当日付费玩家','cnt':payUserCnt})
-
-            payNewUserCnt=yield app.DBMgr.getPayOrderDB().select_new_user_cnt(startTime,endTime,channelStr)
-            result.append({'name':'当日新增付费玩家','cnt':payNewUserCnt})
+        for tmpBIUser in list:
+            result.append(tmpBIUser.toJsonObj())
+            biUserTotal.newUserCnt+=tmpBIUser.newUserCnt
+            biUserTotal.activeUserCnt+=tmpBIUser.activeUserCnt
+            biUserTotal.payUserCnt+=tmpBIUser.payUserCnt
+            biUserTotal.payNewUserCnt+=tmpBIUser.payNewUserCnt
+            biUserTotal.money+=tmpBIUser.money
+        result.insert(0,biUserTotal.toJsonObj())
 
 
-
-
-
-            self.write(json.dumps({'result':'',"data":result}))
-        except Exception, error:
-            self.application.logger.warning('errorarg\t%s\t%s\t%s' % (self.request.headers.get('channel','xxx'),self.request.headers.get('User-Agent','xxx'),str(self.request.arguments)))
-            self.application.logger.warning('errormsg\t%s' % (str(error),))
-            self.application.logger.warning('errortrace\t%s' % (str(traceback.format_exc()),))
-            self.write(json.dumps({"result":"err"}))
+        self.write(json.dumps({'result':'',"data":result}))
 
