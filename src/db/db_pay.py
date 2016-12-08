@@ -35,7 +35,7 @@ class PayOrderDB:
         d.sdk_order_id =row[ 3 ]
         d.product_id   =row[ 4 ]
         d.product_name = row[ 5 ]
-        d.money        = row[ 6 ]
+        d.money        = row[ 6 ]/100
         d.channel      = row[ 7 ]
         d.payType      = row[ 8 ]
         d.server       = row[ 9 ]
@@ -88,7 +88,7 @@ class PayOrderDB:
 
     @gen.coroutine
     def select_sum(self,startTime ,endTime,channel):
-        query="select ifnull(sum(`money`),0) as money from pay_order where create_time>'%s' and create_time<'%s'"%(startTime.strftime("%Y-%m-%d %H:%M:%S"), endTime.strftime("%Y-%m-%d %H:%M:%S"))
+        query="select ifnull(sum(`money`),0)/100 as money from pay_order where create_time>'%s' and create_time<'%s'"%(startTime.strftime("%Y-%m-%d %H:%M:%S"), endTime.strftime("%Y-%m-%d %H:%M:%S"))
         if channel!='0' and channel!=None:
             query+= " and channel=%s"%(channel)
 
