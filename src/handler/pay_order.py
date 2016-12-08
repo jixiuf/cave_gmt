@@ -21,8 +21,11 @@ class PayOrderHandler(BaseHandler):
         where= self.get_argument('where','')
         timeStart = self.get_argument('timeStart','')
         timeEnd= self.get_argument('timeEnd','')
+        channel= int(self.get_argument('channel','0'))
+        if self.gmAccount.channel!=0:
+            channel=self.gmAccount.channel
+
         print(self.gmAccount)
-        channel= self.gmAccount.channel
         if channel!=0:
             if where=='':
                 where="channel=%d"%(channel)
@@ -54,6 +57,7 @@ class PayOrderHandler(BaseHandler):
         self.render("pay_order_list.html", title="定单信息列表",
                     Account=self.gmAccount,
                     timeStart=timeStart,
+                    defaultChannel=channel,
                     timeEnd=timeEnd,
                     moneyTotal=moneyTotal,
                     payOrderList=payOrderList,channelMap=conf.getChannelNameMap())

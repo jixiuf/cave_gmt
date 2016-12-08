@@ -9,6 +9,24 @@
 
     <form class="form-horizontal" role="form" action="/pay_order/list">
         <div class="form-group">
+            <label class="col-sm-3 control-label">渠道</label>
+            <div class="col-sm-3">
+
+                <select class="form-control op-channel" name="channel" id="channel"  placeholder="渠道">
+                    {% if Account!=None and Account.channel==0 %}
+                        <option value='0'>下拉选择渠道(默认全渠道)</option>
+                        {% for channel in channelMap %}
+                        <option  value='{{ escape(channel) }}'>{{ escape(channelMap.get(channel)) }}:{{ channel}}</option>
+                        {% end %}
+                    {%else%}
+                        <option value='{{Account.channel}}'>{{ channelMap.get(str(Account.channel)) }}: {{ Account.channel}}</option>
+                    {%end%}
+                </select>
+
+            </div>
+        </div>
+
+        <div class="form-group">
             <label class="col-sm-3 control-label">开始时间</label>
             <div class="col-sm-3">
                 <input class="form-control op-time-start" type="text" name="timeStart" id="timeStart" value="{{timeStart}}">
