@@ -13,28 +13,38 @@
     text-align:center;
     border-bottom: 1px solid #e5e5e5;
     padding-right: 5px 0;
+    padding-left: 2px;
+    padding-right:2px;
 }
 .ui-pay-order-list-option .ui-pay-order-list-list .ui-pay-order-list-item .ui-pay-order-list-cell {
     text-align:center;
     width: 12%;
     float: left;
     word-wrap: break-word;
+    padding-left: 2px;
+    padding-right:2px;
 }
 .ui-pay-order-list-option .ui-pay-order-list-list .ui-pay-order-list-item .ui-pay-order-list-cell-id {
     text-align:center;
     width: 15%;
     float: left;
     word-wrap: break-word;
+    padding-left: 2px;
+    padding-right:2px;
 }
 .ui-pay-order-list-option .ui-pay-order-list-list .ui-pay-order-list-item .ui-pay-order-list-cell-small {
     text-align:center;
-    width: 5%;
+    width: 4%;
     float: left;
     word-wrap: break-word;
+    padding-left: 2px;
+    padding-right:2px;
 }
 .ui-pay-order-list-option .ui-pay-order-list-list .ui-pay-order-list-item .ui-pay-order-list-cell-big {
+    padding-left: 2px;
+    padding-right:2px;
     text-align:center;
-    width: 19%;
+    width: 20%;
     float: left;
     word-wrap: break-word;
 }
