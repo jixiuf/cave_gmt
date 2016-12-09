@@ -107,7 +107,7 @@
                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">玩家信息<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li><a href="/player/search">玩家信息查询</a></li>
-                    {% if Account!=None and Account.channel==0 %}
+                    {% if Account!=None and Account.channel=='0' %}
                     <li><a href="/player/deskinfo">查询玩家所在牌桌信息</a></li>
                     {% end %}
                 </ul>
@@ -115,7 +115,7 @@
             <li class="dropdown">
                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">统计<b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                    {% if Account!=None and Account.channel==0 %}
+                    {% if Account!=None and Account.channel=='0' %}
                     <li><a href="/zjh_enter_desk_bi/get">每日各桌玩家数</a></li>
                     {% end %}
                     <li><a href="/pay_order/list">定单列表</a></li>

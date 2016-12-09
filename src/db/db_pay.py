@@ -57,6 +57,7 @@ class PayOrderDB:
             query+=" where "+where
 
         query+="  order by %s "%(sort)
+        print(query)
         res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)
 

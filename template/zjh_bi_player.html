@@ -18,8 +18,11 @@
                         {% for channel in channelMap %}
                         <option value='{{ escape(channel) }}'>{{ escape(channelMap.get(channel)) }}:{{ channel}}</option>
                         {% end %}
-                    {%else%}
-                        <option value='{{Account.channel}}'>{{ channelMap.get(str(Account.channel)) }}: {{ Account.channel}}</option>
+                        {%else%}
+
+                        {% for channel in Account.getChannelList() %}
+                        <option  value='{{ escape(channel) }}'>{{ escape(channelMap.get(channel)) }}:{{ channel}}</option>
+                        {% end %}
                     {%end%}
                 </select>
 

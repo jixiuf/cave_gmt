@@ -57,7 +57,7 @@ class PermissionDB:
         defaultAccount=yield self.select_all()
         if defaultAccount==None or defaultAccount==[]:
             yield self.add('admin',0,hashlib.sha1('admin').hexdigest())
-            yield self.update_level('admin',1)
+            yield self.update_level('admin',1,'0')
 
 
     def mapRow(self,row):

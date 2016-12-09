@@ -19,7 +19,7 @@ class PermissionsTestCase(tornado.testing.AsyncTestCase):
         yield self.permissionLevelDB.truncate_table()
         cursor=yield self.permissionDB.add("hello","world")
         self.assertNotEqual (cursor.lastrowid,0)
-        cursor=yield self.permissionDB.update_level("hello",1)
+        cursor=yield self.permissionDB.update_level("hello",1,'0')
         self.assertEqual (1,cursor.rowcount)
         cursor=yield self.permissionLevelDB.add(1,"world","urls,urls2")
         account=yield self.permissionDB.select("hello")

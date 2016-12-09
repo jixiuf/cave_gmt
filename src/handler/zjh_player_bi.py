@@ -98,8 +98,9 @@ class BIPlayer(BaseHandler):
         dayStr = "%d-%0.2d-%0.2d"%(now.year,now.month,now.day)
 
         channelStr = self.get_argument('channel','0')
-        if self.gmAccount.channel!=0 and channelStr!=str(self.gmAccount.channel):
-            self.write(json.dumps({"result":"wrong channel"+str(self.gmAccount.channel)}))
+
+        if self.gmAccount.channel!='0' and not channelStr in self.gmAccount.getChannelList():
+            self.write(json.dumps({"result":"wrong channel"+self.gmAccount.channel}))
             return
 
         biUser=yield fetch_data(dayStr,channelStr)

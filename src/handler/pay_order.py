@@ -21,16 +21,17 @@ class PayOrderHandler(BaseHandler):
         where= self.get_argument('where','')
         timeStart = self.get_argument('timeStart','')
         timeEnd= self.get_argument('timeEnd','')
-        channel= int(self.get_argument('channel','0'))
-        if self.gmAccount.channel!=0:
-            channel=self.gmAccount.channel
+        channel= self.get_argument('channel','0')
+        if self.gmAccount.channel!='0':
+            if not channel in self.gmAccount.getChannelList():
+                channel= self.gmAccount.channel
 
         print(self.gmAccount)
-        if channel!=0:
+        if channel!='0':
             if where=='':
-                where="channel=%d"%(channel)
+                where="channel in (%s)"%(channel)
             else:
-                where+=" and channel=%d"%(channel)
+                where+=" and channel in (%s)"%(channel)
         else:
             print("channel",channel)
 
