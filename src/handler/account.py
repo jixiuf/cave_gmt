@@ -19,6 +19,7 @@ class AccountManageRenderHandler(BaseHandler):
         self.render("account_manage.html",
                     title="账号管理",
                     Account=gmAccount2,
+                    channelMap=conf.getChannelNameMap(),
                     msg=msg,
                     gmAccountList=gmAccountList,
                     permissionLevelList=permissionLevelList)
@@ -61,9 +62,10 @@ class AccountLevelHandler(BaseHandler):
             self.write(json.dumps({ 'action': 'success'}))
             return
         else:
+            channel= self.get_argument('channel','')
             gmAccount= yield app.DBMgr.permissionDB.select(account)
             if gmAccount!=None:
-                yield app.DBMgr.permissionDB.update_level(account,level)
+                yield app.DBMgr.permissionDB.update_level(account,level,channel)
                 self.write(json.dumps({ 'action': 'success'}))
             else:
                 self.write(json.dumps({ 'action': 'no account'}))

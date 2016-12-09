@@ -29,6 +29,17 @@
             </div>
         </div>
         <div class="form-group">
+            <div class="channel-div" style="display:none">
+            <label class="col-sm-2 control-label">渠道</label>
+            <div class="col-sm-10">
+                <input type="checkbox" name="op-channel" value="0" /> 默认全渠道<br/>
+                {% for channel in channelMap %}
+                <input type="checkbox" name="op-channel" value='{{ escape(channel) }}' /> {{ escape(channelMap.get(channel)) }}:{{ channel}}<br/>
+                {% end %}
+            </div>
+            </div>
+        </div>
+        <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="submit" class="btn btn-default op-level-submit">修改权限</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <button type="submit" class="btn btn-default op-delete">删除账号</button>
@@ -44,35 +55,69 @@
         accountEl = $('.op-level-account'),
         updateEl = $('.op-level-submit'),
         deleteEl = $('.op-delete'),
+        checkedChannel='',
         ajaxing = false,
+        idx=0,
+        checked,
         data = {};
 
+    selectEl.change(function(){
+        if($(this).val()=="0"){
+            $(".channel-div").show();
+        }else{
+            $(".channel-div").hide();
+        }
+    });
 
     updateEl.on('click', function() {
-        if(ajaxing || selectEl.val().length != 1||accountEl.val()=="") return false;
+        if(ajaxing ) return false;
+        if(accountEl.val()==""){
+            alert("选择账号");
+            return false;
+        }
+        if( selectEl.val().length != 1){
+            alert("选择权限");
+            return false;
+        }
         ajaxing = true;
+
         data['account'] = accountEl.val();
         data['level'] = selectEl.val();
+        checkedChannel='';
+        if(data['level']==1){
+            checkedChannel='0';
+        }else{
+            checked=$(':input[name="op-channel"]').filter(":checked");
+            idx =0;
+            checked.each(function() {
+                idx++
+                checkedChannel=checkedChannel+$(this).val();
+                if(idx!=checked.length){
+                    checkedChannel=checkedChannel+",";
+                }
+            });
+        }
+        data['channel'] = checkedChannel;
         $.ajax({
             url: '/api/account/update_level',
             type: 'post',
             data: data
         })
-        .done(function(data) {
-            ajaxing = false;
-            if(data == 'wrong permissions') {
-                location.href = '/?msg=原页面无权限访问，跳转到此';
-                alert(data);
-            } else {
-                data = JSON.parse(data);
-            }
+         .done(function(data) {
+             ajaxing = false;
+             if(data == 'wrong permissions') {
+                 location.href = '/?msg=原页面无权限访问，跳转到此';
+                 alert(data);
+             } else {
+                 data = JSON.parse(data);
+             }
 
-            if(data.action == 'success') {
-                alert('账号权限修改成功！');
-            } else if(data.action == 'no account') {
-                alert('该账号不存在！');
-            }
-        });
+             if(data.action == 'success') {
+                 alert('账号权限修改成功！');
+             } else if(data.action == 'no account') {
+                 alert('该账号不存在！');
+             }
+         });
         return false;
     });
     deleteEl.on('click', function() {
@@ -106,7 +151,7 @@
         });
         return false;
     });
- 
+
 
 </script>
 {% end %}

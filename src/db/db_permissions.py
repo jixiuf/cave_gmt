@@ -13,18 +13,21 @@ def NewGmToolAccountPermissionLevel(level,levelDesc,urls):
     return a
 
 class GmToolAccount:
+    def getChannelList(self):   # string list
+        return self.channel.split(",")
+
     def isAdmin(self):
         return self.level==1
 
     def __init__(self):
         self.account=""
-        self.channel=0
+        self.channel=''
         self.passwd=""
         self.level = 0
         self.levelDesc = ""
         self.urls=''
     def __str__(self):
-        return "GMAccount{account=%s,channel=%d,passwd=%s,level=%d,levelDesc=%s,urls=%s}"%(self.account,self.channel,self.passwd,self.level,self.levelDesc,self.urls)
+        return "GMAccount{account=%s,channel=%s,passwd=%s,level=%d,levelDesc=%s,urls=%s}"%(self.account,self.channel,self.passwd,self.level,self.levelDesc,self.urls)
 
 class PermissionDB:
     def __init__(self,dbtemplate):
@@ -35,7 +38,7 @@ class PermissionDB:
         query = "create table if not exists permission ("\
                 "id BIGINT(20) NOT NULL AUTO_INCREMENT, " \
                 "`account` varchar(255) NOT NULL DEFAULT '' COMMENT 'account'," \
-                "`channel` int NOT NULL DEFAULT 0 COMMENT 'channel'," \
+                "`channel` varchar(255) NOT NULL DEFAULT '' COMMENT 'channel'," \
                 "`password` varchar(255) NOT NULL DEFAULT '' COMMENT 'password'," \
                 "`create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," \
                 "`update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP," \
@@ -85,8 +88,8 @@ class PermissionDB:
         raise gen.Return(result)
 
     @gen.coroutine
-    def update_level(self,account,level):
-        query="update permission set level=%s ,update_time=now() where account='%s' "%(level,account)
+    def update_level(self,account,level,channel):
+        query="update permission set level=%s ,channel='%s',update_time=now() where account='%s' "%(level,channel,account)
         result=yield self.dbtemplate.execSql(query)
         raise gen.Return(result)
     @gen.coroutine
