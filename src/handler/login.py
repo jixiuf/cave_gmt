@@ -57,3 +57,12 @@ class LoginHandler(BaseHandler):
             self.application.logger.warning('errormsg\t%s' % (str(error),))
             self.application.logger.warning('errortrace\t%s' % (str(traceback.format_exc()),))
 
+class LogoutHandler(BaseHandler):
+    @gen.coroutine
+    def self_get(self):
+        self.account = self.get_secure_cookie('user')
+        self.password = self.get_secure_cookie('password')
+        self.clear_cookie("user")
+        self.clear_cookie("password")
+        self.render("login.html",title="登录")
+

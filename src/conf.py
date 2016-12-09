@@ -18,6 +18,7 @@ def getConfigFile():
 initPermissionLevel=[db.db_permissions.NewGmToolAccountPermissionLevel(1,"管理员",''),
 db.db_permissions.NewGmToolAccountPermissionLevel(0,"浏览权限",
                                                   ','.join(['/ping',
+                                                            '/logout',
                                                             '/game/address',
                                                             '/account/manage',
                                                             '/player/search',

@@ -88,6 +88,8 @@ class Application(tornado.web.Application):
 
             (r'/ping', PingHandler),
             (r'/', LoginHandler),
+            (r'/logout', LogoutHandler),
+
             (r'/account/register', AccountRegistrationRenderHandler),
             (r'/account/manage', AccountManageRenderHandler),
             (r'/api/account/create', AccountCreateHandler),
