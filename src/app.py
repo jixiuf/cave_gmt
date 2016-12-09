@@ -173,7 +173,7 @@ class Application(tornado.web.Application):
         t.start()
         # t.join()
         delay=utils.secondDiff("3:10:0") # 每天3:10执行
-        self.biTimer=utils.RepeatTimer(delay,60*60*24,handler.zjh_player_bi.update_data)
+        self.biTimer=utils.RepeatTimer(delay,60*60*24,self.doMidNight)
         self.biTimer.start()
 
 
@@ -183,6 +183,27 @@ class Application(tornado.web.Application):
         self.biTimer.cancel()
         sys.exit()
         os._exit()
+
+
+    @gen.coroutine
+    def doMidNight(self):
+        self.logger.info("doMidNight")
+        handler.zjh_player_bi.update_data()
+
+        last2Month=datetime.now()+ timedelta(days=-62)
+
+        sql="delete from LoginLog where  Time<'%s' "%(last2Month.strftime("%Y-%m-%d %H:%M:%S"))
+        yield app.DBMgr.getGMToolDB().execSql(sql)
+        self.logger.info(sql)
+
+        sql="delete from ZJHDeskEnterLog where  Time<'%s' "%(last2Month.strftime("%Y-%m-%d %H:%M:%S"))
+        yield app.DBMgr.getGMToolDB().execSql(sql)
+        self.logger.info(sql)
+
+        sql="delete from AssetsLog where  Time<'%s' "%(last2Month.strftime("%Y-%m-%d %H:%M:%S"))
+        yield app.DBMgr.getGMToolDB().execSql(sql)
+        self.logger.info(sql)
+
 
 
 

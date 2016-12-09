@@ -59,8 +59,9 @@ def fetch_data(dayStr,channelStr):
 
 @gen.coroutine
 def update_data():
-    now=datetime.now()
-    dayStr = "%d-%0.2d-%0.2d"%(now.year,now.month,now.day)
+    yestoday=datetime.now()+ timedelta(days=-1)
+    print("zjh_player_bi.update_date",yestoday)
+    dayStr = "%d-%0.2d-%0.2d"%(yestoday.year,yestoday.month,yestoday.day)
 
     biUser=yield fetch_data(dayStr,'0')
     yield app.DBMgr.biUserDB.add(biUser)
