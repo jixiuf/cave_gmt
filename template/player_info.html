@@ -6,7 +6,7 @@
 {% end %}
 {% block body %}
 <div class="ui-info-option">
-{% if Account!=None and Account.channel==0 %}
+{% if Account!=None and Account.channel=='0' %}
     <h2 class="form-signin-heading ui-info-title">玩家信息</h2>
     {% if not isBanned %}
     <button type="button" class="btn btn-default op-ban " id='btn-ban'>封号</button>
