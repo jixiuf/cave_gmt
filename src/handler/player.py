@@ -17,7 +17,9 @@ class PlayerSearchRenderHandler(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
+        msg = self.get_argument('msg','')
         self.render("player_search.html",
+                    msg=msg,
                     Account=self.gmAccount,
                     title="玩家信息查询")
 

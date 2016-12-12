@@ -18,7 +18,7 @@ class LoginHandler(BaseHandler):
             self.password = self.get_secure_cookie('password')
             succ=yield self.verifyAccount(self.account,self.password)
             if succ:            # 如果有cookie 直接登录
-                self.redirect(r'/account/manage?msg='+msg)
+                self.redirect(r'/player/search?msg='+msg)
                 return
             else:
                 self.render("login.html",title="登录",msg=msg)

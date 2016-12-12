@@ -5,6 +5,10 @@
 {% block body %}
 <div class="ui-search-form">
     <h2 class="form-signin-heading ui-search-title">玩家信息查询</h2>
+        <div class='ui-msg'>
+            {{ msg }}
+        </div>
+
     <form class="form-horizontal" role="form" action="/api/player_search" method="get">
         <div class="form-group">
             <label class="col-sm-2 control-label">PlayerID</label>
