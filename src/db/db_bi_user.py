@@ -15,19 +15,19 @@ class BIUser:
         data["payUserCnt"]=self.payUserCnt
         data["payNewUserCnt"]=self.payNewUserCnt
         data["money"]=self.money
-        data["avgMoney"]=self.getAvgMoney()
-        data["avgMoneyOfPayed"]=self.getAvgMoneyOfPayed()
+        data["avgMoney"]="{0:.2f}".format(self.getAvgMoney())
+        data["avgMoneyOfPayed"]="{0:.2f}".format(self.getAvgMoneyOfPayed())
         return data
     def getAvgMoney(self):
         if self.activeUserCnt==0:
             return 0
         else:
-            return self.money/self.activeUserCnt
+            return float(self.money)/float(self.activeUserCnt)
     def getAvgMoneyOfPayed(self):
         if self.payUserCnt==0:
             return 0
         else:
-            return self.money/self.payUserCnt
+            return float(self.money)/float(self.payUserCnt)
 
 
     def __init__(self):
