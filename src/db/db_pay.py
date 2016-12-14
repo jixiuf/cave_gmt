@@ -64,7 +64,7 @@ class PayOrderDB:
 
     @gen.coroutine
     def select_user_cnt(self,startTime ,endTime,channel):
-        query="select count(`uin`) as user_cnt from pay_order where create_time>'%s' and create_time<'%s'"%(startTime.strftime("%Y-%m-%d %H:%M:%S"), endTime.strftime("%Y-%m-%d %H:%M:%S"))
+        query="select count(distinct `uin`) as user_cnt from pay_order where create_time>'%s' and create_time<'%s'"%(startTime.strftime("%Y-%m-%d %H:%M:%S"), endTime.strftime("%Y-%m-%d %H:%M:%S"))
         if channel!='0' and channel!=None:
             query+= " and channel=%s"%(channel)
 
