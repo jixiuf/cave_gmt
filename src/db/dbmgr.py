@@ -28,7 +28,6 @@ from db_version_update import VersionUpdateDB
 from db_server_version import ServerVersionDB
 from db_dynamic_version_update import DynamicVersionUpdateDB
 from db_award_type import AwardDB
-from db_design_room import BRoomDB
 
 class DBConfigList:
     def __init__(self,dbConfigObjList):
