@@ -1,0 +1,78 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/bugreport.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-bugreport-option">
+    <h2 class="form-signin-heading ui-bugreport-title">玩家Bug列表</h2>
+</div>
+</br>
+</br>
+<ul class="ui-bugreport-list-list op-bugreport-list-list">
+    <div class="ui-data">
+        <li class="ui-bugreport-item clearfix">
+            <div class="ui-bugreport-cell">
+                上报者
+            </div>
+            <div class="ui-bugreport-cell-big">
+                Bug内容
+            </div>
+            <div class="ui-bugreport-cell">
+                时间
+            </div>
+            <div class="ui-bugreport-cell">
+                状态
+            </div>
+        </li>
+        {% for bug in bugList %}
+        <li class="ui-bugreport-item clearfix">
+            <div class="ui-bugreport-cell">
+                {{ bug.get('uin') }}
+            </div>
+            <div class="ui-bugreport-cell-big">
+                {{ bug.get('content') }}
+            </div>
+            <div class="ui-bugreport-cell">
+                {{ bug.get('updateTime') }}
+            </div>
+            <div class="ui-bugreport-cell">
+                {% if bug.get('status')==0 %}
+                <button  data-time-pk='{{bug.get("timePK")}}' data-uin='{{bug.get("uin")}}' class="btn btn-default op-btn">修复</button>
+                {% else %}
+                已处理
+                {% end %}
+            </div>
+        </li>
+        {% end %}
+
+    </div>
+</ul>
+</br>
+<script type="text/javascript">
+ var ajaxing = false,
+     submitEl=$(".op-btn"),
+     data = {};
+
+ submitEl.on('click', function(e) {
+     var el = $(e.currentTarget);
+     if(ajaxing) return false;
+     data['uin'] = el.data('uin');
+     data['timePK'] = el.data('time-pk');
+     ajaxing = true;
+     $.ajax({
+         url: '/bugreport/get',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          /*           location.href = '/bugreport/get';*/
+          window.location.reload();
+      });
+     return false;
+ });
+
+</script>
+
+
+{% end %}

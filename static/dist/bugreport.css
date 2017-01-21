@@ -1,0 +1,41 @@
+.ui-bugreport-form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+.ui-bugreport-form .ui-bugreport-title {
+  margin-left: 200px;
+}
+.ui-bugreport-option {
+    max-width: 1024px;
+    margin: 0 auto;
+}
+.ui-bugreport-option .ui-bugreport-list {
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 20px;
+}
+.ui-data{
+    width: 100%;
+    list-style: none;
+    /* margin-left: 300px; */
+}
+.ui-bugreport-cell-big {
+    text-align:center;
+    width: 50%;
+    float: left;
+    word-wrap: break-word;
+}
+
+.ui-bugreport-cell {
+    text-align:center;
+    width: 15%;
+    float: left;
+    word-wrap: break-word;
+}
+.ui-bugreport-item {
+    text-align:center;
+    border-bottom: 1px solid #e5e5e5;
+    padding-right: 5px 0;
+}

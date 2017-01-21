@@ -32,6 +32,7 @@ from handler.mail import *
 from handler.player import *
 from handler.design  import *
 from handler.player_bi import *
+from handler.bugreport import *
 
 from tornado.ioloop import IOLoop
 
@@ -61,6 +62,8 @@ class Application(tornado.web.Application):
             (r'/bi/player_bi_post' ,BIPlayer),
 
             (r'/pay_order/list' ,PayOrderHandler),
+
+            (r'/bugreport/get' ,BugReportHandler),
 
 
             (r'/ping', PingHandler),
