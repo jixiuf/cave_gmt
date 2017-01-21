@@ -31,6 +31,7 @@ from handler.award import *
 from handler.mail import *
 from handler.player import *
 from handler.design  import *
+from handler.player_bi import *
 
 from tornado.ioloop import IOLoop
 
@@ -56,6 +57,8 @@ class Application(tornado.web.Application):
             (r'/player/kick' ,KickUser),
             (r'/player/list' ,PlayerListHandler),
             (r'/player/del' ,DelUser),
+            (r'/bi/player_bi_get' ,BIPlayerRender),
+            (r'/bi/player_bi_post' ,BIPlayer),
 
             (r'/pay_order/list' ,PayOrderHandler),
 
@@ -172,13 +175,13 @@ class Application(tornado.web.Application):
         yield app.DBMgr.getGMToolDB().execSql(sql)
         self.logger.info(sql)
 
-        sql="delete from ZJHDeskEnterLog where  Time<'%s' "%(last2Month.strftime("%Y-%m-%d %H:%M:%S"))
-        yield app.DBMgr.getGMToolDB().execSql(sql)
-        self.logger.info(sql)
+        # sql="delete from ZJHDeskEnterLog where  Time<'%s' "%(last2Month.strftime("%Y-%m-%d %H:%M:%S"))
+        # yield app.DBMgr.getGMToolDB().execSql(sql)
+        # self.logger.info(sql)
 
-        sql="delete from AssetsLog where  Time<'%s' "%(last2Month.strftime("%Y-%m-%d %H:%M:%S"))
-        yield app.DBMgr.getGMToolDB().execSql(sql)
-        self.logger.info(sql)
+        # sql="delete from AssetsLog where  Time<'%s' "%(last2Month.strftime("%Y-%m-%d %H:%M:%S"))
+        # yield app.DBMgr.getGMToolDB().execSql(sql)
+        # self.logger.info(sql)
 
 
 
