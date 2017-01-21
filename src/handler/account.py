@@ -38,7 +38,7 @@ class AccountCreateHandler(BaseHandler):
     def self_post(self):
         account = self.get_argument('account')
         password = self.get_argument('password')
-        channel = int(self.get_argument('channel'))
+        channel = int(self.get_argument('channel','0'))
         hpassword = hashlib.sha1(password).hexdigest()
         gmAccount = yield app.DBMgr.permissionDB.select(account)
 

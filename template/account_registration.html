@@ -13,19 +13,6 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">渠道</label>
-            <div class="col-sm-10">
-
-                <select class="form-control op-channel" id="inputEmail3"  placeholder="渠道">
-                    <option value='0'>下拉选择渠道(默认全渠道)</option>
-                    {% for channel in channelMap %}
-                    <option value='{{ escape(channel) }}'>{{ escape(channelMap.get(channel)) }}:{{ channel}}</option>
-                    {% end %}
-                </select>
-
-            </div>
-        </div>
-        <div class="form-group">
             <label class="col-sm-2 control-label">密码</label>
             <div class="col-sm-10">
                 <input type="password" class="form-control op-gmt-passwrod" id="inputPassword3" placeholder="密码">
@@ -47,7 +34,6 @@
 <script type="text/javascript">
     var accountEl = $('.op-gmt-account'),
         passwrodEl = $('.op-gmt-passwrod'),
-        channelEl= $('.op-channel'),
         submitEl = $('.op-gmt-submit'),
         ajaxing = false,
         data = {},
@@ -68,7 +54,6 @@
         if(ajaxing || !checkFun()) return false;
         data['account'] = accountEl.val();
         data['password'] = passwrodEl.eq(0).val();
-        data['channel'] = channelEl.val();
 
         ajaxing = true;
         $.ajax({

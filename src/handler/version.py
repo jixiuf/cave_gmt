@@ -177,7 +177,9 @@ class GameAddressRenderHandler(BaseHandler):
             'info': json.dumps(info),
             'defaultChannelName':json.dumps(conf.getChannelNameMap()),
         }
-        self.render("game_address.html",title="下载地址",result=result)
+        self.render("game_address.html",title="下载地址",
+                    Account=self.gmAccount,
+                    result=result)
 
 class GameAddressHandler(BaseHandler):
     @asynchronous
