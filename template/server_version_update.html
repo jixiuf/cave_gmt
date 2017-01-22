@@ -23,6 +23,7 @@
                                    '<div class="ui-cell-channel-id">渠道id</div>' +
                                    '<div class="ui-cell-channel-name">渠道名称</div>' +
                                    '<div class="ui-cell-channel-version">最新版本号</div>' +
+                                   '<div class="ui-cell-channel-svn">对应svn版本</div>' +
                                    '<div class="ui-cell-channel-url">最新动态更新包地址</div>' +
                                '</li>' +
                            '</ul>' +
@@ -66,6 +67,7 @@
                           '<div class="ui-cell-channel-id op-channel-id">' + i + '</div>' +
                           '<div class="ui-cell-channel-name">' + defaultChannelName[i] + '</div>' +
                           '<div class="ui-cell-channel-version op-channel-version">' + version + '</div>' +
+                          '<div class="ui-cell-channel-svn op-channel-svn">' + data.data[i].svnVersion+ '</div>' +
                           '<div class="ui-cell-channel-url op-channel-url">' + data.data[i].url + '</div>' +
                       '</li>';
 

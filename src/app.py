@@ -117,6 +117,7 @@ class Application(tornado.web.Application):
             (r'/api/game/dynamic', DynamicHandler),
             (r'/api/version/update', VersionUpdateHandler),
             (r'/api/game/address', GameAddressHandler),
+            (r'/api/game/dynamic_package_generator', DynamicPackageGeneratorHandler),
 
             (r'/game/server_version_update', GameServerVersionRenderHandler),
             (r'/api/server/version', ServerVersionHandler),

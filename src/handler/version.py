@@ -6,6 +6,9 @@ from tornado import  gen
 from tornado.web import asynchronous
 from handler.base import BaseHandler
 import sys
+import os
+import subprocess
+from tornado.process import Subprocess
 import json
 import time
 import redis_notify
@@ -13,6 +16,8 @@ import conf
 from db.db_dynamic_version_update import DynamicVersionUpdate
 from db.db_version_update import VersionUpdate
 from db.db_server_version import ServerVersion
+from tornado.options import options
+
 import app
 
 class GameUpdateRenderHandler(BaseHandler):
@@ -28,16 +33,85 @@ class GameUpdateRenderHandler(BaseHandler):
         result = {
             'channels': json.dumps(conf.getChannelList()),
             'defaultChannelName':json.dumps(conf.getChannelNameMap()),
+            'ClientSVNResourcesURL':conf.ClientSVNResourcesURL,
             'platformServerVersion':currentVersion,
         }
         self.render("game_update.html",title="动态更新",
                     Account=self.gmAccount,
                     result=result)
 
+class DynamicPackageGeneratorHandler(BaseHandler):
+
+    @asynchronous
+    @gen.coroutine
+    def self_get(self):
+        self.self_post()
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+        channel = self.get_argument('channel', "0")
+        version = self.get_argument('version', "")
+        svnurl = self.get_argument('svnurl', "")
+        svnFromVersion = self.get_argument('svnFromVersion', "")
+        svnToVersion = self.get_argument('svnToVersion', "")
+        # comment = self.get_argument('comment', "")
+        # note = self.get_argument('note', "")
+
+        gmtURL="http://%s" % (self.request.host)
+        if version=="":
+            self.write("version empty")
+            return
+        if svnurl=="":
+            self.write("svnurl empty")
+            return
+        if svnFromVersion=="":
+            self.write("svnFromVersion empty")
+            return
+        if svnToVersion=="":
+            self.write("svnToVersion empty")
+            return
+
+        if channel=="0":
+           channel= " ".join(conf.getChannelStrList())
+
+        cmd= "./DynamicUpload/dynamic_upload.sh %s_%s %s %s %s %s %s %s"%(conf.AppName,options.mode,version,svnFromVersion,svnToVersion,svnurl ,gmtURL,channel)
+        print(cmd)
+        self.write(cmd)
+
+        process = Subprocess(cmd, stdout=Subprocess.STREAM, stderr=Subprocess.STREAM, shell=True)
+        try:
+            while True:
+                pout = yield process.stdout.read_until("\n")
+                # , process.stderr.read_until("\n")
+                print(pout)
+                self.write(pout)
+                # self.write(err)
+                self.write("<br/>")
+                self.flush()
+        except Exception, error:
+            self.flush()
+
+        self.write("<a href='/game/server_version_update'>去完成最后一步，刷新版本</a>")
+        self.flush()
+        self.finish()
+
+        # pout, err = yield [process.stdout.read_until_close(), process.stderr.read_until_close()]
+        # print(pout)
+        # pout=pout.replace("\n","<br/>")
+        # self.write(pout)
+
+
+
+
+
 class DynamicHandler(tornado.web.RequestHandler):
 
+    # @asynchronous
+    # @gen.coroutine
     def get(self):
         self.post()
+    # @asynchronous
+    # @gen.coroutine
     def post(self):
         self.permission_verify()
 
@@ -105,6 +179,7 @@ class DynamicHandler(tornado.web.RequestHandler):
         }
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
         self.write(res)
+        # self.finish()
         if isRedirect:
             self.redirect(r'/game/server_version_update')
 

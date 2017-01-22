@@ -16,6 +16,14 @@ run-pro-en:
 test:
 	cd src;../virtual/bin/python -m runtests
 build-dep:
+	@if [ `uname -s` = "Darwin" ] ; then \
+		if [ -z `which svn` ]; then \
+			brew install svn; \
+		fi ; \
+	else \
+		sudo yum install svn zip;\
+	fi
+
 	@if [ !  -f ./virtual/bin/pip  ]; then  \
 		virtualenv virtual; \
 	fi
@@ -27,5 +35,6 @@ build-dep:
 	./virtual/bin/pip install python-etcd
 	./virtual/bin/pip install tornado-mysql
 	cd src/tea;sh buildtea.sh
+
 clean:
 	find . -name "*.pyc" -exec rm {} \;

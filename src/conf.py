@@ -14,6 +14,7 @@ def getConfigFile():
         filename="%s%s.json"%(CONFIG_DIR,options.mode)
     return filename
 
+ClientSVNResourcesURL='svn://svn.najaplus.com/game2/dev/client/cocos2d-x-2.2.6/projects/client/Resources'
 
 initPermissionLevel=[db.db_permissions.NewGmToolAccountPermissionLevel(1,"管理员",''),
 db.db_permissions.NewGmToolAccountPermissionLevel(0,"浏览权限",
@@ -37,8 +38,8 @@ db.db_permissions.NewGmToolAccountPermissionLevel(0,"浏览权限",
 DYNAMIC_USER='najaplus'
 DYNAMIC_PASSWORD='qHcdGfE6TH'
 
-QINIU_ACCESS_KEY = 'diDp_FZuFNaxi8eX2qKwIRvRewY0RfQced3WQcIt'
-QINIU_SECRET_KEY = 'WA9qohA7cAaMQDwr4mT_AG2TzxqXXNzNCbvXokaJ'
+QINIU_ACCESS_KEY = 'AYwnALpeN5pT5c--NG2sjbnUNP1ey9px4SZAFD-3'
+QINIU_SECRET_KEY = 'jLLvul-joXk6ALMCNkJVnxexsi7yMa7U--dJjwnU'
 QINIU_SECRET_BUCKET_NAME = 'najaplus'
 
 
@@ -55,6 +56,18 @@ def getChannelList():
             channels.append(int(k))
             channels.sort()
     return channels
+
+def getChannelStrList():
+    channels = []
+    with open(getConfigFile()) as data_file:
+        value = json.load(data_file)
+        if value==None:
+            return channels
+        for k in value["channel"]:
+            channels.append(k)
+            channels.sort()
+    return channels
+
 
 # key=渠道号，value =渠道名
 def getChannelNameMap():

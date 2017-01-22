@@ -5,7 +5,7 @@
 {% block body %}
 <div class="ui-game-update">
     <h2 class="form-signin-heading">动态更新包上传</h2>
-    <form class="form-horizontal" role="form" action="/api/game/dynamic" method="post">
+    <form class="form-horizontal" role="form" action="/api/game/dynamic_package_generator" method="post">
         <!-- <div class="form-group">
              <label class="col-sm-3 control-label">更新包</label>
              <div class="col-sm-4">
@@ -20,7 +20,7 @@
             <label class="col-sm-3 control-label">渠道号*</label>
             <div class="col-sm-4">
             <select  name="channel" class="col-sm-4 form-control ui-channel-select op-channel-select">
-              <option value="0">请选择渠道</option>
+              <option value="0">请选择渠道(默认全渠道)</option>
             </select>
             </div>
         </div>
@@ -32,40 +32,22 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">动态更新包url地址*</label>
-            <div class="col-sm-4">
-                <input class="form-control" placeholder="http://qiniu.com/a/b/c.zip" name="url">
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">包大小size(int)</label>
-            <div class="col-sm-4">
-                <input class="form-control" placeholder="例如:102400,(非必須)" name="size">
+            <label class="col-sm-3 control-label">svnResource地址*</label>
+            <div class="col-sm-8">
+                <input class="form-control" value="{% raw result['ClientSVNResourcesURL'] %}" name="svnurl">
             </div>
         </div>
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">SVN版本号</label>
+            <label class="col-sm-3 control-label">SVN 起始版本号</label>
             <div class="col-sm-4">
-                <input class="form-control" placeholder="非必须,客户端备注用" name="svnVersion">
+                <input class="form-control" placeholder="" name="svnFromVersion">
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">版本说明</label>
+            <label class="col-sm-3 control-label">SVN 结束版本号</label>
             <div class="col-sm-4">
-                <textarea class="form-control" rows="3" name="comment"></textarea>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">备注</label>
-            <div class="col-sm-4">
-                <textarea class="form-control" rows="3" name="note"></textarea>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-sm-4">
-                <input type="hidden"  name="user" value="dynamicUser"></textarea>
-                <input type="hidden"  name="password" value="dynamicPassword"></textarea>
+                <input class="form-control" placeholder="" name="svnToVersion">
             </div>
         </div>
 
