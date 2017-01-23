@@ -55,13 +55,12 @@ class PlayerSearchHandler(BaseHandler):
             return
 
         userAttr=yield app.DBMgr.getUserDB().select_attr_by_uin(uin)
-        money=yield app.DBMgr.getMoneyDB(user.server).select_by_uin(uin)
         isBanned=yield app.DBMgr.getUserDB().isbanned(uin)
         isBannedUUID=yield app.DBMgr.getUserDB().isbannedUUID(user.uuid)
 
         self.render("player_info.html",
                     Account=self.gmAccount,
-                    title="玩家信息" ,user=user,userAttr=userAttr,money=money,channelMap=conf.getChannelNameMap(),isBanned=isBanned,isBannedUUID=isBannedUUID)
+                    title="玩家信息" ,user=user,userAttr=userAttr,channelMap=conf.getChannelNameMap(),isBanned=isBanned,isBannedUUID=isBannedUUID)
     @gen.coroutine
     def suin2uin(self,suin): #
         if suin=="":
@@ -157,43 +156,20 @@ class PlayerListHandler(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
-        sortField  = self.get_argument('sort',"gold")
+        sortField  = self.get_argument('sort',"uin")
         page  = int(self.get_argument('page',1))
         reverse  = self.get_argument('reverse',"True")
         if reverse=="True":
             reverse=True
         else:
             reverse=False
-        aiUinMap=yield self.select_all_ai_uinlist()
-        moneyList=yield app.DBMgr.getMoneyDB().select_all()
+        # aiUinMap=yield self.select_all_ai_uinlist()
+        # moneyList=yield app.DBMgr.getMoneyDB().select_all()
         userList=yield app.DBMgr.getUserDB().select_all_channel()
         nickNameList=yield app.DBMgr.getUserDB().select_all_nickname()
         result={}
-        for money in moneyList:
-            rec={}
-            rec['uin']=money.uin
-            rec['gold']=money.gold
-            rec['gem']=money.gem
-            rec['speaker']=money.speaker
-            rec['vipValue']=money.vipValue
-            rec['kickCard']=money.kickCard
-            rec['watch']=money.watch
-            rec['car']=money.car
-            rec['boat']=money.boat
-            rec['rmb']=money.rmb
-            rec['house']=money.house
-            rec['lastPayTime']=money.lastPayTime
-            if money.uin in aiUinMap:
-                rec['isAI']=True
-            else:
-                rec['isAI']=False
-            result[money.uin]=rec
-        for userInfo in userList:
-            if userInfo['uin'] in result:
-                rec=result.get(userInfo['uin'])
-                rec['suin']=userInfo['suin']
-                rec['channel']=userInfo['channel']
-                result[userInfo['uin']]=rec
+        for user in userList:
+            result[user['uin']]=user
         for nickNameInfo in nickNameList:
             if nickNameInfo['uin'] in result:
                 rec=result.get(nickNameInfo['uin'])

@@ -37,50 +37,6 @@
             <div class="ui-player-list-cell">
                 渠道
             </div>
-            <div class="ui-player-list-cell">
-                <a href='/player/list?sort=vipValue&reverse=False' class='op-sort-href'>
-                    ⬆️
-                </a>
-                    VIP值
-                <a href='/player/list?sort=vipValue&reverse=True' class='op-sort-href'>
-                    ⬇️
-                </a>
-
-            </div>
-            <div class="ui-player-list-cell">
-                <a href='/player/list?sort=gold&reverse=False' class='op-sort-href'>
-                    ⬆️
-                </a>
-                    金币
-                <a href= '/player/list?sort=gold&reverse=True' class='op-sort-href'>
-                    ⬇️
-                </a>
-
-                </a>
-            </div>
-            <div class="ui-player-list-cell">
-                <a href='/player/list?sort=gem&reverse=False' class='op-sort-href'>
-                    ⬆️
-                </a>
-
-                    钻石
-                <a href= '/player/list?sort=gem&reverse=True' class='op-sort-href'>
-                    ⬇️
-                </a>
-            </div>
-            <div class="ui-player-list-cell">
-                <a href= '/player/list?sort=rmb&reverse=False' class='op-sort-href'>
-                    ⬆️
-                </a>
-                    充值
-                <a href= '/player/list?sort=rmb&reverse=True' class='op-sort-href'>
-                    ⬇️
-                </a>
-            </div>
-            <div class="ui-player-list-assets">
-                资产
-            </div>
-
         </li>
         {% for index,info in enumerate(result) %}
         <li class="ui-player-list-item clearfix">
@@ -104,21 +60,6 @@
             </div>
             <div class="ui-player-list-cell">
                 {{ info.get('channel')}}
-            </div>
-            <div class="ui-player-list-cell">
-                {{ info.get('vipValue')}}
-            </div>
-            <div class="ui-player-list-cell">
-                {{ info.get('gold')}}
-            </div>
-            <div class="ui-player-list-cell">
-                {{ info.get('gem')}}
-            </div>
-            <div class="ui-player-list-cell">
-                {{ info.get('rmb')}}
-            </div>
-            <div class="ui-player-list-assets">
-                车:{{ info.get('car')}},船:{{ info.get('boat')}}, 表:{{ info.get('watch')}}, 房:{{ info.get('house')}}
             </div>
         </li>
         {% end %}

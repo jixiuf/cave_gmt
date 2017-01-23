@@ -21,7 +21,7 @@
 
     <button type="button" class="btn btn-default op-kick " id='btn-kick'>踢人</button>
     <button type="button" class="btn btn-default op-del " id='btn-del'>删号</button>
-    {% end %}
+{% end %}
     <a class="btn btn-default"  href="/pay_order/list?where=uin%3D{{ userAttr.uin  }}">定单列表</a>
 
     <ul class=" list-unstyled ui-content-lists">
@@ -111,65 +111,6 @@
         {% end %}
     </ul>
 
-    {% if money!= None %}
-    <ul class=" list-unstyled ui-content-lists">
-        <h3 class="">资产信息</h2>
-            <li class="clearfix ui-lists-item">
-                <span class="ui-items-cell col-sm-2 control-label">金币:</span>
-                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " readonly="readonly" id="op-gold" value="{{money.gold}}"> </span>
-
-                <span class="ui-items-cell col-sm-2 control-label">钻石:</span>
-                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " readonly="readonly" id="op-gem" value="{{money.gem}}"> </span>
-            </li>
-
-            <li class="clearfix ui-lists-item">
-                <span class="ui-items-cell col-sm-2 control-label">vip值:</span>
-                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " readonly="readonly" id="op-vipValue" value="{{money.vipValue}}"> </span>
-                <span class="ui-items-cell col-sm-2 control-label">vip过期时间:</span>
-                {% if (money==None or money.lastPayTime==None) %}
-                <span class="ui-items-cell col-sm-2">已过期</span>
-                {%elif  (money.lastPayTime+datetime.timedelta(days=30)-datetime.datetime.now()).days>0 %}
-                <span class="ui-items-cell col-sm-2">剩余{{ (money.lastPayTime+datetime.timedelta(days=30)-datetime.datetime.now()).days }}天</span>
-                {%else%}
-                <span class="ui-items-cell col-sm-2">未知</span>
-                {%end%}
-            </li>
-            <li class="clearfix ui-lists-item">
-                <span class="ui-items-cell col-sm-2 control-label">最近支付时间:</span>
-                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " readonly="readonly" id="op-last-PayTime" value="{{money.lastPayTime}}"> </span>
-            </li>
-
-            <li class="clearfix ui-lists-item">
-                <span class="ui-items-cell col-sm-2 control-label">表:</span>
-                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-watch" readonly="readonly"  value="{{money.watch}}"> </span>
-
-                <span class="ui-items-cell col-sm-2 control-label">车:</span>
-                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-car" readonly="readonly" value="{{money.car}}"> </span>
-            </li>
-            <li class="clearfix ui-lists-item">
-                <span class="ui-items-cell col-sm-2 control-label">房:</span>
-                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-house" readonly="readonly" value="{{money.house}}"> </span>
-
-                <span class="ui-items-cell col-sm-2 control-label">船:</span>
-                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-boat" readonly="readonly" value="{{money.boat}}"> </span>
-            </li>
-
-
-            <li class="clearfix ui-lists-item">
-                <span class="ui-items-cell col-sm-2 control-label">小喇叭:</span>
-                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-speaker" readonly="readonly" value="{{money.speaker}}"> </span>
-
-                <span class="ui-items-cell col-sm-2 control-label">踢人卡:</span>
-                <span class="ui-items-cell col-sm-2"><input type="text" class="form-control " id="op-kickCard" readonly="readonly" value="{{money.kickCard}}"> </span>
-            </li>
-
-            {% if Account!=None and Account.channel=='0' %}
-            <div class="ui-sumbit">
-                <button type="submit" class="btn btn-default op-edit ui-sumbit" >编辑</button>
-                <button type="submit" class="btn btn-default op-submit ui-sumbit" >保存</button>
-            </div>
-            {% end %}
-    </ul>
 
 
     <h5 class="form-signin-heading ui-desk-title">查询玩家资产流水</h5>
@@ -181,7 +122,6 @@
         <button type="submit" class="btn btn-default op-query-assets-log ui-sumbit" >查询</button>
     </ul>
 
-    {% end %}
 </div>
 <script type="text/javascript" src="../static/javascript/plugin/any_time/any_time.js"></script>
 <script type="text/javascript">
@@ -191,17 +131,7 @@
  var uinEl         = $('#uin');
  var uuidEl        = $('#uuid');
  var serverEl      = $('#server');
- var goldEl        = $('#op-gold');
- var gemEl         = $('#op-gem');
- var vipValueEl    = $('#op-vipValue');
- var carEl         = $('#op-car');
- var watchEl       = $('#op-watch');
- var houseEl       = $('#op-house');
- var boatEl        = $('#op-boat');
- var speakerEl     = $('#op-speaker');
- var kickCardEl    = $('#op-kickCard');
  var submitEl      = $('.op-submit');
- var editEl        = $('.op-edit');
  var banEl         =$("#btn-ban");
  var unbanEl       =$("#btn-unban");
  var unbanUUIDEl   =$("#btn-unban-uuid");
@@ -217,55 +147,16 @@
 
  var btnQueryAssetsLogEl=$(".op-query-assets-log");
 
- editEl.on('click', function(){
-     if(goldEl.attr("readonly")=="readonly"){
-         descEl.removeAttr("readonly");
-         nickNameEl.removeAttr("readonly");
-
-         goldEl.removeAttr("readonly");
-         gemEl.removeAttr("readonly");
-         vipValueEl.removeAttr("readonly");
-         carEl.removeAttr("readonly");
-         watchEl.removeAttr("readonly");
-         houseEl.removeAttr("readonly");
-         boatEl.removeAttr("readonly");
-         speakerEl.removeAttr("readonly");
-         kickCardEl.removeAttr("readonly");
-         lastPayTimeEl.removeAttr("readonly");
-     }else{
-         nickNameEl.attr("readonly","readonly");
-         descEl.attr("readonly","readonly");
-         goldEl.attr("readonly","readonly");
-         gemEl.attr("readonly","readonly");
-         vipValueEl.attr("readonly","readonly");
-         carEl.attr("readonly","readonly");
-         watchEl.attr("readonly","readonly");
-         houseEl.attr("readonly","readonly");
-         boatEl.attr("readonly","readonly");
-         speakerEl.attr("readonly","readonly");
-         kickCardEl.attr("readonly","readonly");
-         lastPayTimeEl.attr("readonly","readonly");
-     }
 
      /* 　$('input').attr("readonly","readonly")//将input元素设置为readonly
       * 　　$('input').removeAttr("readonly");//去除input元素的readonly属性
       * 　　 if($('input').attr("readonly")==true)//判断input元素是否已经设置了readonly属性     */
- });
+ /*  });*/
 
  submitEl.on('click', function(){
      var data={};
      data['uin'] = uinEl.val();
 
-     data['gold'] =goldEl.val();
-     data['gem'] =gemEl.val();
-     data['vipValue'] =vipValueEl.val();
-     data['lastPayTime'] =lastPayTimeEl.val();
-     data['car'] =carEl.val();
-     data['watch'] =watchEl.val();
-     data['house'] =houseEl.val();
-     data['boat'] =boatEl.val();
-     data['speaker'] =speakerEl.val();
-     data['kickCard'] =kickCardEl.val();
      data['server']=serverEl.val();
      data['nickName']=nickNameEl.val();
      data['desc']=descEl.val();
