@@ -171,7 +171,7 @@ class Application(tornado.web.Application):
     @gen.coroutine
     def doMidNight(self):
         self.logger.info("doMidNight")
-        handler.zjh_player_bi.update_data()
+        handler.player_bi.update_data()
 
         last2Month=datetime.now()+ timedelta(days=-62)
 
