@@ -4,6 +4,8 @@ var goodsAddEl = $('#op-award-goods-add'),
     numEl = $('#op-award-goods-num'),
     goodsIdEl = $('#op-award-goods-id'),
     goodsIdNameEl = $('#op-award-goods_id_name'),
+    goodsParam1El = $('#op-award-goods-param1'),
+    goodsParam2El = $('#op-award-goods-param2'),
     idData,
     getAwardSubIdFun,
     getAwardDataFun;
@@ -20,6 +22,8 @@ goodsAddEl.on('click', function() {
     typeId = tokens[0];
     /*             hasId  = tokens[1]; */
     goodsId = goodsIdEl.val();
+    goodsParam1=goodsParam1El.val();
+    goodsParam2=goodsParam2El.val();
     goodsIdName=goodsIdNameEl.val();
     count = numEl.val();
     if(isNaN(goodsId)){
@@ -38,16 +42,22 @@ goodsAddEl.on('click', function() {
                 '<button class="btn btn-default ui-item-delete op-award-delete">删除</button>' +
                 '</li>';
         }else{
-            htmlStr += '<li class="ui-award-item clearfix op-goods-item" data-id="' + typeId + '"'+' data-goods-desc="[' + typeName +" "+goodsIdName+ ']x' + count  +'" data-goodsid="' + goodsId + '" data-count="' + count + '">' +
-                '<span>[' + typeName +" "+goodsIdName+ ']x' + count + '</span>' +
+            htmlStr += '<li class="ui-award-item clearfix op-goods-item" data-id="' + typeId + '"'+
+                ' data-goods-desc="[' + typeName+" "+goodsIdName+"("+goodsId +")"  +":"+ goodsParam1 +":"+ goodsParam2+ ']x' + count
+                +'" data-goodsid="' + goodsId + '" data-count="' + count +'" data-goods-param1="'+goodsParam1 +'" data-goods-param2="' +goodsParam2 + '">' +
+                '<span>[' + typeName +":"+goodsIdName+'('+goodsId+')'  +":"+ goodsParam1 +":"+ goodsParam2+  ']x' + count +'</span>' +
                 '<button class="btn btn-default ui-item-delete op-award-delete">删除</button>' +
                 '</li>';
         }
         listEl.append(htmlStr);
-        typeEl.children().eq(0).attr('selected', 'true');
+        // typeEl.children().eq(0).attr('selected', 'true');
         goodsIdEl.val('');
-        goodsIdEl.addClass('hide');
+        goodsParam1El.val('');
+        goodsParam2El.val('');
         numEl.val('');
+        // goodsIdEl.addClass('hide');
+        // goodsParam1El.addClass('hide');
+        // goodsParam2El.addClass('hide');
     } else {
         return false;
     }
@@ -86,8 +96,13 @@ typeEl.on('change', function(e) {
     goodsIdEl.val('');
     if(val.indexOf(":true")!= -1 ) {
         goodsIdEl.removeClass('hide');
+        goodsParam1El.removeClass('hide');
+        goodsParam2El.removeClass('hide');
     } else {
         goodsIdEl.addClass('hide');
+        goodsParam1El.addClass('hide');
+        goodsParam2El.addClass('hide');
+
     }
 });
 
@@ -116,18 +131,36 @@ getAwardDataFun=function() {
         data['awards'] = awardStr;
         return data;
     }
+    data["award_list"]=[];
     for(var i = 0, len = goods.length; i < len; i++ ) {
         var info = {};
         id = goods.eq(i).data('id');
         goodsId = goods.eq(i).data('goodsid');
         count = goods.eq(i).data('count');
+        param1 = goods.eq(i).data('goods-param1');
+        param2 = goods.eq(i).data('goods-param2');
         awardStr=awardStr+ id+":"+goodsId+":"+count;
         awardsDesc+=goods.eq(i).data('goods-desc');
+        awardJson={}
+        awardJson["award_type"]=id;
+        awardJson["award_id"]=goodsId;
+        awardJson["award_count"]=count;
+        awardJson["award_param_list"]=[];
+        if (param1!=''&&param1!=undefined) {
+            awardJson["award_param_list"].push(param1);
+            awardStr=awardStr+ ":"+param1;
+        }
+        if (param2!=''&&param2!=undefined) {
+            awardStr=awardStr+ ":"+param2;
+            awardJson["award_param_list"].push(param2);
+        }
         if (i!=len-1) {
             awardStr=awardStr+"|";
             awardsDesc+="|";
         }
+        data["award_list"].push(awardJson);
     }
+    data["award_list"]=JSON.stringify(data["award_list"]);
     data['awards'] = awardStr;
     data['awardsDesc'] = awardsDesc;
     return data

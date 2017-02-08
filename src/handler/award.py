@@ -11,12 +11,19 @@ class AwardIdList(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_post(self):
-        awardList=yield app.DBMgr.getAwardDB().select_all()
+        # awardList=yield app.DBMgr.getAwardDB().select_all()
+        # data={}
+        # for a in awardList:
+        #     # 如果 has_id 为true ,则用于处理 装备 卡片等有id 的奖品，以例js 显示field供输入id
+        #     # zjh 项目里所有的奖励乾了是key:value ,无key:id:value的，故此处一直为false
+        #     data[str(a.id)]={"name":a.name,"has_id":"false"}
         data={}
-        for a in awardList:
-            # 如果 has_id 为true ,则用于处理 装备 卡片等有id 的奖品，以例js 显示field供输入id
-            # zjh 项目里所有的奖励乾了是key:value ,无key:id:value的，故此处一直为false
-            data[str(a.id)]={"name":a.name,"has_id":"false"}
+        data["1"]={"name":"金币","has_id":"false"}
+        data["2"]={"name":"钻石","has_id":"false"}
+        data["3"]={"name":"体力","has_id":"false"}
+        data["4"]={"name":"道具","has_id":"true"}
+        data["5"]={"name":"装备","has_id":"true"}
+
         info={}
         info['action'] = 'success'
         info['result'] = json.dumps(data)
@@ -32,10 +39,12 @@ class AwardSubIdList(BaseHandler):
         awardType=self.get_argument('id')
         info = {}
         # 这里只是示范相应的格式
-        if awardType==5:
-            result = [{"label":"1:装备1","value":"1"},{"label":"2:装备2","value":"2"}]
+        if awardType==4:
+            # demo
+            # result = [{"label":"1:装备1","value":"1"},{"label":"2:装备2","value":"2"}]
+            result=[]
         else:
-            result = [{"label":"1:卡片1","value":"1"},{"label":"2:卡片2","value":"2"}]
+            result = []
 
 
         info['action'] = 'success'

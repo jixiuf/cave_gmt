@@ -29,10 +29,15 @@ class MailEdit(BaseHandler):
     def self_post(self):
         serverId= self.get_argument('serverid','1')
         award= self.get_argument('awards')
+        awardList= self.get_argument('award_list' ,'')
         awardsDesc= self.get_argument('awardsDesc','')
         title=self.get_argument('title','')
         content=unicode(self.get_argument('content','1'))
-        mailContent=json.dumps({"title":title,"text":content,"sender":self.account},ensure_ascii=False)
+        mailContent=json.dumps({"title":title,
+                                "text":content,
+                                "award_list":json.loads(awardList),
+                                "sender":self.account}
+                               ,ensure_ascii=False)
         startTime=self.get_argument('startTime',datetime.now())
         endTime=self.get_argument('startTime',datetime.now()+ timedelta(days=7))
         # packIcon=self.get_argument('pack_icon')
@@ -47,7 +52,7 @@ class MailEdit(BaseHandler):
             uinList.extend(uinListFromNickNameList) # str list
         for uin in uinList:
             mailId= int(time.time()*1000000)
-            yield app.DBMgr.getMailDraftDB().add(mailId,uin,startTime,endTime,award,awardsDesc,mailContent,int(serverId))
+            yield app.DBMgr.getMailDraftDB().add(mailId,uin,startTime,endTime,award,awardsDesc,title,mailContent,int(serverId))
             time.sleep(0.001)
 
 
