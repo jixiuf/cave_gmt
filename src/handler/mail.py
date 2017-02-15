@@ -52,7 +52,7 @@ class MailEdit(BaseHandler):
             uinList.extend(uinListFromNickNameList) # str list
         for uin in uinList:
             mailId= int(time.time()*1000000)
-            yield app.DBMgr.getMailDraftDB().add(mailId,uin,startTime,endTime,award,awardsDesc,title,mailContent,int(serverId))
+            yield app.DBMgr.getMailDraftDB().add(mailId,uin,startTime,endTime,award,awardsDesc,mailContent,int(serverId))
             time.sleep(0.001)
 
 
