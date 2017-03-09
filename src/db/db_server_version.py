@@ -74,6 +74,7 @@ class ServerVersionDB:
 
     @gen.coroutine
     def update(self,sv):
-        query="update server_version set comments='%s',max_version=%d,mid_version=%d,min_version=%d,show_version='%s' where platform=%d"%(sv.comments,sv.maxVesion,sv.midVersion,sv.minVersion,sv.showVersion,sv.platform)
+        query="insert  into server_version(platform,comments,max_version,mid_version,min_version,show_version) values(%d,'%s',%d,%d,%d,'%s') ON DUPLICATE KEY UPDATE comments=values(comments),max_version=values(max_version),mid_version=values(mid_version),min_version=values(min_version),show_version=values(show_version)"%(sv.platform,sv.comments,sv.maxVesion,sv.midVersion,sv.minVersion,sv.showVersion)
+
         result=yield self.dbtemplate.execSql(query)
         raise gen.Return(result)

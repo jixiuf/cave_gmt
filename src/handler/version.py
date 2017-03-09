@@ -310,13 +310,25 @@ class GameServerVersionRenderHandler(BaseHandler):
         data = {}
         for i in channels:
             dynamicRec=yield app.DBMgr.dynamicVersionUpdateDB.select_max_version(i)
+            jsonObj={}
             if dynamicRec!= None:
-                data[dynamicRec.channel]=dynamicRec.toJsonObj()
+                jsonObj=dynamicRec.toJsonObj()
             else:
                 info=DynamicVersionUpdate()
                 info.channel=i
                 info.version=currentVersion
-                data[i]=info.toJsonObj()
+                jsonObj=info.toJsonObj()
+            channelServerVersionRec= yield app.DBMgr.serverVersionDB.select(conf.PLATFORM*10000+i)
+            if channelServerVersionRec!=None:
+                # versionData[conf.PLATFORM]=serverVersionRec.toJsonObj()
+                jsonObj["channel_current_version"]=channelServerVersionRec.toInnerVersion()
+                jsonObj["channel_show_version"]=channelServerVersionRec.showVersion
+            else:
+                jsonObj["channel_current_version"]=currentVersion
+                jsonObj["channel_show_version"]=""
+            jsonObj["channel_key"]=conf.PLATFORM*10000+i
+
+            data[i]=jsonObj
 
         res = {
             'data': data,
@@ -338,16 +350,17 @@ class ServerVersionHandler(BaseHandler):
         showVersion = self.get_argument('showVersion')
         platform=int(self.get_argument('platform'))
 
-        sv=yield app.DBMgr.serverVersionDB.select(platform)
-        sv.platform=platform
-        sv.maxVesion=version/(1000*1000)
-        sv.midVersion=(version/(1000) -sv.maxVesion*1000)
-        sv.minVersion=version%1000
-        sv.showVersion=showVersion
-        yield app.DBMgr.serverVersionDB.update(sv)
+        svList=yield app.DBMgr.serverVersionDB.select_all()
+        for sv in svList:
+            if sv.platform==platform or sv.platform/10000==platform:
+                # sv.platform=platform
+                sv.maxVesion=version/(1000*1000)
+                sv.midVersion=(version/(1000) -sv.maxVesion*1000)
+                sv.minVersion=version%1000
+                sv.showVersion=showVersion
+                yield app.DBMgr.serverVersionDB.update(sv)
 
-
-        app.Redis.publish(redis_notify.get_platform_redis_notify_channel(platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
+                app.Redis.publish(redis_notify.get_platform_redis_notify_channel(sv.platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
 
 #       for i in a:
 #           app.Redis.publish('centerserver_notify_queue', '{"type":7, "time":%s}'%(int(time.time()*1000)))
