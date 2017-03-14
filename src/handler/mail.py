@@ -29,7 +29,7 @@ class MailEdit(BaseHandler):
     def self_post(self):
         serverId= self.get_argument('serverid','1')
         award= self.get_argument('awards')
-        awardList= self.get_argument('award_list' ,'')
+        awardList= self.get_argument('award_list' ,'[]')
         awardsDesc= self.get_argument('awardsDesc','')
         title=self.get_argument('title','')
         content=unicode(self.get_argument('content','1'))
