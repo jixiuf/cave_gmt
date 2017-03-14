@@ -69,7 +69,7 @@
      data['content'] =contentEl.val() ;
      data['playerid'] =playerIdEl.val() ;
      data['serverid']=serverIdEl.val();
-     if (contentEl.val()=="" &&data['awards']==""){
+     if (contentEl.val()=="" &&data['awards']==""&&data['award_list']==""){
          alert("不允许 内容和奖励都是空");
      }
 
@@ -82,8 +82,8 @@
       .done(function(data) {
           ajaxing = false;
           location.href = '/mail/draft_list'
-      });
-     return false;
+ });
+         return false;
 
  });
 </script>
