@@ -14,15 +14,25 @@ run-pro:
 	elif [ -d "../config/" ];then \
 		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=zh -confdir=../config/;\
 	else \
-		echo "no confdir,please give -confdir";\
+		echo "no confdir,please give -confdir like";\
+		echo "./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=zh -confdir=../config/";\
 	fi
 
 run:
 	./virtual/bin/python src/main.py
-run-stage:
-	./virtual/bin/python src/main.py -host=0.0.0.0
 run-pro-en:
-	./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=en
+	@if [ -d "~/.cave/" ];then \
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=en -confdir=~/.cave/;\
+	elif [ -d "/data/cave/config/" ];then \
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=en -confdir=/data/cave/config/;\
+	elif [ -d "./config/" ]; then\
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=en -confdir=./config/;\
+	elif [ -d "../config/" ];then \
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=en -confdir=../config/;\
+	else \
+		echo "no confdir,please give -confdir like";\
+		echo "./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=en -confdir=../config/";\
+	fi
 
 test:
 	cd src;../virtual/bin/python -m runtests
