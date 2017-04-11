@@ -46,6 +46,7 @@ build-dep:
 	fi
 
 	@if [ !  -f ./virtual/bin/pip  ]; then  \
+		sudo yum install python-virtualenv ;\
 		virtualenv virtual; \
 	fi
 	./virtual/bin/pip install tornado
