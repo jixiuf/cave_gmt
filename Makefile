@@ -68,3 +68,17 @@ build-dep:
 
 clean:
 	find . -name "*.pyc" -exec rm {} \;
+package:
+	@rm -rf /tmp/cave_gmt
+	@mkdir -p /tmp/cave_gmt
+	@cp -rf . /tmp/cave_gmt
+	@rm -rf /tmp/cave_gmt/.git
+	@rm -rf /tmp/cave_gmt/data/*
+	@rm -rf /tmp/cave_gmt.tgz
+	@cd /tmp;tar -czf /tmp/cave_gmt.tgz cave_gmt
+	if [ -d ~/www.najaplus.com/template_static  ]; then\
+		mv /tmp/cave_gmt.tgz ~/www.najaplus.com/template_static;\
+		echo "~/www.najaplus.com/template_static/cave_gmt.tgz";\
+		echo "http://www.najaplus.com/cave_gmt.tgz";\
+	fi
+	@echo "/tmp/cave_gmt.tgz"
