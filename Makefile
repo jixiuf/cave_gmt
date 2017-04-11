@@ -4,12 +4,23 @@
 
 ROOT_DIR=$(shell pwd)
 
+run-pro:
+	@if [ -d "~/.cave/" ];then \
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=zh -confdir=~/.cave/;\
+	elif [ -d "/data/cave/config/" ];then \
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=zh -confdir=/data/cave/config/;\
+	elif [ -d "./config/" ]; then\
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=zh -confdir=./config/;\
+	elif [ -d "../config/" ];then \
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=zh -confdir=../config/;\
+	else \
+		echo "no confdir,please give -confdir";\
+	fi
+
 run:
 	./virtual/bin/python src/main.py
 run-stage:
 	./virtual/bin/python src/main.py -host=0.0.0.0
-run-pro:
-	./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=zh
 run-pro-en:
 	./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=en
 
