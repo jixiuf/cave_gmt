@@ -13,6 +13,8 @@ run-pro:
 		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=zh -confdir=./config/;\
 	elif [ -d "../config/" ];then \
 		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=zh -confdir=../config/;\
+	elif [ -d "cave/config/" ];then \
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=zh -confdir=cave/config/;\
 	else \
 		echo "no confdir,please give -confdir like";\
 		echo "./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=zh -confdir=../config/";\
@@ -29,6 +31,8 @@ run-pro-en:
 		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=en -confdir=./config/;\
 	elif [ -d "../config/" ];then \
 		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=en -confdir=../config/;\
+	elif [ -d "cave/config/" ];then \
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=zh -confdir=cave/config/;\
 	else \
 		echo "no confdir,please give -confdir like";\
 		echo "./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=en -confdir=../config/";\
