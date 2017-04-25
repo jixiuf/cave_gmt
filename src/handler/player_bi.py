@@ -125,3 +125,51 @@ class BIPlayer(BaseHandler):
 
         self.write(json.dumps({'result':'',"data":result}))
 
+
+class BIActivePlayer(BaseHandler):
+    def mapRowUin(self,row):
+        return row[0]           # cnt
+
+    @asynchronous
+    @gen.coroutine
+    def self_get(self):
+        serverIdList= app.DBMgr.get_all_server_id()
+
+        self.render("bi_active_player.html",
+                    Account=self.gmAccount,
+                    serverIdList=serverIdList,
+                    channelMap=conf.getChannelNameMap(),
+                    title="活跃用户统计")
+
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+
+        # now=datetime.now()
+        # dayStr = "%d-%0.2d-%0.2d"%(now.year,now.month,now.day)
+
+        channelStr = self.get_argument('channel','0')
+        serverStr= self.get_argument('server','1')
+        startTime= self.get_argument('start','1')
+        endTime= self.get_argument('end','1')
+    # t=time.strptime(dayStr,"%Y-%m-%d")
+    # startTime=datetime(*t[:3])
+    # endTime=startTime+timedelta(days=1)
+
+
+        if self.gmAccount.channel!='0' and not channelStr in self.gmAccount.getChannelList():
+            self.write(json.dumps({"result":"wrong channel"+self.gmAccount.channel}))
+            return
+
+        sql="select distinct uin  from LoginLog where Server=%s and Time>'%s' and Time<'%s' "%(serverStr,startTime, endTime)
+        if channelStr!='0':
+            sql+= " and channel=%s"%(channelStr)
+        print(sql)
+        list=yield app.DBMgr.getGMToolDB().query(sql,self.mapRowUin)
+        result=[]
+        for uin in list:        # 转成string ,否则uin受限于javascript 数字最大值限制
+            result.append(str(uin))
+
+
+        self.write(json.dumps({'result':'',"data":result}))
+

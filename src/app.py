@@ -60,6 +60,8 @@ class Application(tornado.web.Application):
             (r'/player/del' ,DelUser),
             (r'/bi/player_bi_get' ,BIPlayerRender),
             (r'/bi/player_bi_post' ,BIPlayer),
+            (r'/bi/active_player' ,BIActivePlayer),
+            (r'/bi/active_player_post' ,BIActivePlayer),
 
             (r'/pay_order/list' ,PayOrderHandler),
 

@@ -1,0 +1,153 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/active_player.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" href="../static/javascript/plugin/any_time/any_time.css">
+{% end %}
+{% block body %}
+<div class="ui-ap-edit">
+    <h2 class="form-signin-heading ui-edit-title">活跃用户统计</h2>
+    <form class="form-horizontal ui-edit-form" role="form">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">时间范围</label>
+            <div class="col-sm-10">
+                <span class="ui-time-txt">起始时间</span>
+                <input class="form-control op-time-start" type="text" id="rangeDemoStart">
+                <span class="ui-time-txt">结束时间</span>
+                <input class="form-control op-time-finish" type="text" id="rangeDemoFinish">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">服务器</label>
+            <div class="col-sm-10">
+                <select class="form-control op-sel-server col-sm-2" >
+                    <option value='1'>下拉选择serverId(default 1)</option>
+                    {% for serverId in serverIdList %}
+                    <option value='{{serverId}}'>{{ serverId }}</option>
+                    {% end %}
+                </select>
+
+            </div>
+
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">渠道</label>
+            <div class="col-sm-10">
+
+                <select class="form-control op-channel" id="channel"  placeholder="渠道">
+                    {% if Account!=None and Account.channel=='0' %}
+                    <option value='0'>下拉选择渠道(默认全渠道)</option>
+                    {% for channel in channelMap %}
+                    <option value='{{ escape(channel) }}'>{{ escape(channelMap.get(channel)) }}:{{ channel}}</option>
+                    {% end %}
+                    {%else%}
+
+                    {% for channel in Account.getChannelList() %}
+                    <option  value='{{ escape(channel) }}'>{{ escape(channelMap.get(channel)) }}:{{ channel}}</option>
+                    {% end %}
+                    {%end%}
+                </select>
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button class="btn btn-default op-add-submit">生成</button>
+            </div>
+        </div>
+    </form>
+<div class="ui-data op-data">
+</div>
+</div>
+
+<script src="../static/javascript/plugin/any_time/any_time.js"></script>
+<script type="text/javascript">
+ //time
+ var oneDay = 24*60*60*1000;
+ var rangeDemoFormat = "%Y-%m-%d";
+ var rangeDemoConv = new AnyTime.Converter({format:rangeDemoFormat});
+
+ /* $("#rangeDemoToday").click(function(e) {
+  *     var yestoday = new Date();
+  *     yestoday.setDate(yestoday.getDate() - 1);
+  *     alert(yestoday);
+  *     $("#rangeDemoStart").val(rangeDemoConv.format(yestoday)).change();
+  * });
+  * $("#rangeDemoClear").click(function(e) {
+  *     $("#rangeDemoStart").val("").change();
+  * });*/
+ var today= new Date();
+ var yestoday= new Date();
+ yestoday.setDate(today.getDate() - 1);
+
+ $("#rangeDemoStart").val(rangeDemoConv.format(yestoday)).change();
+ $("#rangeDemoFinish").val(rangeDemoConv.format(today)).change();
+
+ $("#rangeDemoStart").AnyTime_picker({format:rangeDemoFormat});
+ $("#rangeDemoStart").change(function(e) {
+     try {
+         var fromDay = rangeDemoConv.parse($("#rangeDemoStart").val()).getTime();
+         /*          fromDay = new Date(fromDay-oneDay);*/
+         var dayLater = new Date(fromDay+oneDay);
+         dayLater.setHours(0,0,0,0);
+         var ninetyDaysLater = new Date(fromDay+(90*oneDay));
+         ninetyDaysLater.setHours(23,59,59,999);
+         $("#rangeDemoFinish")
+             .AnyTime_noPicker()
+             .removeAttr("disabled")
+             .val(rangeDemoConv.format(dayLater))
+             .AnyTime_picker({
+                 earliest: dayLater,
+                 format: rangeDemoFormat,
+                 latest: ninetyDaysLater
+             });
+     } catch(e) {
+         $("#rangeDemoFinish").val("").attr("disabled","disabled");
+     }
+ } );
+
+ var ajaxing = false,
+     submitBtnEl = $('.op-add-submit'),
+     serverEl = $('.op-sel-server'),
+     startEl = $('.op-time-start'),
+     endEl = $('.op-time-finish'),
+     data = {};
+
+
+
+ submitBtnEl.on('click', function() {
+     if( startEl.val() == '' || endEl.val() == '') {
+         return false;
+     }
+     data['channel'] =  $("#channel").val();
+     data['server'] =  serverEl.val();
+     data['start'] = startEl.val();
+     data['end'] = endEl.val();
+     if(ajaxing) return false;
+     ajaxing = true;
+     $.ajax({
+         url: '/bi/active_player',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          data = JSON.parse(data);
+          if(data['result'] != ''||data['data'].length==0 ) {
+              $('.op-data').empty();
+              $('.op-data').append('<span style="color: red">no result return</span>');
+              ajaxing = false;
+              return;
+          }else{
+              ajaxing = false;
+              $('.op-data').empty();
+              $('.op-data').append("活跃玩家数:"+data['data'].length+"<br/>");
+              for(var i = 0, len = data['data'].length; i < len; i++) {
+                  $('.op-data').append("<a href='/api/player_search?playerId="+data['data'][i]+"'>"+data['data'][i]+"</a><br/>");
+              }
+          }
+          /*           location.href = '/notice/add';*/
+      });
+     return false;
+ });
+</script>
+{% end %}
