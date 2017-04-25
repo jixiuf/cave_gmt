@@ -126,6 +126,22 @@ CREATE TABLE if not exists `user` (
 
         res=yield self.dbtemplate.query(query,mapRow)
         raise gen.Return(res)
+    @gen.coroutine
+    def select_all_attrs(self):
+        query="select uin,nickName,gender,avatar,description,lastLoginTime,lastOffTime from UserAttr"
+        def mapRow(row):
+            result={}
+            result['uin']=row[0]
+            result['nickname']=row[1]
+            result['gender']=row[2]
+            result['avatar']=row[3]
+            result['description']=row[4]
+            result['lastLogintime']=row[5]
+            result['lastOfftime']=row[6]
+            return result
+
+        res=yield self.dbtemplate.query(query,mapRow)
+        raise gen.Return(res)
 
     @gen.coroutine
     def select_attr_by_uin(self,uin):

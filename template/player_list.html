@@ -37,6 +37,16 @@
             <div class="ui-player-list-cell">
                 渠道
             </div>
+            <div class="ui-player-list-cell-time">
+                <a href='/player/list?sort=lastLogintime&reverse=False' class='op-sort-href'>
+                    ⬆️
+                </a>
+                最近登录时间
+                <a href='/player/list?sort=lastLogintime&reverse=True' class='op-sort-href'>
+                    ⬇️
+                </a>
+            </div>
+
         </li>
         {% for index,info in enumerate(result) %}
         <li class="ui-player-list-item clearfix">
@@ -46,20 +56,23 @@
 
             <div class="ui-player-list-cell">
                 <a href='/api/player_search?playerId={{info.get("uin")}}'>
-                {{ info.get('suin')}}
+                    {{ info.get('suin')}}
                 </a>
             </div>
             <div class="ui-player-list-cell">
                 <a href='/api/player_search?playerId={{info.get("uin")}}'>
-                {% if info.get('isAI',False) %}
-                <span style="color:red">{{ info.get('nickname')}}</span>
-                {% else %}
-                {{ info.get('nickname')}}
-                {% end %}
+                    {% if info.get('isAI',False) %}
+                    <span style="color:red">{{ info.get('nickname')}}</span>
+                    {% else %}
+                    {{ info.get('nickname')}}
+                    {% end %}
                 </a>
             </div>
             <div class="ui-player-list-cell">
                 {{ info.get('channel')}}
+            </div>
+            <div class="ui-player-list-cell-time">
+                {{ info.get('lastLogintime')}}
             </div>
         </li>
         {% end %}

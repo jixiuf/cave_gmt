@@ -166,22 +166,36 @@ class PlayerListHandler(BaseHandler):
         # aiUinMap=yield self.select_all_ai_uinlist()
         # moneyList=yield app.DBMgr.getMoneyDB().select_all()
         userList=yield app.DBMgr.getUserDB().select_all_channel()
-        nickNameList=yield app.DBMgr.getUserDB().select_all_nickname()
+        attrs=yield app.DBMgr.getUserDB().select_all_attrs()
         result={}
         for user in userList:
             result[user['uin']]=user
-        for nickNameInfo in nickNameList:
-            if nickNameInfo['uin'] in result:
-                rec=result.get(nickNameInfo['uin'])
-                rec['nickname']=nickNameInfo['nickname']
-                result[nickNameInfo['uin']]=rec
+        for attr in attrs:
+            if attr['uin'] in result:
+                rec=result.get(attr['uin'])
+                rec['nickname']=attr['nickname']
+                rec['gender']=attr['gender']
+                rec['avatar']=attr['avatar']
+                rec['description']=attr['description']
+                rec['lastLogintime']=attr['lastLogintime']
+                rec['lastOfftime']=attr['lastOfftime']
+                result[attr['uin']]=rec
                 #
 
         list=[]
         for info in result:
             list.append(result[info])
         def sortFunc(e1 ,e2 ):
-            return e1.get(sortField,0)-e2.get(sortField,0)
+            diff=e1.get(sortField,0)-e2.get(sortField,0)
+            if type(diff) is timedelta:
+                if e1.get(sortField,0)>e2.get(sortField,0):
+                    return 1
+                elif diff==0:
+                    return 0
+                else:
+                    return -1
+
+            return  diff
 
 
 

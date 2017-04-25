@@ -20,6 +20,12 @@
     float: left;
     word-wrap: break-word;
 }
+.ui-player-list-option .ui-player-list-list .ui-player-list-item .ui-player-list-cell-time {
+    text-align:center;
+    width: 13%;
+    float: left;
+    word-wrap: break-word;
+}
 .ui-player-list-option .ui-player-list-list .ui-player-list-item .ui-player-list-assets {
     text-align:center;
     width: 16%;
