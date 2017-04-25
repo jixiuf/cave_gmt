@@ -11,14 +11,14 @@ import redis_notify
 
 class NoticeManageRenderHandler(BaseHandler):
 
-    def get(self):
+    def self_get(self):
         serverIdList= app.DBMgr.get_all_server_id()
         self.render("notice_manage.html",title="公告管理",
                     Account=self.gmAccount,
                     serverIdList=serverIdList)
 
 class NoticeAddRenderHandler(BaseHandler):
-    def get(self):
+    def self_get(self):
         serverIdList= app.DBMgr.get_all_server_id()
         self.render("notice_add.html",title="公告添加",
                     Account=self.gmAccount,
@@ -26,7 +26,7 @@ class NoticeAddRenderHandler(BaseHandler):
 
 class NoticeEditRenderHandler(BaseHandler):
 
-    def get(self):
+    def self_get(self):
         self.render("notice_edit.html",
                     Account=self.gmAccount,
                     title="公告发布")
@@ -35,7 +35,7 @@ class NoticeInfoHandler(BaseHandler):
 
     @asynchronous
     @gen.coroutine
-    def post(self):
+    def self_post(self):
         now=datetime.datetime.now()
         serverIdStr=self.get_argument('serverId')
         res = yield app.DBMgr.noticeDB.select(serverIdStr,now)
@@ -59,7 +59,7 @@ class NoticeAddInfoHandler(BaseHandler):
 
     @asynchronous
     @gen.coroutine
-    def post(self):
+    def self_post(self):
         now=datetime.datetime.now()
         serverIdStr=self.get_argument('serverId')
         res = yield app.DBMgr.noticeDB.get_notice(serverIdStr,now)
@@ -84,7 +84,7 @@ class NoticeAddHandler(BaseHandler):
 
     @asynchronous
     @gen.coroutine
-    def post(self):
+    def self_post(self):
         now=datetime.datetime.now()
         title=self.request.arguments['title'][0]
         content=self.request.arguments['content'][0]
@@ -98,7 +98,7 @@ class NoticeUpdateHandler(BaseHandler):
 
     @asynchronous
     @gen.coroutine
-    def post(self):
+    def self_post(self):
         url=json.loads(self.request.arguments['url'][0])
         remove_id=json.loads(self.request.arguments['remove_id'][0])
         update=json.loads(self.request.arguments['update'][0])
