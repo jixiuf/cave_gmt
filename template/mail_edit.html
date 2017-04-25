@@ -28,7 +28,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">玩家id</label>
             <div class="col-sm-10">
-                <textarea type="text" class="form-control ui-playerid" id='op-playerid' placeholder="逗号或换行分隔的玩家id(长短都行,昵称也可)，为空时表示发给所有玩家"></textarea>
+                <textarea type="text" class="form-control ui-playerid" id='op-playerid' placeholder="逗号或换行分隔的玩家id(长短都行)，为空时表示发给所有玩家"></textarea>
             </div>
         </div>
 
@@ -36,6 +36,12 @@
             <label class="col-sm-2 control-label">邮件内容</label>
             <div class="col-sm-10">
                 <textarea type="text" class="form-control op-mail-content" id='op-mail-content' placeholder="邮件内容"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">有效期(小时)</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control ui-mail-title op-hour" id="op-hour" value="24">
             </div>
         </div>
 
@@ -61,6 +67,7 @@
  var  serverIdEl= $('#op-server');
  var  contentEl = $('#op-mail-content');
  var  playerIdEl = $('#op-playerid');
+ var  hourEl = $('#op-hour');
  var ajaxing = false;
  var submitEl = $('#op-submit-btn');
  submitEl.on('click', function(){
@@ -69,6 +76,7 @@
      data['content'] =contentEl.val() ;
      data['playerid'] =playerIdEl.val() ;
      data['serverid']=serverIdEl.val();
+     data['hour']=hourEl.val();
      if (contentEl.val()=="" &&data['awards']==""&&data['award_list']==""){
          alert("不允许 内容和奖励都是空");
      }
@@ -82,8 +90,8 @@
       .done(function(data) {
           ajaxing = false;
           location.href = '/mail/draft_list'
- });
-         return false;
+      });
+     return false;
 
  });
 </script>
