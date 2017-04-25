@@ -52,7 +52,8 @@
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default op-submit-btn" id='op-submit-btn'>保存</button>
+                <button type="submit" class="btn btn-default op-submit-btn" data-type="save" >存草稿</button>
+                <button type="submit" class="btn btn-default op-submit-btn" data-type="send">直接发送</button>
             </div>
         </div>
     </form>
@@ -69,9 +70,10 @@
  var  playerIdEl = $('#op-playerid');
  var  hourEl = $('#op-hour');
  var ajaxing = false;
- var submitEl = $('#op-submit-btn');
+ var submitEl = $('.op-submit-btn');
  submitEl.on('click', function(){
      var data=getAwardDataFun();
+     data['type']=$(this).data('type');
      data['title'] = titleEl.val();
      data['content'] =contentEl.val() ;
      data['playerid'] =playerIdEl.val() ;
@@ -89,7 +91,11 @@
      })
       .done(function(data) {
           ajaxing = false;
-          location.href = '/mail/draft_list'
+          if(data=="save"){
+              location.href = '/mail/draft_list';
+          }else{
+              alert("发送成功");
+          }
       });
      return false;
 
