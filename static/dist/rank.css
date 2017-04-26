@@ -1,0 +1,14 @@
+.ui-rank-edit {
+  max-width: 490px;
+  margin: 0 auto;
+}
+.ui-rank-edit .ui-edit-title {
+  margin-left: 175px;
+}
+.ui-rank-edit .ui-btn-edit {
+  margin-top: 15px;
+}
+
+.ui-rank-edit .ui-data {
+  margin-left: 175px;
+}

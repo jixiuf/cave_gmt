@@ -1,0 +1,85 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/rank.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-rank-edit">
+    <h2 class="form-signin-heading ui-edit-title">排行榜信息</h2>
+    <form class="form-horizontal ui-edit-form" role="form">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">服务器</label>
+            <div class="col-sm-10">
+                <select class="form-control op-sel-server col-sm-2" >
+                    <option value='1'>下拉选择serverId(default 1)</option>
+                    {% for serverId in serverIdList %}
+                    <option value='{{serverId}}'>{{ serverId }}</option>
+                    {% end %}
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button class="btn btn-default op-add-submit">查询</button>
+            </div>
+        </div>
+    </form>
+    <h4 class="form-signin-heading ui-edit-title">等级排行榜</h4>
+    <div class="ui-data ui-data op-data-level">
+    </div>
+    <br/>
+    <h4 class="form-signin-heading ui-edit-title">战力排行榜</h4>
+    <div class="ui-data ui-data op-data-power">
+    </div>
+</div>
+
+<script type="text/javascript">
+ var ajaxing = false,
+     submitBtnEl = $('.op-add-submit'),
+     serverEl = $('.op-sel-server'),
+     data = {};
+
+
+
+ submitBtnEl.on('click', function() {
+     data['server'] =  serverEl.val();
+     if(ajaxing) return false;
+     ajaxing = true;
+     $.ajax({
+         url: '/bi/rank_post',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          data = JSON.parse(data);
+          if(data['level'].length == 0 ) {
+              $('.op-data-level').empty();
+              $('.op-data-level').append('<span style="color: red">no result return</span>');
+              ajaxing = false;
+              return false;
+          }else{
+              ajaxing = false;
+              $('.op-data-level').empty();
+              for(var i = 0, len = data['level'].length; i < len; i++) {
+                  $('.op-data-level').append("<a href='/api/player_search?playerId="+data['level'][i]+"'>"+data['level'][i]+"</a><br/>");
+              }
+          }
+          if(data['power'].length == 0 ) {
+              $('.op-data-power').empty();
+              $('.op-data-power').append('<span style="color: red">no result return</span>');
+              ajaxing = false;
+              return false;
+          }else{
+              ajaxing = false;
+              $('.op-data-power').empty();
+              for(var i = 0, len = data['power'].length; i < len; i++) {
+                  $('.op-data-power').append("<a href='/api/player_search?playerId="+data['power'][i]+"'>"+data['power'][i]+"</a><br/>");
+              }
+          }
+
+          /*           location.href = '/notice/add';*/
+      });
+     return false;
+ });
+ submitBtnEl.click()
+</script>
+{% end %}

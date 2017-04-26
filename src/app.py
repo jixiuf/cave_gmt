@@ -33,6 +33,7 @@ from handler.player import *
 from handler.design  import *
 from handler.player_bi import *
 from handler.bugreport import *
+from handler.rank import *
 
 from tornado.ioloop import IOLoop
 
@@ -62,6 +63,9 @@ class Application(tornado.web.Application):
             (r'/bi/player_bi_post' ,BIPlayer),
             (r'/bi/active_player' ,BIActivePlayer),
             (r'/bi/active_player_post' ,BIActivePlayer),
+
+            (r'/bi/rank' ,Rank),
+            (r'/bi/rank_post' ,Rank),
 
             (r'/pay_order/list' ,PayOrderHandler),
 
