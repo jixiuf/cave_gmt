@@ -22,7 +22,7 @@
                     '<li class="ui-channel-version-item clearfix">' +
                     '<div class="ui-cell-channel-id">渠道</div>' +
                     '<div class="ui-cell-channel-version">当前版本号</div>' +
-                    '<div class="ui-cell-channel-version">最新版本号</div>' +
+                    '<div class="ui-cell-channel-version">动更包最新版本号</div>' +
                     '<div class="ui-cell-channel-svn">对应svn版本</div>' +
                     '<div class="ui-cell-channel-url">最新动态更新包地址</div>' +
                     '</li>' +
@@ -67,7 +67,7 @@
                    '<div class="ui-cell-channel-id op-channel-id" data-channel-id="'+i+'">' +defaultChannelName[i]+":" +i + '</div>' +
                    '<div class="ui-cell-channel-version op-channel-current-version" data-channel-current-version="'+data.data[i].channel_current_version +'">'
                  + data.data[i].channel_current_version+"("+data.data[i].channel_show_version+")" + '</div>' +
-                   '<div class="ui-cell-channel-version op-channel-version" data-version="'+version+'">' + version +
+                   '<input   type="text" class="ui-cell-channel-version op-channel-version" value="'+version+'">' +
                    '<button class="btn btn-default ui-update-btn op-channel-update-btn">更新</button>' +
                    '</div>' +
                    '<div class="ui-cell-channel-svn op-channel-svn">' + data.data[i].svnVersion+ '</div>' +
@@ -82,7 +82,7 @@
      var versionEl = platformGroupEl.eq(i).find('.op-channel-version'),
          updateEl = platformGroupEl.eq(i).find('.op-update-btn');
      for(var j = 0, len = versionEl.length; j < len; j++) {
-         if(versionEl.eq(j).text() < platformGroupEl.eq(i).data().version) {
+         if(versionEl.eq(j).val() < platformGroupEl.eq(i).data().version) {
              versionEl.eq(j).parent().addClass('ui-warning');
              updateEl.attr('disabled', true);
          }
@@ -109,9 +109,9 @@
       });
  });
  $('.op-channel-update-btn').on('click', function() {
-     var groupEl = $(this).parent().parent().parent().parent('.op-platform-group');
+     var groupEl = $(this).parent().parent().parent('.op-platform-group');
      var channel=$(this).parent().parent().find(".op-channel-id").data("channel-id");
-     var version=$(this).parent().parent().find(".op-channel-version").data("version");
+     var version=$(this).parent().parent().find(".op-channel-version").val();
      var channel_key=$(this).parent().parent().find(".op-channel-key").text();
 
      var showVersionEl = groupEl.find('.op-showVersion');
