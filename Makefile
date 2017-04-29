@@ -54,10 +54,15 @@ build-dep:
 	fi
 
 	@if [ !  -f ./virtual/bin/pip  ]; then  \
-		sudo yum install python-virtualenv ;\
+		if [ `uname -s` = "Darwin" ] ; then \
+				sudo easy_install pip;\
+				sudo pip install virtualenv;\
+		else \
+			sudo yum install python-virtualenv ;\
+		fi;\
 		virtualenv virtual; \
 	fi
-	./virtual/bin/pip install tornado
+	./virtual/bin/pip install tornado==4.4
 	./virtual/bin/pip install chardet
 	./virtual/bin/pip install qiniu
 	./virtual/bin/pip install redis
