@@ -40,6 +40,7 @@ from tornado.ioloop import IOLoop
 DBMgr=db.dbmgr.DBMgr()
 Redis=redis.Redis()
 Etcd=etcd.Client(port=4001,host="127.0.0.1")
+Logger=None
 
 class Application(tornado.web.Application):
     """
@@ -144,6 +145,9 @@ class Application(tornado.web.Application):
 
         tornado.web.Application.__init__(self, handlers, **settings)
         self.logger = get_logger('server', os.path.join(options.data_dir, 'server.log'))
+        global Logger
+        Logger=self.logger
+
         # self.channel_logger = get_logger('channel',os.path.join(options.data_dir,'channel.log'))
         self.gm_logger = get_logger('gminfo',os.path.join(options.data_dir,'gminfo.log'))
         global DBMgr

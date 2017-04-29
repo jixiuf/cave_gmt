@@ -57,6 +57,8 @@
             </div>
         </div>
     </form>
+    <div class="ui-data op-data">
+    </div>
 </div>
 
 <script type="text/javascript" src='../static/javascript/base/award_select.js'>
@@ -79,6 +81,7 @@
      data['playerid'] =playerIdEl.val() ;
      data['serverid']=serverIdEl.val();
      data['hour']=hourEl.val();
+     $('.op-data').empty();
      if (contentEl.val()=="" &&data['awards']==""&&data['award_list']==""){
          alert("不允许 内容和奖励都是空");
      }
@@ -94,7 +97,18 @@
           if(data=="save"){
               location.href = '/mail/draft_list';
           }else{
-              alert("发送成功");
+              data = JSON.parse(data);
+              $('.op-data').empty();
+              $('.op-data').append("发送邮件数:"+data['uin'].length+"<br/>");
+              $('.op-data').append("以下为对应玩家(0表示所有玩家):<br/>");
+              for(var i = 0, len = data['uin'].length; i < len; i++) {
+                  if(data['uin']!="0"){
+                      $('.op-data').append("<a href='/api/player_search?playerId="+data['uin'][i]+"'>"+data['uin'][i]+"</a><br/>");
+                  }else{
+                      $('.op-data').append("  0<br/>");
+
+                  }
+              }
           }
       });
      return false;
