@@ -52,7 +52,8 @@ rm -rf dest.zip
 
 # 加密lua
 
-mkdir destTmp
+rm -rf destTmp
+mkdir -p destTmp
 python ./cocos2d-console/console/cocos2d.py luacompile -s dest/ -d destTmp --disable-compile -e true -k cb4166-a92250-e3a55d-c0549d-3ea2365c -b WANNA_DECRYPTION_??
 cp -rf destTmp/* dest
 
