@@ -38,6 +38,7 @@ def is_float(s):
     except ValueError:
         return False
 
+# json.dumps(data,cls=utils.DateEncoder)
 class DateEncoder(json.JSONEncoder ):
   def default(self, obj):
     if isinstance(obj, datetime):

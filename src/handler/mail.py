@@ -54,20 +54,19 @@ class MailEdit(BaseHandler):
             uinList.extend(uinListFromNickNameList) # str list
         data={}
         data['sendType']=sendType
-        data['uin']=[]
-        print(sendType)
+        data['data']=[]
         for uin in uinList:
             mailId= int(time.time()*1000000)
             if sendType!='save': # save or send
                 yield app.DBMgr.getMailDB(int(serverId)).add(mailId,uin,startTime,endTime,award ,mailContent)
-                data['uin'].append(uin)
+                mailJson=yield app.DBMgr.getMailDB(int(serverId)).get(mailId,uin)
+                data['data'].append(mailJson)
                 app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,serverId), redis_notify.NOTIFY_TYPE_RELOAD_MAIL%(str(uin)))
             else:
                 yield app.DBMgr.getMailDraftDB().add(mailId,uin,startTime,endTime,award,awardsDesc,mailContent,int(serverId))
             time.sleep(0.001)
 
-        print(json.dumps(data))
-        self.write(json.dumps(data))
+        self.write(json.dumps(data,cls=utils.DateEncoder))
 
 
 

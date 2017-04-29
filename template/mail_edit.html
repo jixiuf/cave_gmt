@@ -94,18 +94,23 @@
      })
       .done(function(data) {
           ajaxing = false;
-          if(data=="save"){
+              data = JSON.parse(data);
+          if(data['sendType']=="save"){
               location.href = '/mail/draft_list';
           }else{
-              data = JSON.parse(data);
               $('.op-data').empty();
-              $('.op-data').append("发送邮件数:"+data['uin'].length+"<br/>");
-              $('.op-data').append("以下为对应玩家(0表示所有玩家):<br/>");
-              for(var i = 0, len = data['uin'].length; i < len; i++) {
-                  if(data['uin']!="0"){
-                      $('.op-data').append("<a href='/api/player_search?playerId="+data['uin'][i]+"'>"+data['uin'][i]+"</a><br/>");
+              $('.op-data').append("发送邮件数:"+data['data'].length+"<br/>");
+              $('.op-data').append("以下为对应玩家(0表示所有玩家,出现在下列列表中的玩家表示邮件发送成功):<br/>");
+              var line;
+              var info;
+              for(var i = 0, len = data['data'].length; i < len; i++) {
+                  info=data['data'][i]
+                  line="玩家id:"+info['uin']+",content:"+info['Content'];
+
+                  if(info['uin']!="0"){
+                      $('.op-data').append("<a href='/api/player_search?playerId="+info['uin']+"'>"+info['uin']+"</a>:"+line+"<br/>");
                   }else{
-                      $('.op-data').append("  0<br/>");
+                      $('.op-data').append(line);
 
                   }
               }
