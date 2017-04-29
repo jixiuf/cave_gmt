@@ -2,6 +2,7 @@
 # 需要用到的命令 ，确保svn  zip,curl,python 以安装
 #用法举例比如 ./dynamic_upload.sh gamename 版本号  svnVersionFrom svnVersionTo svn_resource_url gmt_notify_url channel1 channel2 ....channelN
 #用法举例比如 ./dynamic_upload.sh goldflower 1100083  1005 1139 svn://svn.najaplus.com/game1/dev/Data http://dev.najaplus.com:8000  6 7
+# ./dynamic_upload.sh cave 1001005  10174 10888 svn://svn.najaplus.com/game2/dev/client/cocos2d-x-2.2.6/projects/client/Resources http://cavegmt.zh.najaplus.com  10
 dir=`pwd`
 cd `dirname $0`
 # qiniu accesskey secretkey
@@ -18,7 +19,7 @@ svnpath=$5
 gmt_url=$6
 channel_begin_param=6
 svnUser=version
-svnPassword=versionnaja
+svnPassword=u3gZa2fWKM
 
 gmt_notify_url="$gmt_url""/api/game/dynamic"
 gmt_update_version_url="$gmt_url""/game/server_version_update"
