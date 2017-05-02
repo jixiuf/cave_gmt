@@ -95,14 +95,19 @@
      })
       .done(function(data) {
           ajaxing = false;
-          $(this).attr('disabled', 'false');
-              data = JSON.parse(data);
+          submitEl.removeAttr("disabled");
+
+          data = JSON.parse(data);
           if(data['sendType']=="save"){
               location.href = '/mail/draft_list';
           }else{
               $('.op-data').empty();
               $('.op-data').append("发送邮件数:"+data['data'].length+"<br/>");
-              $('.op-data').append("以下为对应玩家(0表示所有玩家,出现在下列列表中的玩家表示邮件发送成功):<br/>");
+              if(!(data['data'].length==1 && data['data'][0]['uin']=='0')){
+                  $('.op-data').append("以下为成功发送到邮箱的玩家(由于缓存或客户端收取邮件时机的原因，玩家收取此邮件可能会有5min左右的延迟):<br/>");
+              }
+
+
               var line;
               var info;
               for(var i = 0, len = data['data'].length; i < len; i++) {
@@ -110,9 +115,9 @@
                   line="";
 
                   if(info['uin']!="0"){
-                      $('.op-data').append("<a href='/api/player_search?playerId="+info['uin']+"'>"+info['uin']+"</a>:"+line+"<br/>");
+                      $('.op-data').append("<a href='/api/player_search?playerId="+info['uin']+"'>"+info['uin']+"</a> "+line+"<br/>");
                   }else{
-                      $('.op-data').append(line);
+                      $('.op-data').append("已发送到所有玩家邮箱中(距玩家能领到邮件有一定的延迟，请玩家耐心等待)");
 
                   }
               }

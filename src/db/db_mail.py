@@ -27,7 +27,7 @@ class MailDB:
     def mapRow(self,row):
         data={}
         data['mailId']=row[0]
-        data['uin']=row[1]
+        data['uin']=str(row[1])
         data['FromUin']=row[2]
         data['MailType']=row[3]
         data['StartTime']=row[4]
