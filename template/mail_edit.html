@@ -87,6 +87,7 @@
      }
 
      ajaxing = true;
+     $(this).attr('disabled', 'true');
      $.ajax({
          url: '/mail/edit',
          type: 'post',
@@ -94,6 +95,7 @@
      })
       .done(function(data) {
           ajaxing = false;
+          $(this).attr('disabled', 'false');
               data = JSON.parse(data);
           if(data['sendType']=="save"){
               location.href = '/mail/draft_list';
@@ -105,7 +107,7 @@
               var info;
               for(var i = 0, len = data['data'].length; i < len; i++) {
                   info=data['data'][i]
-                  line="玩家id:"+info['uin']+",content:"+info['Content'];
+                  line="";
 
                   if(info['uin']!="0"){
                       $('.op-data').append("<a href='/api/player_search?playerId="+info['uin']+"'>"+info['uin']+"</a>:"+line+"<br/>");
