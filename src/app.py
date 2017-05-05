@@ -102,6 +102,8 @@ class Application(tornado.web.Application):
             (r'/server_mgr/server_stopping', ServerStopping),
             (r'/server_mgr/server_stop', ServerStop),
             (r'/server_mgr/server_switch', ServerSwitch),
+            (r'/server_mgr/server_exec', ServerExec),
+
 
             (r'/maintain/mgr', Maintain),
             (r'/maintain/mgr_post', Maintain),

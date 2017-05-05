@@ -39,8 +39,16 @@
 
                                <button type="submit" data-server-id='{{serverId}}' data-process-id='{{etcdServer["processId"]}}' class="btn btn-default op-kick-submit">踢人{{ etcdServer["processId"] }}线</button>
                                    <button type="submit" data-server-id='{{serverId}}' data-process-id='{{etcdServer["processId"]}}' class="btn btn-default op-stop-submit">停服{{ etcdServer["processId"] }}线</button>
+                                   <button type="submit" data-server-id='{{serverId}}' data-process-id='{{etcdServer["processId"]}}' class="btn btn-default op-exec-cmd">执行命令{{ etcdServer["processId"] }}线</button>
                                    <br/>
                                    {% end %}
+                                   <br/>
+                                   <div class="col-sm-4">
+                                       <input class="form-control op-cmd" placeholder="命令" type="text">
+                                   </div>
+
+                                   <button type="submit" data-server-id='{{serverId}}' data-process-id='-1' class="btn btn-default op-exec-cmd">执行命令（on gmt）</button>
+                                   <br/>
 
                                    {% for addr in supervisorAddrJson[serverId] %}
                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ addr }}" target="blank">{{ addr }}</a><br/>
@@ -51,6 +59,8 @@
         </div>
 
     </form>
+    <div class="ui-data op-data">
+    </div>
 </div>
 
 
@@ -58,6 +68,38 @@
  var ajaxing = false,
      modalEl=$('.op-modal'),
      data = {};
+ modalEl.delegate('.op-exec-cmd', 'click', function(e) {
+     var el = $(e.currentTarget);
+     var processId=el.data('process-id');
+     var serverId=el.data('server-id');
+     var cmd=$(".op-cmd").val();
+     if(ajaxing) return false;
+     if(serverId == '' ) {
+         serverId="1";
+     }
+     if(cmd==""){
+         alert("cmd不能为空");
+         return false;
+     }
+     data['serverId'] = serverId;
+     data['processId'] = processId;
+     data['cmd'] = cmd;
+
+     ajaxing = true;
+     $.ajax({
+         url: '/server_mgr/server_exec',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          $(".op-cmd").select();
+          $(".op-cmd").focus();
+          $('.op-data').empty();
+          $('.op-data').append(data);
+      });
+     return false;
+ });
 
  modalEl.delegate('.op-stopping-submit', 'click', function(e) {
      var el = $(e.currentTarget);

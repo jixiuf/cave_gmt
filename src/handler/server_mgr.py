@@ -11,6 +11,8 @@ from tornado import  gen
 import app
 import conf
 import time
+import subprocess
+from tornado.process import Subprocess
 
 class ServerMgr(BaseHandler):
     @asynchronous
@@ -48,6 +50,43 @@ class ServerStop(BaseHandler):
             app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,serverIdStr), redis_notify.NOTIFY_TYPE_SERVER_STOP)
         else:
             app.Redis.publish(redis_notify.get_process_redis_notify_channel(conf.PLATFORM,serverIdStr,processIdStr), redis_notify.NOTIFY_TYPE_SERVER_STOP)
+        time.sleep(0.1)
+        self.write('success')
+
+class ServerExec(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+        serverIdStr=self.get_argument('serverId')
+        processIdStr=self.get_argument('processId')
+        cmd=self.get_argument('cmd','')
+        if processIdStr=='-1':  # on gmt
+            app.Logger.info(cmd)
+            self.write("<span style='color:green'>$ %s </span>"%(cmd))
+            self.write("<br/>")
+
+            process = Subprocess(cmd, stdout=Subprocess.STREAM, stderr=Subprocess.STREAM, shell=True)
+            try:
+                while True:
+                    pout = yield process.stdout.read_until("\n")
+                    # , process.stderr.read_until("\n")
+                    app.Logger.info(pout)
+                    self.write(pout)
+                    # self.write(err)
+                    self.write("<br/>")
+                    self.flush()
+            except Exception, error:
+                self.flush()
+
+            self.write("eof")
+            self.flush()
+            self.finish()
+            return
+        elif processIdStr=='' or processIdStr=="0":
+            print("eeeeeeee")
+            app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,serverIdStr), redis_notify.NOTIFY_TYPE_SERVER_EXEC%(cmd))
+        else:
+            app.Redis.publish(redis_notify.get_process_redis_notify_channel(conf.PLATFORM,serverIdStr,processIdStr), redis_notify.NOTIFY_TYPE_SERVER_EXEC%(cmd))
         time.sleep(0.1)
         self.write('success')
 
