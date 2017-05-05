@@ -83,9 +83,10 @@ class ServerExec(BaseHandler):
             self.finish()
             return
         elif processIdStr=='' or processIdStr=="0":
-            print("eeeeeeee")
+            cmd=cmd.replace("\"","\\\"")
             app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,serverIdStr), redis_notify.NOTIFY_TYPE_SERVER_EXEC%(cmd))
         else:
+            cmd=cmd.replace("\"","\\\"")
             app.Redis.publish(redis_notify.get_process_redis_notify_channel(conf.PLATFORM,serverIdStr,processIdStr), redis_notify.NOTIFY_TYPE_SERVER_EXEC%(cmd))
         time.sleep(0.1)
         self.write('success')

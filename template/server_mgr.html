@@ -20,6 +20,9 @@
             <label class="col-sm-2 control-label">开服停服:</label>
             <div class="col-sm-offset-2 col-sm-10">
                     {% for serverId in supervisorAddrJson %}
+                                {% for addr in supervisorAddrJson[serverId] %}
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ addr }}" target="blank">{{ addr }}</a><br/>
+                                {% end %}
                         {{ serverId }}服：<button type="submit" data-server-id='{{serverId}}'  data-process-id='0' class="btn btn-default op-stopping-submit">预停{{serverId}}服</button>
                 <button type="submit" data-server-id='{{serverId}}' data-process-id='0' class="btn btn-default op-kick-submit">踢人{{serverId}}服</button>
                 <br/>
@@ -50,9 +53,6 @@
                                    <button type="submit" data-server-id='{{serverId}}' data-process-id='-1' class="btn btn-default op-exec-cmd">执行命令（on gmt）</button>
                                    <br/>
 
-                                   {% for addr in supervisorAddrJson[serverId] %}
-                                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ addr }}" target="blank">{{ addr }}</a><br/>
-                                   {% end %}
                                    {% end %}
 
             </div>
