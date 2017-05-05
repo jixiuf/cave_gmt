@@ -88,8 +88,11 @@ class ServerExec(BaseHandler):
         else:
             cmd=cmd.replace("\"","\\\"")
             app.Redis.publish(redis_notify.get_process_redis_notify_channel(conf.PLATFORM,serverIdStr,processIdStr), redis_notify.NOTIFY_TYPE_SERVER_EXEC%(cmd))
-        time.sleep(0.1)
-        self.write('success')
+        time.sleep(1)
+
+        output=app.Redis.get(conf.AppName+"_cmd_output")
+        output=output.replace("\n","<br/>")
+        self.write(output)
 
 class ServerSwitch(BaseHandler):
     @asynchronous
