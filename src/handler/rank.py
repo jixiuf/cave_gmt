@@ -28,10 +28,10 @@ class Rank(BaseHandler):
     def self_post(self):
         serverId= self.get_argument('server','1')
         levelRankKey="cave_rank_level_%d_%s"%(conf.PLATFORM,serverId)
-        levelRank=app.Redis.zrange(levelRankKey ,0,10) # list of keys
+        levelRank=app.Redis.zrange(levelRankKey ,0,50) # list of keys
 
         powerRankKey="cave_rank_power_%d_%s"%(conf.PLATFORM,serverId)
-        powerRank=app.Redis.zrange(powerRankKey ,0,10) # list of keys
+        powerRank=app.Redis.zrange(powerRankKey ,0,50) # list of keys
         print(powerRank)
         self.write(json.dumps({ 'level': levelRank,'power':powerRank}))
 
