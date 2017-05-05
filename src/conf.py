@@ -14,6 +14,7 @@ def getConfigFile():
         filename="%s%s.json"%(CONFIG_DIR,options.mode)
     return filename
 
+REDIS_MAX_SCORE = 9007199254740992
 ClientSVNResourcesURL='svn://svn.najaplus.com/game2/dev/client/cocos2d-x-2.2.6/projects/client/Resources'
 
 initPermissionLevel=[db.db_permissions.NewGmToolAccountPermissionLevel(1,"管理员",''),

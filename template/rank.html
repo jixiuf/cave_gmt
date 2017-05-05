@@ -24,11 +24,18 @@
         </div>
     </form>
     <h4 class="form-signin-heading ui-edit-title">等级排行榜</h4>
-    <div class="ui-data ui-data op-data-level">
+    <div class="ui-data op-data-level">
+        <div class=" ui-data-h  op-data-level-keys">
+        </div>
+        <div class=" ui-data-h  op-data-level-values">
+        </div>
     </div>
-    <br/>
     <h4 class="form-signin-heading ui-edit-title">战力排行榜</h4>
-    <div class="ui-data ui-data op-data-power">
+    <div class=" ui-data op-data-power">
+        <div class=" ui-data-h  op-data-power-keys">
+        </div>
+        <div class=" ui-data-h  op-data-power-values">
+    </div>
     </div>
 </div>
 
@@ -51,31 +58,47 @@
      })
       .done(function(data) {
           data = JSON.parse(data);
-          if(data['level'].length == 0 ) {
-              $('.op-data-level').empty();
-              $('.op-data-level').append('<span style="color: red">no result return</span>');
+          if(data['levelKeys'].length == 0 ) {
+              $('.op-data-level-keys').empty();
+              $('.op-data-level-keys').append("<div>玩家Id</div>");
+              $('.op-data-level-values').empty();
+              $('.op-data-level-values').append("<div>等级</div>");
               ajaxing = false;
               return false;
           }else{
               ajaxing = false;
-              $('.op-data-level').empty();
-              for(var i = 0, len = data['level'].length; i < len; i++) {
-                  $('.op-data-level').append("<a href='/api/player_search?playerId="+data['level'][i]+"'>"+data['level'][i]+"</a><br/>");
+              $('.op-data-level-keys').empty();
+              $('.op-data-level-keys').append("<div>玩家Id</div>");
+              for(var i = 0, len = data['levelKeys'].length; i < len; i++) {
+                  $('.op-data-level-keys').append("<div ><a href='/api/player_search?playerId="+data['levelKeys'][i]+"'>"+data['levelKeys'][i]+"</a></div>");
               }
-          }
-          if(data['power'].length == 0 ) {
-              $('.op-data-power').empty();
-              $('.op-data-power').append('<span style="color: red">no result return</span>');
-              ajaxing = false;
-              return false;
-          }else{
-              ajaxing = false;
-              $('.op-data-power').empty();
-              for(var i = 0, len = data['power'].length; i < len; i++) {
-                  $('.op-data-power').append("<a href='/api/player_search?playerId="+data['power'][i]+"'>"+data['power'][i]+"</a><br/>");
+              $('.op-data-level-values').empty();
+              $('.op-data-level-values').append("<div>等级</div>");
+              for(var i = 0, len = data['levelValues'].length; i < len; i++) {
+                  $('.op-data-level-values').append(data['levelValues'][i]+"<br/>");
               }
           }
 
+          if(data['powerKeys'].length == 0 ) {
+              $('.op-data-power-keys').empty();
+              $('.op-data-power-keys').append("<div>玩家Id</div>");
+              $('.op-data-power-values').empty();
+              $('.op-data-power-values').append("<div>战力</div>");
+              ajaxing = false;
+              return false;
+          }else{
+              ajaxing = false;
+              $('.op-data-power-keys').empty();
+              $('.op-data-power-keys').append("<div>玩家Id</div>");
+              for(var i = 0, len = data['powerKeys'].length; i < len; i++) {
+                  $('.op-data-power-keys').append("<a href='/api/player_search?playerId="+data['powerKeys'][i]+"'>"+data['powerKeys'][i]+"</a><br/>");
+              }
+              $('.op-data-power-values').empty();
+              $('.op-data-power-values').append("<div>战力</div>");
+              for(var i = 0, len = data['powerValues'].length; i < len; i++) {
+                  $('.op-data-power-values').append(data['powerValues'][i]+"<br/>");
+              }
+          }
           /*           location.href = '/notice/add';*/
       });
      return false;
