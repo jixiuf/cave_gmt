@@ -186,9 +186,9 @@ class PlayerListHandler(BaseHandler):
         for info in result:
             list.append(result[info])
         def sortFunc(e1 ,e2 ):
-            if e1==None:
+            if e1.get(sortField,None)==None:
                 return -1
-            elif e2==None:
+            elif e2.get(sortField,None)==None:
                 return 1
 
             diff=e1.get(sortField,0)-e2.get(sortField,0)
