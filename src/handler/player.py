@@ -186,6 +186,11 @@ class PlayerListHandler(BaseHandler):
         for info in result:
             list.append(result[info])
         def sortFunc(e1 ,e2 ):
+            if e1==None:
+                return -1
+            elif e2==None:
+                return 1
+
             diff=e1.get(sortField,0)-e2.get(sortField,0)
             if type(diff) is timedelta:
                 if e1.get(sortField,0)>e2.get(sortField,0):
