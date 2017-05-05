@@ -32,19 +32,20 @@
                                <button type="submit" data-server-id='{{serverId}}' data-process-id='{{etcdServer["processId"]}}' class="btn btn-default op-stopping-submit">预停{{ etcdServer["processId"] }}线</button>
                             {% end %}
                             {% if etcdServer["st"] =='stopping' %}
-                               <button type="submit" data-server-id='{{serverId}}'  data-process-id='{{etcdServer["processId"]}}' disabled class="btn disabled btn-default op-switch-submit">拒绝登录{{ etcdServer["processId"] }}线</button>
+                               <button type="submit" data-server-id='{{serverId}}'  data-process-id='{{etcdServer["processId"]}}'  class="btn  btn-default op-switch-submit">允许登录{{ etcdServer["processId"] }}线</button>
                                {%else%}
                                <button type="submit" data-server-id='{{serverId}}' data-process-id='{{etcdServer["processId"]}}' class="btn btn-default op-switch-submit">拒绝登录{{ etcdServer["processId"] }}线</button>
                             {% end %}
 
                                <button type="submit" data-server-id='{{serverId}}' data-process-id='{{etcdServer["processId"]}}' class="btn btn-default op-kick-submit">踢人{{ etcdServer["processId"] }}线</button>
-                               <br/>
-                        {% end %}
+                                   <button type="submit" data-server-id='{{serverId}}' data-process-id='{{etcdServer["processId"]}}' class="btn btn-default op-stop-submit">停服{{ etcdServer["processId"] }}线</button>
+                                   <br/>
+                                   {% end %}
 
-                        {% for addr in supervisorAddrJson[serverId] %}
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ addr }}" target="blank">{{ addr }}</a><br/>
-                        {% end %}
-                    {% end %}
+                                   {% for addr in supervisorAddrJson[serverId] %}
+                                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ addr }}" target="blank">{{ addr }}</a><br/>
+                                   {% end %}
+                                   {% end %}
 
             </div>
         </div>
@@ -84,6 +85,33 @@
       });
      return false;
  });
+ modalEl.delegate('.op-stop-submit', 'click', function(e) {
+     var el = $(e.currentTarget);
+     var processId=el.data('process-id');
+     var serverId=el.data('server-id');
+     if(ajaxing) return false;
+     if(serverId == '' ) {
+         serverId="1";
+     }
+     data['serverId'] = serverId;
+     data['processId'] = processId;
+     ajaxing = true;
+     $.ajax({
+         url: '/server_mgr/server_stop',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          if(data == 'success') {
+              location.href = '/server_mgr/server_mgr';
+          } else {
+              alert('无权限'+data);
+          }
+      });
+     return false;
+ });
+
  modalEl.delegate('.op-switch-submit', 'click', function(e) {
      var el = $(e.currentTarget);
      var processId=el.data('process-id');

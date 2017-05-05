@@ -38,15 +38,25 @@ class ServerStopping(BaseHandler):
             app.Redis.publish(redis_notify.get_process_redis_notify_channel(conf.PLATFORM,serverIdStr,processIdStr), redis_notify.NOTIFY_TYPE_SERVER_STOPPING)
         time.sleep(0.1)
         self.write('success')
-
-
+class ServerStop(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+        serverIdStr=self.get_argument('serverId')
+        processIdStr=self.get_argument('processId')
+        if processIdStr=='' or processIdStr=="0":
+            app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,serverIdStr), redis_notify.NOTIFY_TYPE_SERVER_STOP)
+        else:
+            app.Redis.publish(redis_notify.get_process_redis_notify_channel(conf.PLATFORM,serverIdStr,processIdStr), redis_notify.NOTIFY_TYPE_SERVER_STOP)
         time.sleep(0.1)
         self.write('success')
+
 class ServerSwitch(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_post(self):
         serverIdStr=self.get_argument('serverId')
+        processIdStr=self.get_argument('processId')
         processIdStr=self.get_argument('processId')
         if processIdStr=='' or processIdStr=="0" or serverIdStr=='' or serverIdStr=='0':
             self.write('params wrong')
@@ -55,8 +65,12 @@ class ServerSwitch(BaseHandler):
         if serverInfo==None:
             self.write('server not running')
             return
+        if serverInfo['st']=='stopping':
+            serverInfo['st']='running'
+        else:
+            serverInfo['st']='stopping'
 
-        serverInfo['st']='stopping'
+
         app.putEtcdServerProcess(conf.PLATFORM,serverIdStr,processIdStr,serverInfo)
         time.sleep(0.1)
         self.write('success')
