@@ -33,6 +33,7 @@ from handler.player import *
 from handler.design  import *
 from handler.player_bi import *
 from handler.bugreport import *
+from handler.gameconfig import *
 from handler.rank import *
 
 from tornado.ioloop import IOLoop
@@ -71,6 +72,9 @@ class Application(tornado.web.Application):
             (r'/pay_order/list' ,PayOrderHandler),
 
             (r'/bugreport/get' ,BugReportHandler),
+
+            (r'/gameconfig/put' ,GameConfigHandler),
+            (r'/gameconfig/get' ,GameConfigHandler),
 
 
             (r'/ping', PingHandler),

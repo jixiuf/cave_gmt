@@ -1,0 +1,75 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/gameconfig.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-gameconfig-option">
+    <h2 class="form-signin-heading ui-gameconfig-title">游戏配置控制</h2>
+</div>
+</br>
+</br>
+<ul class="ui-gameconfig-list-list op-gameconfig-list-list">
+    <div class="ui-data">
+        <li class="ui-gameconfig-item clearfix">
+            <div class="ui-gameconfig-cell">
+                标题
+            </div>
+            <div class="ui-gameconfig-cell">
+                内容
+            </div>
+            <div class="ui-gameconfig-cell-big">
+                描述
+            </div>
+            <div class="ui-gameconfig-cell">
+                提交
+            </div>
+        </li>
+        {% for gameconfig in list %}
+        <li class="ui-gameconfig-item clearfix">
+            <div class="ui-gameconfig-cell">
+                {{ gameconfig.get('gameConfigTitle') }}({{ gameconfig.get('gameConfigKey') }})
+            </div>
+            <div class="ui-gameconfig-cell">
+                <input class="form-control op-value"  value="{{ gameconfig.get('gameConfigValue') }}">
+            </div>
+            <div class="ui-gameconfig-cell-big">
+                {{ gameconfig.get('gameConfigDesc') }}
+            </div>
+            <div class="ui-gameconfig-cell">
+                <button  data-key='{{gameconfig.get("gameConfigKey")}}'  class="btn btn-default op-btn">提交</button>
+            </div>
+        </li>
+        {% end %}
+
+    </div>
+</ul>
+</br>
+<script type="text/javascript">
+ var ajaxing = false,
+     submitEl=$(".op-btn"),
+     data = {};
+
+ submitEl.on('click', function(e) {
+     var el = $(e.currentTarget);
+     if(ajaxing) return false;
+     var gameConfigValue=$(this).parent().parent().find(".op-value").val();
+     data['gameConfigKey'] = el.data('key');
+     data['gameConfigValue'] = gameConfigValue;
+     ajaxing = true;
+     $.ajax({
+         url: '/gameconfig/put',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          /*           location.href = '/gameconfig/get';*/
+          window.location.reload();
+      });
+     return false;
+ });
+
+</script>
+
+
+{% end %}
