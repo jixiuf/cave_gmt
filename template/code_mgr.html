@@ -10,7 +10,7 @@
     <h2 class="form-signin-heading">礼包码管理</h2>
     <form class="form-horizontal" role="form">
         <div class="form-group">
-            <label class="col-sm-3 control-label">选服*</label>
+            <label class="col-sm-2 control-label">选服*</label>
             <div class="col-sm-5">
                 <select class="form-control op-server" id='op-server'>
                     {% for serverId in serverIdList %}
@@ -21,37 +21,37 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">礼包名称*</label>
+            <label class="col-sm-2 control-label">礼包名称*</label>
             <div class="col-sm-5">
                 <input type="text" class="form-control ui-code-name op-name" id="op-name" placeholder="礼包名称">
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">礼包描述</label>
+            <label class="col-sm-2 control-label">礼包描述</label>
             <div class="col-sm-5">
                 <input type="text" class="form-control ui-code-common op-desc" id="op-desc" placeholder="礼包描述">
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">单码使用次数限制*</label>
+            <label class="col-sm-2 control-label">单码使用次数限制*</label>
             <div class="col-sm-5">
                 <input type="number"  min="1" class="form-control ui-code-common op-limit-cnt" id="op-limit-cnt"  value="1" placeholder="单码使用次数限制">
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">同批号使用次数限制*</label>
+            <label class="col-sm-2 control-label">同批号使用次数限制*</label>
             <div class="col-sm-5">
                 <input type="number"  min="1" class="form-control ui-code-common op-batch-limit-cnt" id="op-batch-limit-cnt"  value="1" placeholder="单码使用次数限制">
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">生成数量*</label>
+            <label class="col-sm-2 control-label">生成数量*</label>
             <div class="col-sm-5">
                 <input type="number"  min="1" class="form-control ui-code-common op-cnt" id="op-cnt"  placeholder="生成礼包码的数量">
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">有效期*</label>
+            <label class="col-sm-2 control-label">有效期*</label>
             <div class="col-sm-5">
                 <span class="ui-time-txt">起始时间</span>
                 <input class="form-control op-time-start" type="text" id="op-time-start">
@@ -62,13 +62,13 @@
 
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">互斥码</label>
+            <label class="col-sm-2 control-label">互斥码</label>
             <div class="col-sm-5">
                 <input type="text" class="form-control ui-code-common op-group" id="op-group"  placeholder="两批具有相同互斥码的活动，玩家只能参加其中一个,可为空">
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">礼包码前缀</label>
+            <label class="col-sm-2 control-label">礼包码前缀</label>
             <div class="col-sm-5">
                 <input type="text" class="form-control ui-code-common op-group" id="op-channelSDK"  placeholder="生成的礼包码以此为前缀(比如以渠道号为前缀)">
             </div>
@@ -76,7 +76,7 @@
 
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">奖励*</label>
+            <label class="col-sm-2 control-label">奖励*</label>
             {% include award_select_template.html %}
         </div>
         <div class="form-group">
