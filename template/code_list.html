@@ -40,6 +40,9 @@
 
 </script>
 <script type="text/javascript">
+ function isBlank(str) {
+     return (!str || /^\s*$/.test(str));
+ }
  var  serverIdEl= $('#op-server');
  var  batchCodeEl = $('#op-batch-code');
 
@@ -51,12 +54,12 @@
      data['serverid']=serverIdEl.val();
      data['batchCode']=batchCodeEl.val();
      $('.op-data').empty();
-     if(data['batchCode']==""){
+     if(isBlank(data['batchCode'])){
          alert("批次为空，目前无可查询数据");
          return false;
      }
 
-         ajaxing = true;
+     ajaxing = true;
      $(this).attr('disabled', 'true');
      $.ajax({
          url: '/code/list',
