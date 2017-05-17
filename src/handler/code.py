@@ -84,7 +84,7 @@ class CodeMgr(BaseHandler):
                 codes.append(code)
 
         for code in codes:
-            sql="INSERT INTO `CodeBase` (`server`,`code`,`channelCode`,`batchCode`,`startTime`,`endTime`,`limitCnt`,`useCnt`,`batchLimitCnt`,`content`,`desc`,`group`) VALUES (%s,'%s','%s','%s','%s','%s',%s,%s,%s,'%s','%s','%s')"%(serverId,code,channelSDK,batchCode,startTime,endTime,limitCnt,0,batchLimitCnt,mailContent,desc,group)
+            sql="INSERT INTO `CodeBase` (`server`,`code`,`channelCode`,`batchCode`,`startTime`,`endTime`,`limitCnt`,`useCnt`,`batchLimitCnt`,name,`content`,`desc`,`group`) VALUES (%s,'%s','%s','%s','%s','%s',%s,%s,%s,'%s','%s','%s','%s')"%(serverId,code,channelSDK,batchCode,startTime,endTime,limitCnt,0,batchLimitCnt,name,mailContent,desc,group)
             yield app.DBMgr.getProfileDB().execSql(sql)
             data['data'].append(code)
         self.write(json.dumps(data,cls=utils.DateEncoder))
@@ -97,3 +97,70 @@ class CodeMgr(BaseHandler):
         '''
         # chars=string.ascii_letters+string.digits
         return prefix + ''.join([random.choice(CodeMgr.chars) for i in range(length)])
+
+class CodeList(BaseHandler):
+
+    def mapRow1(self,row):
+        return row[0]
+
+    @asynchronous
+    @gen.coroutine
+    def self_get(self):
+        sql="select ifnull(max(batchCode),0) as max_batch_code from CodeBase " # 获取当前最大批号
+        maxBatchCode=yield app.DBMgr.getProfileDB().queryObject(sql,self.mapRow1)
+        batchCodeList=range(1,1+maxBatchCode)
+        batchCodeList.reverse()
+
+        serverIdList=app.DBMgr.get_all_server_id()
+        self.render("code_list.html",title="礼包码列表",
+                    Account=self.gmAccount,
+                    batchCodeList=batchCodeList,
+                    serverIdList=serverIdList)
+
+    def mapRow(self,row):
+        data={}
+        data['server']=row[0]
+        data['code']=row[1]
+        data['channelCode']=row[2]
+        data['batchCode']=row[3]
+        data['startTime']=row[4]
+        data['endTime']=row[5]
+        data['limitCnt']=row[6]
+        data['useCnt']=row[7]
+        data['batchLimitCnt']=row[8]
+        data['name']=row[9]
+        data['content']=row[10]
+        data['desc']=row[11]
+        data['group']=row[12]
+        return data
+
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+        serverId= self.get_argument('serverid','1')
+        batchCode= self.get_argument('batchCode','1')
+        channelCode= self.get_argument('channelCode','')
+        sql="select `server`,`code`,`channelCode`,`batchCode`,`startTime`,`endTime`,`limitCnt`,`useCnt`,`batchLimitCnt`,name,`content`,`desc`,`group` from `CodeBase` where server=%s and batchCode=%s "%(serverId,batchCode)
+        if channelCode!='':
+            sql= sql+"channelCode='%s'"%(channelCode)
+
+
+        list=yield app.DBMgr.getProfileDB().query(sql,self.mapRow)
+
+        data={}
+        data['cnt']=len(list)   # 共有多少个码
+        data['data']=list
+        totalUseCnt=0           # 这批码 共领取了多少次
+
+        for code in list:
+            totalUseCnt=totalUseCnt+code['useCnt']
+            data['limitCnt']=code['limitCnt'] # 一个码允许使用次数
+            data['batchLimitCnt']=code['batchLimitCnt'] # 本批码允许一个玩家领取的最大次数
+            data['startTime']=code['startTime']
+            data['endTime']=code['endTime']
+            data['desc']=code['desc']
+            data['name']=code['name']
+            data['channelCode']=code['channelCode']
+            data['server']=code['server']
+        data['totalUseCnt']=totalUseCnt
+        self.write(json.dumps(data,cls=utils.DateEncoder))

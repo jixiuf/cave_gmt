@@ -1,0 +1,92 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/code_list.css" rel="stylesheet" type="text/css"/>
+<link href="../static/dist/award_select.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+
+<div class="ui-code-mgr">
+    <h2 class="form-signin-heading">礼包码列表</h2>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">选服*</label>
+            <div class="col-sm-5">
+                <select class="form-control op-server" id='op-server'>
+                    {% for serverId in serverIdList %}
+                    <option value="{{serverId}}">{{serverId}}服</option>
+                    {% end %}
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">批次*</label>
+            <div class="col-sm-5">
+                <select class="form-control op-batch-code" id='op-batch-code'>
+                    {% for batchCode in batchCodeList %}
+                    <option value="{{batchCode}}">{{batchCode}}</option>
+                    {% end %}
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-5">
+                <button type="submit" class="btn btn-default op-submit-btn" >查询</button>
+            </div>
+        </div>
+    </form>
+    <div class="ui-data op-data">
+    </div>
+</div>
+
+</script>
+<script type="text/javascript">
+ var  serverIdEl= $('#op-server');
+ var  batchCodeEl = $('#op-batch-code');
+
+ var ajaxing = false;
+
+ var submitEl = $('.op-submit-btn');
+ submitEl.on('click', function(){
+     var data={};
+     data['serverid']=serverIdEl.val();
+     data['batchCode']=batchCodeEl.val();
+     $('.op-data').empty();
+
+     ajaxing = true;
+     $(this).attr('disabled', 'true');
+     $.ajax({
+         url: '/code/list',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          submitEl.removeAttr("disabled");
+          data = JSON.parse(data);
+          $('.op-data').empty();
+          $('.op-data').append("礼包名称：           "+data['name']+"<br/>");
+          $('.op-data').append("礼包码前缀：         "+data['channelCode']+"<br/>");
+          $('.op-data').append("服务器编号：         "+data['server']+"<br/>");
+          $('.op-data').append("单码领取上限：       "+data['limitCnt']+"<br/>");
+          $('.op-data').append("同批次领取上限:      "+data['batchLimitCnt']+"<br/>");
+          $('.op-data').append("已领取次数：         "+data['totalUseCnt']+"<br/>");
+          $('.op-data').append("可领取次数：         "+data['limitCnt']+"*"+data['cnt']+"<br/>");
+          $('.op-data').append("礼包码数量：         "+data['cnt']+"<br/>");
+          $('.op-data').append("活动开始时间:        "+data['startTime']+"<br/>");
+          $('.op-data').append("活动结束时间:        "+data['endTime']+"<br/>");
+          $('.op-data').append("<br/>");
+
+          var line;
+          var info;
+          for(var i = 0, len = data['data'].length; i < len; i++) {
+              info=data['data'][i]['code'];
+              line=info;
+              $('.op-data').append(line+"<br/>");
+          }
+
+      });
+     return false;
+
+ });
+</script>
+{% end %}
