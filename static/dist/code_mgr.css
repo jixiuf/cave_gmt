@@ -1,0 +1,18 @@
+.ui-code-mgr h2 {
+  margin-left: 295px;
+}
+.ui-code-mgr .ui-code-common {
+  /* max-width: 300px; */
+}
+.ui-code-mgr .ui-code-name {
+  /* max-width: 300px; */
+}
+
+.ui-code-mgr .ui-time-width {
+  float: left;
+  max-width: 160px;
+}
+.ui-code-mgr .ui-time-text {
+  float: left;
+  margin: 10px 20px 0 20px;
+}

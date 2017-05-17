@@ -35,6 +35,7 @@ from handler.player_bi import *
 from handler.bugreport import *
 from handler.gameconfig import *
 from handler.rank import *
+from handler.code import *
 
 from tornado.ioloop import IOLoop
 
@@ -99,6 +100,8 @@ class Application(tornado.web.Application):
             (r'/mail/draft_send', MailDraftSend),
             (r'/mail/draft_delete', MailDraftDelete),
 
+            (r'/code/get', CodeMgr),
+            (r'/code/put', CodeMgr),
 
 
 

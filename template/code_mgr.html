@@ -1,0 +1,216 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/code_mgr.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" href="../static/javascript/plugin/any_time/any_time.css">
+<link href="../static/dist/award_select.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+
+<div class="ui-code-mgr">
+    <h2 class="form-signin-heading">礼包码管理</h2>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">选服*</label>
+            <div class="col-sm-5">
+                <select class="form-control op-server" id='op-server'>
+                    {% for serverId in serverIdList %}
+                    <option value="{{serverId}}">{{serverId}}服</option>
+                    {% end %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">礼包名称*</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control ui-code-name op-name" id="op-name" placeholder="礼包名称">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">礼包描述</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control ui-code-common op-desc" id="op-desc" placeholder="礼包描述">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">单码使用次数限制*</label>
+            <div class="col-sm-5">
+                <input type="number"  min="1" class="form-control ui-code-common op-limit-cnt" id="op-limit-cnt"  value="1" placeholder="单码使用次数限制">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">同批号使用次数限制*</label>
+            <div class="col-sm-5">
+                <input type="number"  min="1" class="form-control ui-code-common op-batch-limit-cnt" id="op-batch-limit-cnt"  value="1" placeholder="单码使用次数限制">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">生成数量*</label>
+            <div class="col-sm-5">
+                <input type="number"  min="1" class="form-control ui-code-common op-cnt" id="op-cnt"  placeholder="生成礼包码的数量">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">有效期*</label>
+            <div class="col-sm-5">
+                <span class="ui-time-txt">起始时间</span>
+                <input class="form-control op-time-start" type="text" id="op-time-start">
+                <span class="ui-time-txt">结束时间</span>
+                <input class="form-control op-time-end" type="text" id="op-time-end">
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">互斥码</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control ui-code-common op-group" id="op-group"  placeholder="两批具有相同互斥码的活动，玩家只能参加其中一个,可为空">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">礼包码前缀</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control ui-code-common op-group" id="op-channelSDK"  placeholder="生成的礼包码以此为前缀(比如以渠道号为前缀)">
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">奖励*</label>
+            {% include award_select_template.html %}
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-5">
+                <button type="submit" class="btn btn-default op-submit-btn" >生成</button>
+            </div>
+        </div>
+    </form>
+    <div class="ui-data op-data">
+    </div>
+</div>
+
+<script src="../static/javascript/plugin/any_time/any_time.js"></script>
+<script type="text/javascript" src='../static/javascript/base/award_select.js'>
+</script>
+<script type="text/javascript">
+ //time
+ var oneDay = 24*60*60*1000;
+ var rangeDemoFormat = "%Y-%m-%d";
+ var rangeDemoConv = new AnyTime.Converter({format:rangeDemoFormat});
+ $("#rangeDemoToday").click(function(e) {
+     $("#op-time-start").val(rangeDemoConv.format(new Date())).change();
+ });
+ $("#rangeDemoClear").click(function(e) {
+     $("#op-time-start").val("").change();
+ });
+ $("#op-time-start").AnyTime_picker({format:rangeDemoFormat});
+ $("#op-time-start").change(function(e) {
+     try {
+         var fromDay = rangeDemoConv.parse($("#op-time-start").val()).getTime();
+         var dayLater = new Date(fromDay+oneDay);
+         dayLater.setHours(0,0,0,0);
+         var ninetyDaysLater = new Date(fromDay+(90*oneDay));
+         ninetyDaysLater.setHours(23,59,59,999);
+         $("#op-time-end")
+             .AnyTime_noPicker()
+             .removeAttr("disabled")
+             .val(rangeDemoConv.format(dayLater))
+             .AnyTime_picker({
+                 earliest: dayLater,
+                 format: rangeDemoFormat,
+                 latest: ninetyDaysLater
+             });
+     } catch(e) {
+         $("#op-time-end").val("").attr("disabled","disabled");
+     }
+ } );
+
+
+ getAwardIdFun();
+ function isNumeric(num){
+     return !isNaN(num)
+ }
+
+ var  serverIdEl= $('#op-server');
+ var  nameEl = $('#op-name');
+ var  descEl = $('#op-desc');
+ var  limitCntEl = $('#op-limit-cnt');
+ var  batchLimitCntEl = $('#op-batch-limit-cnt');
+ var  groupEl = $('#op-group');
+ var  cntEl = $('#op-cnt');
+ var  startTimeEl = $('#op-time-start');
+ var  endTimeEl = $('#op-time-end');
+ var  channelSDKEl = $('#op-channelSDK');
+
+ var ajaxing = false;
+
+ var submitEl = $('.op-submit-btn');
+ submitEl.on('click', function(){
+     var data=getAwardDataFun();
+     /*      data['type']=$(this).data('type');*/
+     data['serverid']=serverIdEl.val();
+     data['name'] = nameEl.val();
+     data['desc'] =descEl.val() ;
+     data['limitCnt'] =limitCntEl.val() ;
+     data['batchLimitCnt'] =batchLimitCntEl.val() ;
+     data['group'] =groupEl.val() ;
+     data['cnt'] =cntEl.val() ;
+     data['startTime']=startTimeEl.val();
+     data['channelSDK']=channelSDKEl.val()
+     data['endTime']=endTimeEl.val();
+     $('.op-data').empty();
+     if (nameEl.val()=="" ){
+         alert("礼包名称不能为空");
+         return false;
+     }
+     if (limitCntEl.val()==""||!isNumeric(limitCntEl.val())){
+         alert("单码使用次数限制 不能为空 且 必须是数字");
+         return false;
+     }
+     if (batchLimitCntEl.val()==""||!isNumeric(batchLimitCntEl.val())){
+         alert("同批号使用次数限制 不能为空 且 必须是数字");
+         return false;
+     }
+     if (cntEl.val()==""||!isNumeric(cntEl.val())){
+         alert("生成数量 不能为空 且 必须是数字");
+         return false;
+     }
+     if (startTimeEl.val()==""||endTimeEl.val()==""){
+         alert("有效期 不能为空");
+         return false;
+     }
+     if (data['award_list']==""||data['award_list']==undefined){
+         alert("请添加奖品");
+     }
+
+     ajaxing = true;
+     $(this).attr('disabled', 'true');
+     $.ajax({
+         url: '/code/put',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          submitEl.removeAttr("disabled");
+          data = JSON.parse(data);
+          if(data['result']!=''){
+              $('.op-data').empty();
+              $('.op-data').append(data['result']);
+          }else{
+              $('.op-data').append("共生成"+data['data'].length+"个礼包码,对应批次号为:"+data['batchCode']+"</br>");
+              var line;
+              var info;
+              for(var i = 0, len = data['data'].length; i < len; i++) {
+                  info=data['data'][i]
+                  line=info;
+                  $('.op-data').append(line+"<br/>");
+              }
+
+          }
+      });
+     return false;
+
+ });
+</script>
+{% end %}
