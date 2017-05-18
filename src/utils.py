@@ -7,6 +7,7 @@ import threading
 from datetime import datetime
 
 import json
+import re,urllib2
 
 QINIU_ACCESS_KEY = '4V9Hf9mJb-4oXbM5H_kqXEuV_5aI4v6S1_LaVLKY'
 QINIU_SECRET_KEY = 'BX6p6vGQWa-6VuWf6eikNKYN4P3RG_L4H5Sig_vh'
@@ -75,3 +76,25 @@ class RepeatTimer():
 
     def cancel(self):
         self.thread.cancel()
+
+
+# localip = Getmyip().getip()
+class Getmyip:
+    def getip(self):
+        try:
+            myip = self.visit("http://ns1.dnspod.net:6666")
+        except:
+            try:
+                myip = self.visit("http://www.ip138.com/ips1388.asp")
+            except:
+                try:
+                    myip = self.visit("https://cgi1.apnic.net/cgi-bin/my-ip.php")
+                except:
+                    myip = "192.168.0.1"
+        return myip
+    def visit(self,url):
+        opener = urllib2.urlopen(url)
+        if url == opener.geturl():
+            str = opener.read()
+        return re.search('\d+\.\d+\.\d+\.\d+',str).group(0)
+

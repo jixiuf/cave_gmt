@@ -18,14 +18,23 @@ class ServerMgr(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
+        def mapWhiteIPRow(row):
+            whiteIP={}
+            whiteIP['id']=row[0]
+            whiteIP['ip']=row[1]
+            return  whiteIP
+
         serverIdList= app.DBMgr.get_all_server_id()
         maintainList=yield app.DBMgr.maintainDB.select_all()
+        whiteIPList=yield app.DBMgr.getProfileDB().query("select Id,Content from ban where Type=5 order by StartBanTime desc",mapWhiteIPRow ) # 5=whiteip list
         supervisorAddrJson=conf.getAllSupervisorAddrList()
         etcdServerListMap={}
         for serverId in serverIdList:
             etcdServerListMap[str(serverId)]=app.getEtcdServerList(conf.PLATFORM,serverId)
         self.render("server_mgr.html",
                     Account=self.gmAccount,
+                    myPublicIP=utils.Getmyip().getip(),
+                    whiteIPList=whiteIPList,
                     title="服务器管理",serverIdList=serverIdList,supervisorAddrJson=supervisorAddrJson,etcdServerListMap=etcdServerListMap)
 
 class ServerStopping(BaseHandler):
@@ -161,3 +170,32 @@ class DelUser(BaseHandler):
         app.DBMgr.getUserDB().updateAccountId(uin,accountId)
         self.write('success')
 
+
+class WhiteIPDelete(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+        id= self.get_argument('id','')
+        if id=='':
+            return
+        yield app.DBMgr.getProfileDB().execSql("delete from ban where Id=%s"%(id))
+        time.sleep(0.13)
+        app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_BAN)
+
+        self.write('success')
+
+class WhiteIPAdd(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+        ip= self.get_argument('ip','')
+        if ip=='':
+            return
+        now=datetime.now()
+        year5FromNow=now+ timedelta(days=365*5)
+
+        yield app.DBMgr.getProfileDB().execSql("insert into ban (Type,Content,EndBanTime) value (5,'%s','%s')"%(ip,year5FromNow))
+        time.sleep(0.13)
+        app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_BAN)
+
+        self.write('success')
