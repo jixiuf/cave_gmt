@@ -216,7 +216,7 @@ class Application(tornado.web.Application):
         global Redis
         global DBMgr
         while self.keepRunning:
-            result=Redis.brpop("cave_redis_log",2) # timeout 2seconds
+            result=Redis.brpop(conf.AppName+"_redis_log",2) # timeout 2seconds
             if result!=None:
                 # result[0]=="key"
                 # result[1]=="value"

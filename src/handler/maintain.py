@@ -29,7 +29,7 @@ class Maintain(BaseHandler):
         now=datetime.now()
         day7FromNow=now+ timedelta(days=7)
         yield app.DBMgr.maintainDB.add(serverIdStr,content,now,day7FromNow)
-        time.sleep(0.3)
+        time.sleep(0.5)
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_MAINTAIN)
         self.write('success')
 class MaintainDelete(BaseHandler):
@@ -39,7 +39,7 @@ class MaintainDelete(BaseHandler):
         serverIdStr=self.get_argument('serverId')
         info={}
         yield app.DBMgr.maintainDB.delete(serverIdStr)
-        time.sleep(0.3)
+        time.sleep(0.5)
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_MAINTAIN)
         self.write('success')
 
