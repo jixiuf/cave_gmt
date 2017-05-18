@@ -276,6 +276,8 @@
 
  $(".op-cmd").autocomplete({source: ["sss"], minLength:0,
                             select: function( event, ui ) {}});
+ $(".op-ip-field").autocomplete({source: ["{{myPublicIP}}"], minLength:0,
+                                       select: function( event, ui ) {}});
 
 
 </script>

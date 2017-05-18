@@ -25,6 +25,7 @@ class ServerMgr(BaseHandler):
             return  whiteIP
 
         serverIdList= app.DBMgr.get_all_server_id()
+
         maintainList=yield app.DBMgr.maintainDB.select_all()
         whiteIPList=yield app.DBMgr.getProfileDB().query("select Id,Content from ban where Type=5 order by StartBanTime desc",mapWhiteIPRow ) # 5=whiteip list
         supervisorAddrJson=conf.getAllSupervisorAddrList()
@@ -33,7 +34,7 @@ class ServerMgr(BaseHandler):
             etcdServerListMap[str(serverId)]=app.getEtcdServerList(conf.PLATFORM,serverId)
         self.render("server_mgr.html",
                     Account=self.gmAccount,
-                    myPublicIP=utils.Getmyip().getip(),
+                    myPublicIP=self.request.remote_ip,
                     whiteIPList=whiteIPList,
                     title="服务器管理",serverIdList=serverIdList,supervisorAddrJson=supervisorAddrJson,etcdServerListMap=etcdServerListMap)
 
