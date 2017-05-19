@@ -35,13 +35,16 @@ class MailEdit(BaseHandler):
         content=unicode(self.get_argument('content','1'))
         hour=int(self.get_argument('hour',1))
         sendType=self.get_argument('type','save')
+        startTime=self.get_argument('startTime',datetime.now())
+        endTime=self.get_argument('startTime',datetime.now()+ timedelta(hours=hour))
         mailContent=json.dumps({"title":title,
+                                "startTime":int(time.time()) ,
+                                "endTime":int(time.time()) ,
                                 "text":content,
                                 "award_list":json.loads(awardList),
                                 "sender":self.account}
                                ,ensure_ascii=False)
-        startTime=self.get_argument('startTime',datetime.now())
-        endTime=self.get_argument('startTime',datetime.now()+ timedelta(hours=hour))
+
         # packIcon=self.get_argument('pack_icon')
         playerId=self.userIdTrim(self.get_argument('playerid',''))
         if playerId=="":
