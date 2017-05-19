@@ -38,8 +38,8 @@ class MailEdit(BaseHandler):
         startTime=self.get_argument('startTime',datetime.now())
         endTime=self.get_argument('startTime',datetime.now()+ timedelta(hours=hour))
         mailContent=json.dumps({"title":title,
-                                "startTime":int(time.time()) ,
-                                "endTime":int(time.time()) ,
+                                "startTime":utils.datetime2timestamp(startTime),
+                                "endTime":utils.datetime2timestamp(endTime),
                                 "text":content,
                                 "award_list":json.loads(awardList),
                                 "sender":self.account}

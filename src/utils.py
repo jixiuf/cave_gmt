@@ -5,12 +5,27 @@ import ConfigParser
 import threading
 
 from datetime import datetime
+import time
 
 import json
 import re,urllib2
 
 QINIU_ACCESS_KEY = '4V9Hf9mJb-4oXbM5H_kqXEuV_5aI4v6S1_LaVLKY'
 QINIU_SECRET_KEY = 'BX6p6vGQWa-6VuWf6eikNKYN4P3RG_L4H5Sig_vh'
+def timestamp_now():
+    return datetime2timestamp(datetime.now())
+def datetime2timestamp(dt):
+     return int(time.mktime(dt.timetuple()))
+
+def timestamp2datetime(timestamp, convert_to_local=True):
+    ''' Converts UNIX timestamp to a datetime object. '''
+    if isinstance(timestamp, (int, long, float)):
+        dt = datetime.utcfromtimestamp(timestamp)
+        if convert_to_local: # 是否转化为本地时间
+            dt = dt + datetime.timedelta(hours=8) # 中国默认时区
+        return dt
+    return timestamp
+
 
 def get_all_urls(handlers):
     num = 0
