@@ -162,5 +162,6 @@ class CodeList(BaseHandler):
             data['name']=code['name']
             data['channelCode']=code['channelCode']
             data['server']=code['server']
+            data['group']=code['group']
         data['totalUseCnt']=totalUseCnt
         self.write(json.dumps(data,cls=utils.DateEncoder))
