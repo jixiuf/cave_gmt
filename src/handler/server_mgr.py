@@ -9,6 +9,7 @@ from handler.base import BaseHandler
 from tornado.web import asynchronous
 from tornado import  gen
 import app
+import json
 import conf
 import time
 import subprocess
@@ -26,6 +27,17 @@ class ServerMgr(BaseHandler):
 
         serverIdList= app.DBMgr.get_all_server_id()
 
+        cmds=[]
+        redisAddrs=conf.getRedisAddr()
+        cmds.append(r"echo 'keys *'|redis-cli -h %s -p %s"%(redisAddrs['host'],redisAddrs['port']))
+
+        profileDBConfig=conf.getProfileDBConfigMaster()
+        cmds.append(r'echo "select 1"|mysql -h %s -u%s -p"%s" %s'%(profileDBConfig.host,profileDBConfig.user,profileDBConfig.passwd,profileDBConfig.database))
+        cmds.append("ps -ef |grep ")
+
+
+
+
         maintainList=yield app.DBMgr.maintainDB.select_all()
         whiteIPList=yield app.DBMgr.getProfileDB().query("select Id,Content from ban where Type=5 order by StartBanTime desc",mapWhiteIPRow ) # 5=whiteip list
         supervisorAddrJson=conf.getAllSupervisorAddrList()
@@ -35,6 +47,7 @@ class ServerMgr(BaseHandler):
         self.render("server_mgr.html",
                     Account=self.gmAccount,
                     myPublicIP=self.request.remote_ip,
+                    cmds=json.dumps(cmds),
                     whiteIPList=whiteIPList,
                     title="服务器管理",serverIdList=serverIdList,supervisorAddrJson=supervisorAddrJson,etcdServerListMap=etcdServerListMap)
 

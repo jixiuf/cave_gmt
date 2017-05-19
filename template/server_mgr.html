@@ -62,6 +62,12 @@
         </div>
 
     </form>
+    <br/>
+
+
+    <div class="ui-data op-data">
+    </div>
+
     <h2 class="form-signin-heading ui-login-title">IP白名单</h2>
     <div class="ui-whiteip-div op-whiteip-div">
         白名单中的IP,在服务器处于stopping状态时，依然允许其登录，用来实现内部人员提前进行测试<br/>
@@ -74,10 +80,6 @@
             <a  href="" class="op-whiteip" title="点击删除" data-id="{{whiteIP['id']}}">{{ whiteIP['ip']}}</a><br/>
             {% end %}
         </div>
-    </div>
-
-
-    <div class="ui-data op-data">
     </div>
 </div>
 
@@ -114,6 +116,7 @@
           $(".op-cmd").select();
           $(".op-cmd").focus();
           $('.op-data').empty();
+          $('.op-data').append("<br/>");
           $('.op-data').append(data);
       });
      return false;
@@ -273,8 +276,8 @@
      return false;
  });
 
-
- $(".op-cmd").autocomplete({source: ["sss"], minLength:0,
+var cmdSources={% raw cmds %};
+ $(".op-cmd").autocomplete({source: cmdSources, minLength:0,
                             select: function( event, ui ) {}});
  $(".op-ip-field").autocomplete({source: ["{{myPublicIP}}"], minLength:0,
                                        select: function( event, ui ) {}});

@@ -3,6 +3,7 @@ __author__ = 'jixiufeng'
 
 import json
 import db.db_permissions
+import db.dbmgr
 from tornado.options import  options
 import os.path
 
@@ -117,4 +118,28 @@ def getEtcdAddr():
         addrs["ip"]=token[0]
         addrs["port"]=int(token[1])
         return addrs
+def getRedisAddr():
+    addrs={}                    # "ip":"ip","port":"port"
+    with open(getConfigFile()) as data_file:
+        value = json.load(data_file)
+        if value==None:
+            return None
+        addrs['host']= value["redis"]['addr'].split(':')[0]
+        addrs['port'] = value["redis"]['addr'].split(':')[1]
+    return addrs
 
+
+def getProfileDBConfigMaster():
+    with open(getConfigFile()) as data_file:
+        value = json.load(data_file)
+        jsonData=value["profile_db_config"]
+        user=jsonData["master"]['user']
+        passwd=jsonData["master"]['passwd']
+        host=jsonData["master"]['host']
+        database=jsonData["master"]['database']
+        port=jsonData["master"].get('port','')
+        if port=="":
+            port=3306
+        if type(port)==str or type(port)==unicode :
+            port=int(port)
+        return db.dbmgr.DBConfig(user,passwd,host,database,port)
