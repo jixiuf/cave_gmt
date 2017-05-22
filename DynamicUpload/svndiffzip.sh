@@ -38,6 +38,10 @@ rm  -rf dest
 mkdir -p dest
 for url in $changed_file ; do
     # 最后的sed 是为了去除目录最前面的/，以免变成绝对路径
+    if [ -z `svn ls $url --depth empty` ]; then
+        echo "$url is directory and is ignored for export"
+        continue ;
+    fi
     relativePath=`echo $url|sed "s|$svnpath||g"|sed 's|^/||g'`
     relativeDir=`echo $relativePath|sed 's|/|\\\\|g'`
     svn $svnuser $svnpass --no-auth-cache --non-interactive export --force -r $to $url dest/$relativeDir
@@ -47,7 +51,6 @@ for url in $changed_file ; do
     fi
 
 done
-echo "eee"
 
 rm -rf dest.zip
 
