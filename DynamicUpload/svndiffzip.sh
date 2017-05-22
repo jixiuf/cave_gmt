@@ -38,9 +38,13 @@ rm  -rf dest
 mkdir -p dest
 for url in $changed_file ; do
     # 最后的sed 是为了去除目录最前面的/，以免变成绝对路径
+    if [ -z `svn ls $url --depth empty` ]; then
+        echo "$url is directory and is ignored for export"
+        continue ;
+    fi
     relativePath=`echo $url|sed "s|$svnpath||g"|sed 's|^/||g'`
     relativeDir=`echo $relativePath|sed 's|/|\\\\|g'`
-    svn $svnuser $svnpass --no-auth-cache --non-interactive export -r $to $url dest/$relativeDir
+    svn $svnuser $svnpass --no-auth-cache --non-interactive export --force -r $to $url dest/$relativeDir
     if [ $? -ne 0 ];then
         # 任何一个svn相关的命令执行失败，则退出整个脚本，退出状态为1即，exit 1
         exit 3
