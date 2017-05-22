@@ -1,6 +1,7 @@
 {% extends base.html %}
 {% block css%}
 <link href="../static/dist/rank.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" href="../static/javascript/plugin/any_time/any_time.css">
 {% end %}
 {% block body %}
 <div class="ui-rank-edit">
@@ -17,6 +18,13 @@
                 </select>
             </div>
         </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">起始时间</label>
+            <div class="col-sm-10">
+                <input class="form-control op-time-start" type="text" id="rangeDemoStart">
+            </div>
+        </div>
+
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <button class="btn btn-default op-add-submit">查询</button>
@@ -39,16 +47,31 @@
     </div>
 </div>
 
+<script src="../static/javascript/plugin/any_time/any_time.js"></script>
 <script type="text/javascript">
  var ajaxing = false,
      submitBtnEl = $('.op-add-submit'),
      serverEl = $('.op-sel-server'),
      data = {};
 
+ //time
+ var oneDay = 24*60*60*1000;
+ var rangeDemoFormat = "%Y-%m-%d";
+ var rangeDemoConv = new AnyTime.Converter({format:rangeDemoFormat});
+ var today= new Date();
+
+ $("#rangeDemoStart").val(rangeDemoConv.format(today)).change();
+ $("#rangeDemoStart").AnyTime_picker({format:rangeDemoFormat});
 
 
  submitBtnEl.on('click', function() {
      data['server'] =  serverEl.val();
+     data['time'] =  $("#rangeDemoStart").val();
+     $('.op-data-level-keys').empty();
+     $('.op-data-level-values').empty();
+     $('.op-data-power-keys').empty();
+     $('.op-data-power-values').empty();
+
      if(ajaxing) return false;
      ajaxing = true;
      $.ajax({
