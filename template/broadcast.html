@@ -1,10 +1,11 @@
 {% extends base.html %}
 {% block css%}
 <link href="../static/dist/maintain.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" href="../static/javascript/plugin/any_time/any_time.css">
 {% end %}
 {% block body %}
 <div class="ui-login-form">
-    <h2 class="form-signin-heading ui-login-title">紧急广播</h2>
+    <h2 class="form-signin-heading ui-login-title">紧急广播/跑马灯</h2>
     <form class="form-horizontal" role="form">
         <div class="form-group">
             <label class="col-sm-2 control-label">服务器编号</label>
@@ -21,7 +22,7 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-2 control-label">紧急广播内容:</label>
+            <label class="col-sm-2 control-label">内容:</label>
             <div class="col-sm-10">
                 <div id="sample">
                     <div>
@@ -31,45 +32,103 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-default op-login-submit">发送</button>
+            <label class="col-sm-2 control-label">时间范围</label>
+            <div class="col-sm-5">
+                <span class="ui-time-txt">起始时间</span>
+                <input class="form-control op-time-start" type="text" id="rangeDemoStart">
+                <span class="ui-time-txt">结束时间</span>
+                <input class="form-control op-time-finish" type="text" id="rangeDemoFinish">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">跑马灯间隔(秒):</label>
+            <div class="col-sm-5">
+            <input class="form-control op-interval" min="10" type="number" value="60" id="op-interval">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10 op-model">
+                <button type="submit" class="btn btn-default op-submit op-submit-now" data-type="now">立即发送</button>
+                <button type="submit" class="btn btn-default op-submit op-submit-marquee" data-type="marquee">存跑马灯</button>
             </div>
         </div>
     </form>
 </div>
 
+<script src="../static/javascript/plugin/any_time/any_time.js"></script>
 <script type="text/javascript">
+ //time
+ var oneDay = 24*60*60*1000;
+ var rangeDemoFormat = "%Y-%m-%d";
+ var rangeDemoConv = new AnyTime.Converter({format:rangeDemoFormat});
+ $("#rangeDemoStart").AnyTime_picker({format:rangeDemoFormat});
+ $("#rangeDemoStart").change(function(e) {
+     try {
+         var fromDay = rangeDemoConv.parse($("#rangeDemoStart").val()).getTime();
+         var dayLater = new Date(fromDay+oneDay);
+         dayLater.setHours(0,0,0,0);
+         var ninetyDaysLater = new Date(fromDay+(90*oneDay));
+         ninetyDaysLater.setHours(23,59,59,999);
+         $("#rangeDemoFinish")
+             .AnyTime_noPicker()
+             .removeAttr("disabled")
+             .val(rangeDemoConv.format(dayLater))
+             .AnyTime_picker({
+                 earliest: dayLater,
+                 format: rangeDemoFormat,
+                 latest: ninetyDaysLater
+             });
+     } catch(e) {
+         $("#rangeDemoFinish").val("").attr("disabled","disabled");
+     }
+ } );
+
+ var today= new Date();
+ $("#rangeDemoStart").val(rangeDemoConv.format(today)).change();
+
  var ajaxing = false,
      serverIdEl = $('.op-serverid'),
      contentEl = $('#editor_id'),
-     submitEl = $('.op-login-submit'),
+     submitEl = $('.op-submit-now'),
      data = {};
-
- submitEl.on('click', function() {
-     if(ajaxing) return false;
-     var serverId = serverIdEl.val().replace(/(^\s*)|(\s*$)/g, ""),
-         content = contentEl.val().replace(/(^\s*)|(\s*$)/g, "");
-     if(serverId == '' ) {
-         serverId="1";
+ var submitFun=function(){
+         if(ajaxing) return false;
+         var serverId = serverIdEl.val().replace(/(^\s*)|(\s*$)/g, ""),
+             content = contentEl.val().replace(/(^\s*)|(\s*$)/g, "");
+         if(serverId == '' ) {
+             serverId="1";
+         }
+         if(content==""){
+             alert("内容不能为空");
+             return false;
+         }
+         data['serverId'] = serverId;
+         data['type'] = $(this).data('type');
+         data['interval'] = $('.op-interval').val();
+         data['startTime'] = $('#rangeDemoStart').val();
+         data['endTime'] = $('#rangeDemoFinish').val();
+         data['content'] = content;
+         ajaxing = true;
+         $.ajax({
+             url: '/broadcast/post',
+             type: 'post',
+             data: data
+         })
+          .done(function(data) {
+              ajaxing = false;
+              if(data == 'success') {
+                  location.href = '/broadcast/get';
+              } else {
+                  alert('无权限'+data);
+              }
+          });
+         return false;
      }
-     data['serverId'] = serverId;
-     data['content'] = content;
-     ajaxing = true;
-     $.ajax({
-         url: '/broadcast/post',
-         type: 'post',
-         data: data
-     })
-      .done(function(data) {
-          ajaxing = false;
-          if(data == 'success') {
-              location.href = '/broadcast/get';
-          } else {
-              alert('无权限'+data);
-          }
-      });
-     return false;
- });
+
+     submitEl.on('click', submitFun );
+$(".op-submit-marquee").on('click', submitFun );
+
 
 </script>
 
