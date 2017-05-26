@@ -173,6 +173,7 @@ CREATE TABLE if not exists `user` (
             mapRow=self.mapRowUinAsStr
 
         query="select uin from user where autoIncrementId in(%s)"%(suins)
+        print(query)
         res=yield self.dbtemplate.query(query,mapRow)
         raise gen.Return(res)
 
