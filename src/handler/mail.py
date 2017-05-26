@@ -62,8 +62,10 @@ class MailEdit(BaseHandler):
             mailId= int(time.time()*1000000)
             if sendType!='save': # save or send
                 yield app.DBMgr.getMailDB(int(serverId)).add(mailId,uin,startTime,endTime,award ,mailContent)
+                time.sleep(0.01)
                 mailJson=yield app.DBMgr.getMailDB(int(serverId)).get(mailId,uin)
                 data['data'].append(mailJson)
+                time.sleep(0.01)
                 app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,serverId), redis_notify.NOTIFY_TYPE_RELOAD_MAIL%(str(uin)))
             else:
                 yield app.DBMgr.getMailDraftDB().add(mailId,uin,startTime,endTime,award,awardsDesc,mailContent,int(serverId))
@@ -96,7 +98,7 @@ class MailEdit(BaseHandler):
         for userId in userIdStrList:
             if userId!="":
                 if len(userId)<12 and userId.isdigit(): # 认为是短id
-                    suinList.append(userId)
+                    suinList.append(userId.lstrip("0"))
                 elif userId.isdigit():
                     uinList.append(userId)
                 else:
