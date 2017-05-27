@@ -120,6 +120,8 @@ class Application(tornado.web.Application):
             (r'/maintain/delete', MaintainDelete),
             (r'/broadcast/get', Broadcast),
             (r'/broadcast/post', Broadcast),
+            (r'/marquee/delete', MarqueeDelete),
+
 
             (r'/notice/get', NoticeManageRenderHandler),
             (r'/notice/add', NoticeAddRenderHandler),

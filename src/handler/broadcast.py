@@ -26,6 +26,7 @@ class Broadcast(BaseHandler):
             data['startTime']=row[3]
             data['endTime']=row[4]
             data['interval']=row[5]
+
             if data['content']!="":
                 data['content']=json.loads(data['content'])['content']
 
@@ -64,4 +65,14 @@ class Broadcast(BaseHandler):
 
         self.write('success')
 
+
+class MarqueeDelete(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+        id= self.get_argument('id','0')
+        sql="delete from Marquee where id=%s"%(id)
+        print(sql)
+        yield app.DBMgr.getProfileDB().execSql(sql)
+        self.write('success')
 

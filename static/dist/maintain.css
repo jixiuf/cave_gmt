@@ -28,3 +28,46 @@
 .ui-package-option .ui-modal-body {
   background: #9c9c9c;
 }
+
+
+.ui-marquee-form {
+  /* max-width: 500px; */
+  margin: 0 auto;
+}
+.ui-marquee-form .ui-marquee-title {
+  margin-left: 200px;
+}
+.ui-marquee-option {
+    max-width: 1024px;
+    margin: 0 auto;
+}
+.ui-marquee-option .ui-marquee-list {
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 20px;
+}
+.ui-data{
+    width: 100%;
+    list-style: none;
+    /* margin-left: 300px; */
+}
+.ui-marquee-cell-big {
+    text-align:center;
+    width: 50%;
+    float: left;
+    word-wrap: break-word;
+}
+
+.ui-marquee-cell {
+    text-align:center;
+    width: 10%;
+    float: left;
+    word-wrap: break-word;
+}
+.ui-marquee-item {
+    text-align:center;
+    border-bottom: 1px solid #e5e5e5;
+    padding-right: 5px 0;
+}

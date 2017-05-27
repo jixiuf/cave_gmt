@@ -55,6 +55,56 @@
         </div>
     </form>
 </div>
+<div class="op-data">
+    <ul class="ui-marquee-list-list op-marquee-list-list">
+        <div class="ui-data">
+            <li class="ui-marquee-item clearfix">
+                <div class="ui-marquee-cell">
+                    服务器编号
+                </div>
+                <div class="ui-marquee-cell-big">
+                    内容
+                </div>
+                <div class="ui-marquee-cell">
+                    开始时间
+                </div>
+                <div class="ui-marquee-cell">
+                    结束时间
+                </div>
+                <div class="ui-marquee-cell">
+                    间隔
+                </div>
+                <div class="ui-marquee-cell">
+                    操作
+                </div>
+            </li>
+            {% for marquee in marqueeList %}
+            <li class="ui-marquee-item clearfix">
+                <div class="ui-marquee-cell">
+                    {{ marquee.get('server') }}
+                </div>
+                <div class="ui-marquee-cell-big">
+                    {{ marquee.get('content') }}
+                </div>
+                <div class="ui-marquee-cell">
+                    {{ marquee.get('startTime') }}
+                </div>
+                <div class="ui-marquee-cell">
+                    {{ marquee.get('endTime') }}
+                </div>
+                <div class="ui-marquee-cell">
+                    {{ marquee.get('interval') }}秒
+                </div>
+                <div class="ui-marquee-cell">
+                    <button   data-id='{{marquee.get("id")}}' class="btn btn-default op-btn-delete">删除</button>
+                </div>
+            </li>
+            {% end %}
+
+        </div>
+    </ul>
+
+</div>
 
 <script src="../static/javascript/plugin/any_time/any_time.js"></script>
 <script type="text/javascript">
@@ -93,41 +143,66 @@
      submitEl = $('.op-submit-now'),
      data = {};
  var submitFun=function(){
-         if(ajaxing) return false;
-         var serverId = serverIdEl.val().replace(/(^\s*)|(\s*$)/g, ""),
-             content = contentEl.val().replace(/(^\s*)|(\s*$)/g, "");
-         if(serverId == '' ) {
-             serverId="1";
-         }
-         if(content==""){
-             alert("内容不能为空");
-             return false;
-         }
-         data['serverId'] = serverId;
-         data['type'] = $(this).data('type');
-         data['interval'] = $('.op-interval').val();
-         data['startTime'] = $('#rangeDemoStart').val();
-         data['endTime'] = $('#rangeDemoFinish').val();
-         data['content'] = content;
-         ajaxing = true;
-         $.ajax({
-             url: '/broadcast/post',
-             type: 'post',
-             data: data
-         })
-          .done(function(data) {
-              ajaxing = false;
-              if(data == 'success') {
-                  location.href = '/broadcast/get';
-              } else {
-                  alert('无权限'+data);
-              }
-          });
+     if(ajaxing) return false;
+     var serverId = serverIdEl.val().replace(/(^\s*)|(\s*$)/g, ""),
+         content = contentEl.val().replace(/(^\s*)|(\s*$)/g, "");
+     if(serverId == '' ) {
+         serverId="1";
+     }
+     if(content==""){
+         alert("内容不能为空");
+         return false;
+     }
+     data['serverId'] = serverId;
+     data['type'] = $(this).data('type');
+     data['interval'] = $('.op-interval').val();
+     data['startTime'] = $('#rangeDemoStart').val();
+     data['endTime'] = $('#rangeDemoFinish').val();
+     data['content'] = content;
+     if(data['interval']<10){
+         alert("间隔不能小于10s");
          return false;
      }
 
-     submitEl.on('click', submitFun );
-$(".op-submit-marquee").on('click', submitFun );
+     ajaxing = true;
+     $.ajax({
+         url: '/broadcast/post',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          if(data == 'success') {
+              location.href = '/broadcast/get';
+          } else {
+              alert('无权限'+data);
+          }
+      });
+     return false;
+ }
+
+ submitEl.on('click', submitFun );
+ $(".op-submit-marquee").on('click', submitFun );
+
+
+
+ $(".op-btn-delete").on('click', function(e) {
+     var el = $(e.currentTarget);
+     if(ajaxing) return false;
+     data['id'] = el.data('id');
+     ajaxing = true;
+     $.ajax({
+         url: '/marquee/delete',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          window.location.reload();
+      });
+     return false;
+ });
+
 
 
 </script>
