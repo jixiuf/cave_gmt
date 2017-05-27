@@ -79,6 +79,7 @@ package:
 	@cp -rf . /tmp/cave_gmt
 	@rm -rf /tmp/cave_gmt/.git
 	@rm -rf /tmp/cave_gmt/data/*
+	@rm -rf /tmp/cave_gmt/DynamicUpload/destTmp
 	@rm -rf /tmp/cave_gmt.tgz
 	@cd /tmp;tar -czf /tmp/cave_gmt.tgz cave_gmt
 	if [ -d ~/www.najaplus.com/template_static  ]; then\
@@ -87,3 +88,16 @@ package:
 		echo "http://www.najaplus.com/cave_gmt.tgz";\
 	fi
 	@echo "/tmp/cave_gmt.tgz"
+
+update:
+	rm -rf /tmp/tmp_cave_gmt
+	mkdir /tmp/tmp_cave_gmt
+	curl -L http://www.najaplus.com/cave_gmt.tgz >/tmp/tmp_cave_gmt/cave_gmt.tgz
+	tar -xf /tmp/tmp_cave_gmt/cave_gmt.tgz -C /tmp/tmp_cave_gmt/
+	mkdir -p /data/cave_gmt/{DynamicUpload,virtual,src,template,static}
+	cp -rf /tmp/tmp_cave_gmt/cave_gmt/DynamicUpload/* /data/cave_gmt/DynamicUpload/
+	cp -rf /tmp/tmp_cave_gmt/cave_gmt/static/* /data/cave_gmt/static/
+	cp -rf /tmp/tmp_cave_gmt/cave_gmt/template/* /data/cave_gmt/template/
+	cp -rf /tmp/tmp_cave_gmt/cave_gmt/src/* /data/cave_gmt/src/
+	cp -rf /tmp/tmp_cave_gmt/cave_gmt/virtual/* /data/cave_gmt/virtual/
+	cp -rf /tmp/tmp_cave_gmt/cave_gmt/Makefile /data/cave_gmt/
