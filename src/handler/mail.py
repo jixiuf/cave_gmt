@@ -33,6 +33,8 @@ class MailEdit(BaseHandler):
         awardsDesc= self.get_argument('awardsDesc','')
         title=self.get_argument('title','')
         content=unicode(self.get_argument('content','1'))
+        content=content.replace("\"","")
+        content=content.replace("'","")
         hour=int(self.get_argument('hour',1))
         sendType=self.get_argument('type','save')
         startTime=self.get_argument('startTime',datetime.now())

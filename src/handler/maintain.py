@@ -26,6 +26,10 @@ class Maintain(BaseHandler):
     def self_post(self):
         serverIdStr=self.get_argument('serverId')
         content=self.get_argument('content')
+        content=content.replace("\"","")
+        content=content.replace("'","")
+
+
         now=datetime.now()
         day7FromNow=now+ timedelta(days=7)
         yield app.DBMgr.maintainDB.add(serverIdStr,content,now,day7FromNow)

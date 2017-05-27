@@ -45,7 +45,8 @@ class Broadcast(BaseHandler):
         typ=self.get_argument('type')
         serverIdStr=self.get_argument('serverId')
         content=self.get_argument('content')
-        content=content.replace("'","\"")
+        content=content.replace("'","")
+        content=content.replace("\"","")
 
         startTime=self.get_argument('startTime',datetime.now())
         endTime=self.get_argument('endTime',datetime.now())
