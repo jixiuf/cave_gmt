@@ -103,6 +103,7 @@ class Application(tornado.web.Application):
             (r'/code/get', CodeMgr),
             (r'/code/put', CodeMgr),
             (r'/code/list', CodeList),
+            (r'/code/del', CodeDel),
 
 
 

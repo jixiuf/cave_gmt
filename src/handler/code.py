@@ -165,3 +165,14 @@ class CodeList(BaseHandler):
             data['group']=code['group']
         data['totalUseCnt']=totalUseCnt
         self.write(json.dumps(data,cls=utils.DateEncoder))
+
+
+
+class CodeDel(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+        batchCode= self.get_argument('batchCode','1')
+        sql="delete from CodeBase where batchCode=%s"%(batchCode)
+        yield app.DBMgr.getProfileDB().execSql(sql)
+        self.write("success")

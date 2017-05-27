@@ -31,6 +31,7 @@
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-5">
                 <button type="submit" class="btn btn-default op-submit-btn" >查询</button>
+                <button type="submit" class="btn btn-default op-submit-del" >删除</button>
             </div>
         </div>
     </form>
@@ -96,5 +97,32 @@
      return false;
 
  });
+ $(".op-submit-del").on('click', function(){
+     var data={};
+     data['serverid']=serverIdEl.val();
+     data['batchCode']=batchCodeEl.val();
+    if(!confirm("确定要删除本批礼包码吗?")) {
+        return false;
+    }
+
+     $('.op-data').empty();
+     if(isBlank(data['batchCode'])){
+         alert("批次为空，目前无可查询数据");
+         return false;
+     }
+
+     ajaxing = true;
+     $(this).attr('disabled', 'true');
+     $.ajax({
+         url: '/code/del',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          window.location.reload();
+      });
+     return false;
+ });
+
 </script>
 {% end %}
