@@ -216,10 +216,20 @@ CREATE TABLE if not exists `user` (
         end= datetime.now()+ timedelta(days=365)
         query="insert into ban(Type,content,reason,startBanTime,endBanTime) values(2,'%s','gmt','%s','%s')"%(str(uin),now,end)
         yield self.dbtemplate.execSql(query)
+    @gen.coroutine
+    def banUinChat(self,uin):
+        now=datetime.now()+timedelta(days=-1)
+        end= datetime.now()+ timedelta(days=365)
+        query="insert into ban(Type,content,reason,startBanTime,endBanTime) values(3,'%s','gmt','%s','%s')"%(str(uin),now,end)
+        yield self.dbtemplate.execSql(query)
 
     @gen.coroutine
-    def unbanUin(self,uin):
+    def unbanUin(self,uin,typ=None):
         query="delete from ban where content='%s'"%(str(uin))
+        if typ!=None:
+            query+=" and Type=%d"%(int(typ))
+
+
         yield self.dbtemplate.execSql(query)
     @gen.coroutine
     def banUuid(self,uuid):
@@ -242,6 +252,16 @@ CREATE TABLE if not exists `user` (
         if res==None or len(res)==0:
             raise gen.Return(False)
         raise gen.Return(True)
+    @gen.coroutine
+    def isbannedChat(self,uin):
+        query="select content from ban where content='%s' and Type=3 and now()<endBanTime and now()>startBanTime"%(str(uin))
+        def mapRowIsBanned(row):
+            return row[0]
+        res=yield self.dbtemplate.query(query,mapRowIsBanned)
+        if res==None or len(res)==0:
+            raise gen.Return(False)
+        raise gen.Return(True)
+
 
     @gen.coroutine
     def isbannedUUID(self,uin):

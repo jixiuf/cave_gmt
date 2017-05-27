@@ -56,11 +56,17 @@ class PlayerSearchHandler(BaseHandler):
 
         userAttr=yield app.DBMgr.getUserDB().select_attr_by_uin(uin)
         isBanned=yield app.DBMgr.getUserDB().isbanned(uin)
+        isBannedChat=yield app.DBMgr.getUserDB().isbannedChat(uin)
         isBannedUUID=yield app.DBMgr.getUserDB().isbannedUUID(user.uuid)
 
         self.render("player_info.html",
                     Account=self.gmAccount,
-                    title="玩家信息" ,user=user,userAttr=userAttr,channelMap=conf.getChannelNameMap(),isBanned=isBanned,isBannedUUID=isBannedUUID)
+                    title="玩家信息" ,user=user,
+                    userAttr=userAttr,
+                    channelMap=conf.getChannelNameMap(),
+                    isBanned=isBanned,
+                    isBannedChat=isBannedChat,
+                    isBannedUUID=isBannedUUID)
     @gen.coroutine
     def suin2uin(self,suin): #
         if suin=="":
@@ -117,6 +123,32 @@ class PlayerBanHandler(BaseHandler):
         time.sleep(0.13)
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_BAN)
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_CLEAR_RANK_USER%uin)
+        self.write("success")
+        return
+class PlayerBanChatHandler(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+        uin  = int(self.get_argument('uin',0))
+        if uin==0:
+            self.write("fail")
+            return
+        yield app.DBMgr.getUserDB().banUinChat(uin)
+        time.sleep(0.13)
+        app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_BAN)
+        self.write("success")
+        return
+class PlayerUnBanChatHandler(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+        uin  = int(self.get_argument('uin',0))
+        if uin==0:
+            self.write("fail")
+            return
+        yield app.DBMgr.getUserDB().unbanUin(uin,3)
+        time.sleep(0.13)
+        app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_BAN)
         self.write("success")
         return
 class PlayerUnBanHandler(BaseHandler):

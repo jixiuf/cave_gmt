@@ -13,6 +13,12 @@
     {%else%}
     <button type="button" class="btn btn-default op-unban " id='btn-unban'>解封</button>
     {% end %}
+    {% if not isBannedChat %}
+    <button type="button" class="btn btn-default op-ban-chat " id='btn-ban-chat'>禁言</button>
+    {%else%}
+    <button type="button" class="btn btn-default op-unban-chat " id='btn-unban-chat'>解除禁言</button>
+    {% end %}
+
     {% if not isBannedUUID %}
     <button type="button" class="btn btn-default op-ban-uuid " id='btn-ban-uuid'>封设备</button>
     {%else%}
@@ -138,6 +144,8 @@
  var submitEl      = $('.op-submit');
  var banEl         =$("#btn-ban");
  var unbanEl       =$("#btn-unban");
+ var banChatEl         =$("#btn-ban-chat");
+ var unbanChatEl         =$("#btn-unban-chat");
  var unbanUUIDEl   =$("#btn-unban-uuid");
 
  var lastPayTimeEl =$("#op-last-PayTime");
@@ -152,9 +160,9 @@
  var btnQueryAssetsLogEl=$(".op-query-assets-log");
 
 
-     /* 　$('input').attr("readonly","readonly")//将input元素设置为readonly
-      * 　　$('input').removeAttr("readonly");//去除input元素的readonly属性
-      * 　　 if($('input').attr("readonly")==true)//判断input元素是否已经设置了readonly属性     */
+ /* 　$('input').attr("readonly","readonly")//将input元素设置为readonly
+  * 　　$('input').removeAttr("readonly");//去除input元素的readonly属性
+  * 　　 if($('input').attr("readonly")==true)//判断input元素是否已经设置了readonly属性     */
  /*  });*/
 
  submitEl.on('click', function(){
@@ -180,6 +188,46 @@
      return false;
 
  });
+
+ banChatEl.on('click',function(){
+     var data={};
+     data['uin'] = uinEl.val();
+     ajaxing = true;
+     $.ajax({
+         url: '/api/player_ban_chat',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          if(data!="success"){
+              alert(data);
+          }
+          window.location.reload();
+      });
+     return false;
+
+
+ });
+ unbanChatEl.on('click',function(){
+     var data={};
+     data['uin'] = uinEl.val();
+     ajaxing = true;
+     $.ajax({
+         url: '/api/player_unban_chat',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          if(data!="success"){
+              alert(data);
+          }
+          window.location.reload();
+      });
+     return false;
+ });
+
  banEl.on('click',function(){
      var data={};
      data['uin'] = uinEl.val();
@@ -258,7 +306,7 @@
      return false;
  });
 
-btnKickEl.on('click',function(){
+ btnKickEl.on('click',function(){
      var data={};
      data['uin'] = uinEl.val();
      data['serverId'] = serverEl.val();
@@ -278,7 +326,7 @@ btnKickEl.on('click',function(){
       });
      return false;
  });
-delEl.on('click',function(){
+ delEl.on('click',function(){
      var data={};
      data['uin'] = uinEl.val();
      data['accountId'] = accountIdEl.val();
@@ -298,7 +346,7 @@ delEl.on('click',function(){
      return false;
  });
 
-btnQueryAssetsLogEl.on('click',function(){
+ btnQueryAssetsLogEl.on('click',function(){
      time=  $("#timeId").val();
      if(time==""){
          alert("请选择时间");
