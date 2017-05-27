@@ -61,6 +61,7 @@ class Broadcast(BaseHandler):
                 serverIdStr,utils.timestamp_now(),json.dumps(chatInfo,cls=utils.DateEncoder ),startTime,endTime,interval,startTime)
             print(sql)
             yield app.DBMgr.getProfileDB().execSql(sql)
+            app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,serverIdStr), redis_notify.NOTIFY_TYPE_MARQUEE)
 
 
         self.write('success')
@@ -74,5 +75,6 @@ class MarqueeDelete(BaseHandler):
         sql="delete from Marquee where id=%s"%(id)
         print(sql)
         yield app.DBMgr.getProfileDB().execSql(sql)
+        app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,serverIdStr), redis_notify.NOTIFY_TYPE_MARQUEE)
         self.write('success')
 
