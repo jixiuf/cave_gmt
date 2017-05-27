@@ -30,6 +30,7 @@ class ServerMgr(BaseHandler):
         cmds=[]
         redisAddrs=conf.getRedisAddr()
         cmds.append(r"echo 'keys *'|redis-cli -h %s -p %s"%(redisAddrs['host'],redisAddrs['port']))
+        cmds.append(r"echo 'get %s_cmd_output'|redis-cli -h %s -p %s"%(conf.AppName, redisAddrs['host'],redisAddrs['port']))
 
         profileDBConfig=conf.getProfileDBConfigMaster()
         cmds.append(r'echo "select 1"|mysql -h %s -u%s -p"%s" %s'%(profileDBConfig.host,profileDBConfig.user,profileDBConfig.passwd,profileDBConfig.database))
