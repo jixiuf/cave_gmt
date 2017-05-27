@@ -35,6 +35,8 @@ class ServerMgr(BaseHandler):
         profileDBConfig=conf.getProfileDBConfigMaster()
         cmds.append(r'echo "select 1"|mysql -h %s -u%s -p"%s" %s'%(profileDBConfig.host,profileDBConfig.user,profileDBConfig.passwd,profileDBConfig.database))
         cmds.append("ps -ef |grep ")
+        cmds.append("tail  -n 100 data/server.log")
+        cmds.append("tail  -n 100 data/gminfo.log")
 
 
 
