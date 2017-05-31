@@ -174,6 +174,9 @@ class DBMgr:
         return GearFortifyDB(self.getGMToolDB())
     def getGearRefineDB(self):
         return GearRefineDB(self.getGMToolDB())
+    def getLevelUpDB(self):
+        return LevelUpDB(self.getGMToolDB())
+
 
 
 

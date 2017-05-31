@@ -135,6 +135,7 @@
             <button type="submit" class="btn btn-default op-query-gear-got-log " >装备获得</button>
             <button type="submit" class="btn btn-default op-query-gear-fortify-log " >装备强化</button>
             <button type="submit" class="btn btn-default op-query-gear-refine-log " >装备洗练</button>
+                <button type="submit" class="btn btn-default op-query-levelup-log " >升级</button>
         </ul>
 
 </div>
@@ -427,6 +428,20 @@
 
  });
 
+ $(".op-query-levelup-log").on('click',function(){
+     time=  $("#timeId").val();
+     if(time==""){
+         alert("请选择时间");
+         return false;
+     }
+     uin = uinEl.val();
+     if($("#timeId")==""){
+         alert("时间不能为空");
+         return false;
+     }
+     window.location.href="/levelup/list?time="+$("#timeId").val()+"&uin="+uin;
+
+ });
 
 
 

@@ -1,0 +1,69 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/currency_change_list.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-currency-change-list-option">
+    <h2 class="form-signin-heading ui-currency-change-list-title">玩家升级日志</h2>
+    <ul class="ui-currency-change-list-list op-currency-change-list-list">
+        <li class="ui-currency-change-list-item clearfix">
+            <div class="ui-currency-change-list-cell-id">
+                玩家ID
+            </div>
+            <div class="ui-currency-change-list-cell">
+                等级(变化前)
+            </div>
+            <div class="ui-currency-change-list-cell">
+                经验(变化前)
+            </div>
+            <div class="ui-currency-change-list-cell">
+                当前等级
+            </div>
+            <div class="ui-currency-change-list-cell">
+                当前经验
+            </div>
+            <div class="ui-currency-change-list-cell">
+                变化值
+            </div>
+            <div class="ui-currency-change-list-cell-big">
+                时间
+            </div>
+        </li>
+        {% for index,info in enumerate(currencyChangeList) %}
+        <li class="ui-currency-change-list-item clearfix">
+            <div class="ui-currency-change-list-cell-id">
+                <a href='/api/player_search?playerId={{info.get("Uin")}}'>
+                    {{ info.get("SUin")}}
+                </a>
+            </div>
+            <div class="ui-currency-change-list-cell">
+                {{ info.get("PreLevel")}}
+            </div>
+            <div class="ui-currency-change-list-cell">
+                {{ info.get("PreExp")}}
+            </div>
+            <div class="ui-currency-change-list-cell">
+                {{ info.get("CurLevel")}}
+            </div>
+            <div class="ui-currency-change-list-cell">
+                {{ info.get("CurExp")}}
+            </div>
+            <div class="ui-currency-change-list-cell">
+                {{ info.get("Changed")}}
+            </div>
+            <div class="ui-currency-change-list-cell-big">
+                {{ info.get("Time")}}
+            </div>
+        </li>
+        {% end %}
+    </ul>
+</div>
+<script>
+ /* $('.op-query').click( function(e) {e.preventDefault();
+  *     e.target.href="currency_change/list?time="+$("#timeId").val();
+  *     window.location.href="/currency_change/list?time="+$("#timeId").val();
+  *     return true;
+  * } );*/
+
+</script>
+{% end %}
