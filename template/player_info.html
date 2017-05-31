@@ -123,20 +123,24 @@
 
 
 
-    <!-- <h5 class="form-signin-heading ui-desk-title">查询玩家资产流水</h5>
-         <ul class="">
-         <label class="col-sm-2 control-label">选择时间:</label>
-         <div class="col-sm-2">
-         <input class="form-control op-time-start" type="text" id="timeId">
-         </div>
-         <button type="submit" class="btn btn-default op-query-assets-log ui-sumbit" >查询</button>
-         </ul>
-       -->
+    <br/>
+    <h3 class="form-signin-heading ui-info-title">查询玩家资产流水</h5>
+        <ul class="">
+            <label class="col-sm-2 control-label">选择时间:</label>
+            <div class="col-sm-2">
+                <input class="form-control op-time-start" type="text" id="timeId">
+            </div>
+            <button type="submit" class="btn btn-default op-query-currency-change-log " >查询货币流水</button>
+    </ul>
+
 </div>
 <script type="text/javascript" src="../static/javascript/plugin/any_time/any_time.js"></script>
 <script type="text/javascript">
  var dateFormat = "%Y-%m-%d";
+ var today= new Date();
+ var rangeDemoConv = new AnyTime.Converter({format:dateFormat});
  $("#timeId").AnyTime_picker({format:dateFormat});
+ $("#timeId").val(rangeDemoConv.format(today)).change();
 
  var uinEl         = $('#uin');
  var uuidEl        = $('#uuid');
@@ -157,7 +161,7 @@
  var delEl         =$("#btn-del");
  var accountIdEl   =$("#accountId");
 
- var btnQueryAssetsLogEl=$(".op-query-assets-log");
+ var btnQueryAssetsLogEl=$(".op-query-currency-change-log");
 
 
  /* 　$('input').attr("readonly","readonly")//将input元素设置为readonly
@@ -353,7 +357,12 @@
          return false;
      }
      uin = uinEl.val();
-     location.href = '/assets_log/list?uin='+uin+"&time="+time;
+     if($("#timeId")==""){
+         alert("时间不能为空");
+         return false;
+     }
+     window.location.href="/currency_change/list?time="+$("#timeId").val()+"&uin="+uin;
+
  });
 
 

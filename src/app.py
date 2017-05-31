@@ -36,6 +36,7 @@ from handler.bugreport import *
 from handler.gameconfig import *
 from handler.rank import *
 from handler.code import *
+from handler.currency_change_log import *
 
 from tornado.ioloop import IOLoop
 
@@ -71,6 +72,7 @@ class Application(tornado.web.Application):
 
             (r'/bi/rank' ,Rank),
             (r'/bi/rank_post' ,Rank),
+            (r'/currency_change/list' ,CurrencyChangeHandler),
 
             (r'/pay_order/list' ,PayOrderHandler),
 

@@ -21,6 +21,7 @@ from db_permissions import PermissionLevelDB
 from db_user import UserDB
 from db_pay import PayOrderDB
 from db_bi_user import  BIUserDB
+from db_bi import *
 
 from db_mail import MailDB
 from db_mail_draft import MailDraftDB
@@ -163,6 +164,8 @@ class DBMgr:
         return UserDB(self.getProfileDB())
     def getPayOrderDB(self):
         return PayOrderDB(self.getProfileDB())
+    def getCurrencyChangeDB(self):
+        return CurrencyChangeDB(self.getGMToolDB())
 
 
     def getMailDB(self,server=1):

@@ -1,0 +1,50 @@
+.ui-currency-change-list-title {
+    /* text-align:center; */
+      margin-left: 300px;
+
+}
+
+.ui-currency-change-list-option {
+    /* max-width: 1024px; */
+    margin: 0 auto;
+}
+.ui-currency-change-list-option .ui-currency-change-list-list {
+    width: 100%;
+    list-style: none;
+    margin: 0px;
+    padding: 0;
+    margin-bottom: 20px;
+}
+.ui-currency-change-list-option .ui-currency-change-list-list .ui-currency-change-list-item {
+    text-align:center;
+    border-bottom: 1px solid #e5e5e5;
+    padding-right: 5px 0;
+}
+.ui-currency-change-list-option .ui-currency-change-list-list .ui-currency-change-list-item .ui-currency-change-list-cell {
+    text-align:center;
+    width: 12%;
+    float: left;
+    word-wrap: break-word;
+}
+.ui-currency-change-list-option .ui-currency-change-list-list .ui-currency-change-list-item .ui-currency-change-list-cell-id {
+    text-align:center;
+    width: 15%;
+    float: left;
+    word-wrap: break-word;
+}
+.ui-currency-change-list-option .ui-currency-change-list-list .ui-currency-change-list-item .ui-currency-change-list-cell-small {
+    text-align:center;
+    width: 5%;
+    float: left;
+    word-wrap: break-word;
+}
+.ui-currency-change-list-option .ui-currency-change-list-list .ui-currency-change-list-item .ui-currency-change-list-cell-big {
+    text-align:center;
+    width: 15%;
+    float: left;
+    word-wrap: break-word;
+}
+
+.ui-currency-change-list-option .ui-modal-body {
+    background: #9c9c9c;
+}
