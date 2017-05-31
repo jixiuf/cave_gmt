@@ -1,0 +1,90 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/guide_list.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-currency-change-list-option">
+    <h2 class="form-signin-heading ui-currency-change-list-title">新手引导打点分析</h2>
+    <ul class="ui-currency-change-list-list op-currency-change-list-list">
+        <li class="ui-currency-change-list-item clearfix">
+            <div class="ui-currency-change-list-cell">
+                WorldID
+            </div>
+            <div class="ui-currency-change-list-cell">
+                数量
+            </div>
+            <div class="ui-currency-change-list-cell">
+                步骤
+            </div>
+            <div class="ui-currency-change-list-cell-big">
+                描述
+            </div>
+        </li>
+        {% for index,info in enumerate(list1) %}
+        <li class="ui-currency-change-list-item clearfix">
+            <div class="ui-currency-change-list-cell">
+                {{ info.get("WordID")}}
+            </div>
+            <div class="ui-currency-change-list-cell">
+                {{ info.get("count")}}
+            </div>
+            <div class="ui-currency-change-list-cell">
+                {{ info.get("name")}}
+            </div>
+            <div class="ui-currency-change-list-cell-big">
+                {{ info.get("desc")}}
+            </div>
+        </li>
+        {% end %}
+    </ul>
+    <br/>
+
+    <ul class="ui-currency-change-list-list op-currency-change-list-list">
+        <li class="ui-currency-change-list-item clearfix">
+            <div class="ui-currency-change-list-cell">
+                X
+            </div>
+            <div class="ui-currency-change-list-cell">
+                Y
+            </div>
+            <div class="ui-currency-change-list-cell">
+                数量
+            </div>
+            <div class="ui-currency-change-list-cell">
+                步骤
+            </div>
+            <div class="ui-currency-change-list-cell">
+                描述
+            </div>
+        </li>
+        {% for index,info in enumerate(list1) %}
+        <li class="ui-currency-change-list-item clearfix">
+            <div class="ui-currency-change-list-cell">
+                {{ info.get("X")}}
+            </div>
+            <div class="ui-currency-change-list-cell">
+                {{ info.get("Y")}}
+            </div>
+            <div class="ui-currency-change-list-cell">
+                {{ info.get("count")}}
+            </div>
+            <div class="ui-currency-change-list-cell">
+                {{ info.get("name")}}
+            </div>
+            <div class="ui-currency-change-list-cell">
+                {{ info.get("desc")}}
+            </div>
+        </li>
+        {% end %}
+    </ul>
+
+</div>
+<script>
+ /* $('.op-query').click( function(e) {e.preventDefault();
+  *     e.target.href="currency_change/list?time="+$("#timeId").val();
+  *     window.location.href="/currency_change/list?time="+$("#timeId").val();
+  *     return true;
+  * } );*/
+
+</script>
+{% end %}

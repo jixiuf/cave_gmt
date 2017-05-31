@@ -235,6 +235,48 @@ class PartnerDB:
         res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)
 
+class GuideDB:
+    def __init__(self,dbtemplate):
+        self.dbtemplate=dbtemplate
+
+    def mapRow(self,row):
+        data           ={}
+        data['WordID'] =row[ 0 ]
+        data['count']  =row[ 1 ]
+        return data
+
+    def mapRow2(self,row):
+        data           ={}
+        data['WordID'] =row[ 0 ]
+        data['count']  =row[ 1 ]
+
+        return data
+
+
+    @gen.coroutine
+    def select_cnt_map(self,):
+        query="select WordID,count(`Id`) as count  from GuideStepFinish group by WordID"
+        print(query)
+        res=yield self.dbtemplate.query(query,self.mapRow)
+        data={}
+        for e in res:
+            data[str(e['WordID'])]=e
+        raise gen.Return(data)
+
+    @gen.coroutine
+    def select_cnt_2_map(self):
+        query="select X,Y,count(`Id`) as count  from GuideActorDestroy group by x,y"
+        print(query)
+        res=yield self.dbtemplate.query(query,self.mapRow)
+        data={}
+        for e in res:
+            data[str(e['X']*10000+e['Y'])]=e
+        raise gen.Return(data)
+
+
+
+
+
 
 
 

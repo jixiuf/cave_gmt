@@ -44,9 +44,10 @@ class Broadcast(BaseHandler):
     def self_post(self):
         typ=self.get_argument('type')
         serverIdStr=self.get_argument('serverId')
-        content=self.get_argument('content')
+        content=unicode(self.get_argument('content'))
         content=content.replace("'","")
         content=content.replace("\"","")
+        print(content)
 
         startTime=self.get_argument('startTime',datetime.now())
         endTime=self.get_argument('endTime',datetime.now())
@@ -58,8 +59,9 @@ class Broadcast(BaseHandler):
             app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,serverIdStr), redis_notify.NOTIFY_TYPE_BROADCAST%(json.dumps(chatInfo)))
         else:
             chatInfo={"chat_type":3,"content":"%s"%content,"params":"{}"} # chat_type_broadcast
+            print(chatInfo)
             sql="insert into Marquee( server,id,content,startTime,endTime,`interval`,nextTime) value(%s,%s,'%s','%s','%s',%s,'%s') "% (
-                serverIdStr,utils.timestamp_now(),json.dumps(chatInfo,cls=utils.DateEncoder ),startTime,endTime,interval,startTime)
+                serverIdStr,utils.timestamp_now(),json.dumps(chatInfo,ensure_ascii=False,cls=utils.DateEncoder ),startTime,endTime,interval,startTime)
             print(sql)
             yield app.DBMgr.getProfileDB().execSql(sql)
             app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,serverIdStr), redis_notify.NOTIFY_TYPE_MARQUEE)

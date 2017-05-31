@@ -178,6 +178,9 @@ class DBMgr:
         return LevelUpDB(self.getGMToolDB())
     def getPartnerDB(self):
         return PartnerDB(self.getGMToolDB())
+    def getGuideDB(self):
+        return GuideDB(self.getGMToolDB())
+
 
 
 
