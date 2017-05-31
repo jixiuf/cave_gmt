@@ -130,8 +130,9 @@
             <div class="col-sm-2">
                 <input class="form-control op-time-start" type="text" id="timeId">
             </div>
-            <button type="submit" class="btn btn-default op-query-currency-change-log " >查询货币流水</button>
-                <button type="submit" class="btn btn-default op-query-item-change-log " >查询道具流水</button>
+            <button type="submit" class="btn btn-default op-query-currency-change-log " >货币流水</button>
+            <button type="submit" class="btn btn-default op-query-item-change-log " >道具流水</button>
+            <button type="submit" class="btn btn-default op-query-gear-got-log " >装备获得流水</button>
         </ul>
 
 </div>
@@ -380,6 +381,22 @@
      window.location.href="/item_change/list?time="+$("#timeId").val()+"&uin="+uin;
 
  });
+
+ $(".op-query-gear-got-log").on('click',function(){
+     time=  $("#timeId").val();
+     if(time==""){
+         alert("请选择时间");
+         return false;
+     }
+     uin = uinEl.val();
+     if($("#timeId")==""){
+         alert("时间不能为空");
+         return false;
+     }
+     window.location.href="/gear_got/list?time="+$("#timeId").val()+"&uin="+uin;
+
+ });
+
 
 
 

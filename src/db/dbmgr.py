@@ -168,6 +168,9 @@ class DBMgr:
         return CurrencyChangeDB(self.getGMToolDB())
     def getItemChangeDB(self):
         return ItemChangeDB(self.getGMToolDB())
+    def getGearGotDB(self):
+        return GearGotDB(self.getGMToolDB())
+
 
 
     def getMailDB(self,server=1):

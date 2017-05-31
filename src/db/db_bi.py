@@ -53,14 +53,37 @@ class ItemChangeDB:
         data['Changed']    =row[ 9 ]
         return data
 
-    @gen.coroutine
-    def truncate_table(self):
-        query="truncate table CurrencyChange "
-        yield self.dbtemplate.execDDL(query)
 
     @gen.coroutine
     def select_all(self,uin,startTime,endTime):
         query="select `Id`, `Uin`, `SUin`, `ClientTime`, `Time`, `Source`, `ItemID`, `PreCount`, `CurCount` ,`Changed` from ItemChange  where Uin=%s and Time>'%s' and Time<'%s' order by Time desc"%(uin,startTime,endTime)
+        print(query)
+        res=yield self.dbtemplate.query(query,self.mapRow)
+        raise gen.Return(res)
+
+class GearGotDB:
+    def __init__(self,dbtemplate):
+        self.dbtemplate=dbtemplate
+
+
+    def mapRow(self,row):
+        data               ={}
+        data['Id']         =row[ 0 ]
+        data['Uin']        =row[ 1 ]
+        data['SUin']       =row[ 2 ]
+        data['Time']       =row[ 3 ]
+        data['ClientTime'] =row[ 4 ]
+        data['Source']     =row[ 5 ]
+        data['InstID']     =row[ 6 ]
+        data['ModID']      =row[ 7 ]
+        data['BaseID']     =row[ 8 ]
+        data['Quality']    =row[ 9 ]
+        return data
+
+
+    @gen.coroutine
+    def select_all(self,uin,startTime,endTime):
+        query="select `Id`, `Uin`, `SUin`, `ClientTime`, `Time`, `Source`, `InstID`, `ModID`, `BaseID` ,`Quality` from GearGot  where Uin=%s and Time>'%s' and Time<'%s' order by Time desc"%(uin,startTime,endTime)
         print(query)
         res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)
