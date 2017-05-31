@@ -166,6 +166,8 @@ class DBMgr:
         return PayOrderDB(self.getProfileDB())
     def getCurrencyChangeDB(self):
         return CurrencyChangeDB(self.getGMToolDB())
+    def getItemChangeDB(self):
+        return ItemChangeDB(self.getGMToolDB())
 
 
     def getMailDB(self,server=1):

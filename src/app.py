@@ -73,6 +73,8 @@ class Application(tornado.web.Application):
             (r'/bi/rank' ,Rank),
             (r'/bi/rank_post' ,Rank),
             (r'/currency_change/list' ,BICurrencyChangeHandler),
+            (r'/item_change/list' ,BIItemChangeHandler),
+
 
             (r'/pay_order/list' ,PayOrderHandler),
 
