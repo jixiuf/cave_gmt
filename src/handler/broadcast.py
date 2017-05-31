@@ -44,7 +44,7 @@ class Broadcast(BaseHandler):
     def self_post(self):
         typ=self.get_argument('type')
         serverIdStr=self.get_argument('serverId')
-        content=unicode(self.get_argument('content'))
+        content=self.get_argument('content')
         content=content.replace("'","")
         content=content.replace("\"","")
         print(content)
