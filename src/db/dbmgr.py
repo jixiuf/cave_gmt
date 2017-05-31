@@ -176,6 +176,9 @@ class DBMgr:
         return GearRefineDB(self.getGMToolDB())
     def getLevelUpDB(self):
         return LevelUpDB(self.getGMToolDB())
+    def getPartnerDB(self):
+        return PartnerDB(self.getGMToolDB())
+
 
 
 

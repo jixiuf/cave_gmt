@@ -78,6 +78,8 @@ class Application(tornado.web.Application):
             (r'/gear_fortify/list' ,BIGearFortifyHandler),
             (r'/gear_refine/list' ,BIGearRefineHandler),
             (r'/levelup/list' ,BILevelUpHandler),
+            (r'/partner_got/list' ,BIPartnerGotHandler),
+
 
 
 

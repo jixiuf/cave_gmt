@@ -156,3 +156,27 @@ class BILevelUpHandler(BaseHandler):
                     Account=self.gmAccount,
                     channelMap=conf.getChannelNameMap())
 
+class BIPartnerGotHandler(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_get(self):
+        uin = self.get_argument('uin','')
+        tStr = self.get_argument('time','')
+        if tStr=='':
+            self.write(json.dumps({"result":"请选择日期"}))
+            return
+        if uin=='':
+            self.write(json.dumps({"result":"玩家Id不能为空"}))
+            return
+        t=time.strptime(tStr,"%Y-%m-%d")
+        startTime=datetime(*t[:3])
+        endTime=startTime+timedelta(days=1)
+
+
+
+        currencyChangeList=yield app.DBMgr.getPartnerDB().select_all(uin,startTime,endTime)
+        self.render("bi_partner_list.html", title="获得伙伴日志",
+                    currencyChangeList=currencyChangeList,
+                    Account=self.gmAccount,
+                    channelMap=conf.getChannelNameMap())
+

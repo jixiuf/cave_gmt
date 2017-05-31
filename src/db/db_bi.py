@@ -204,3 +204,37 @@ class LevelUpDB:
 
 
 
+class PartnerDB:
+    def __init__(self,dbtemplate):
+        self.dbtemplate=dbtemplate
+    def bool(self,d):
+        if d==1:
+            return "是"
+        return "否"
+
+
+    def mapRow(self,row):
+        data               ={}
+        data['Id']            =row[ 0 ]
+        data['Uin']           =row[ 1 ]
+        data['SUin']          =row[ 2 ]
+        data['ClientTime']    =row[ 3 ]
+        data['Time']          =row[ 4 ]
+        data['PartnerID']     =row[ 5 ]
+        data['FromPartnerID'] =row[ 6 ]
+        data['Operation']     =row[ 7 ]
+
+
+        return data
+
+
+    @gen.coroutine
+    def select_all(self,uin,startTime,endTime):
+        query="select `Id`, `Uin`, `SUin`, `ClientTime`, `Time`, PartnerID,FromPartnerID,Operation  from Partner  where Uin=%s and Time>'%s' and Time<'%s' order by Time desc"%(uin,startTime,endTime)
+        print(query)
+        res=yield self.dbtemplate.query(query,self.mapRow)
+        raise gen.Return(res)
+
+
+
+

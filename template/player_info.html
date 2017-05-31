@@ -136,6 +136,7 @@
             <button type="submit" class="btn btn-default op-query-gear-fortify-log " >装备强化</button>
             <button type="submit" class="btn btn-default op-query-gear-refine-log " >装备洗练</button>
                 <button type="submit" class="btn btn-default op-query-levelup-log " >升级</button>
+                    <button type="submit" class="btn btn-default op-query-partner-got-log " >伙伴获得</button>
         </ul>
 
 </div>
@@ -443,6 +444,21 @@
 
  });
 
+
+ $(".op-query-partner-got-log").on('click',function(){
+     time=  $("#timeId").val();
+     if(time==""){
+         alert("请选择时间");
+         return false;
+     }
+     uin = uinEl.val();
+     if($("#timeId")==""){
+         alert("时间不能为空");
+         return false;
+     }
+     window.location.href="/partner_got/list?time="+$("#timeId").val()+"&uin="+uin;
+
+ });
 
 
 
