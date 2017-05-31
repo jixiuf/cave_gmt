@@ -75,6 +75,7 @@ class MarqueeDelete(BaseHandler):
     @gen.coroutine
     def self_post(self):
         id= self.get_argument('id','0')
+        serverIdStr=self.get_argument('serverId')
         sql="delete from Marquee where id=%s"%(id)
         print(sql)
         yield app.DBMgr.getProfileDB().execSql(sql)
