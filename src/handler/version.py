@@ -75,7 +75,7 @@ class DynamicPackageGeneratorHandler(BaseHandler):
            channel= " ".join(conf.getChannelStrList())
 
         cmd= "./DynamicUpload/dynamic_upload.sh %s_%s %s %s %s %s %s %s"%(conf.AppName,options.mode,version,svnFromVersion,svnToVersion,svnurl ,gmtURL,channel)
-        print(cmd)
+        app.Logger.info(cmd)
         self.write(cmd)
 
         process = Subprocess(cmd, stdout=Subprocess.STREAM, stderr=Subprocess.STREAM, shell=True)
@@ -84,6 +84,7 @@ class DynamicPackageGeneratorHandler(BaseHandler):
                 pout = yield process.stdout.read_until("\n")
                 # , process.stderr.read_until("\n")
                 print(pout)
+                app.Logger.info(pout)
                 self.write(pout)
                 # self.write(err)
                 self.write("<br/>")
