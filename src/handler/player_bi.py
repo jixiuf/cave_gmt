@@ -164,7 +164,6 @@ class BIActivePlayer(BaseHandler):
         sql="select distinct uin  from LoginLog where Server=%s and Time>'%s' and Time<'%s' "%(serverStr,startTime, endTime)
         if channelStr!='0':
             sql+= " and channel=%s"%(channelStr)
-        print(sql)
         list=yield app.DBMgr.getGMToolDB().query(sql,self.mapRowUin)
         result=[]
         for uin in list:        # 转成string ,否则uin受限于javascript 数字最大值限制

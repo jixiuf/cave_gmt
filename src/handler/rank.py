@@ -38,8 +38,6 @@ class Rank(BaseHandler):
         time= self.get_argument('time',None)
         day=str(datetime.strptime(time, '%Y-%m-%d').timetuple().tm_yday)
 
-        print(time)
-        print(day)
         # levelRankKey="cave_rank_level_%d_%s"%(conf.PLATFORM,serverId)
         # levelRank=app.Redis.zrange(levelRankKey ,0,200,withscores=True,score_cast_func=getvalue) # list of [key,value]
         sql="select uin,score from RankLevel where day=%s order by score desc"%(day)

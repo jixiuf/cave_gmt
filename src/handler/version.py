@@ -83,7 +83,6 @@ class DynamicPackageGeneratorHandler(BaseHandler):
             while True:
                 pout = yield process.stdout.read_until("\n")
                 # , process.stderr.read_until("\n")
-                print(pout)
                 app.Logger.info(pout)
                 self.write(pout)
                 # self.write(err)

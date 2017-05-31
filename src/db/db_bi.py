@@ -28,7 +28,6 @@ class CurrencyChangeDB:
     @gen.coroutine
     def select_all(self,uin,startTime,endTime):
         query="select `Id`, `Uin`, `SUin`, `ClientTime`, `Time`, `Source`, `CurrencyType`, `CurAmount`, `Changed` from CurrencyChange  where Uin=%s and Time>'%s' and Time<'%s' order by Time desc"%(uin,startTime,endTime)
-        print(query)
         res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)
 
@@ -57,7 +56,6 @@ class ItemChangeDB:
     @gen.coroutine
     def select_all(self,uin,startTime,endTime):
         query="select `Id`, `Uin`, `SUin`, `ClientTime`, `Time`, `Source`, `ItemID`, `PreCount`, `CurCount` ,`Changed` from ItemChange  where Uin=%s and Time>'%s' and Time<'%s' order by Time desc"%(uin,startTime,endTime)
-        print(query)
         res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)
 
@@ -84,7 +82,6 @@ class GearGotDB:
     @gen.coroutine
     def select_all(self,uin,startTime,endTime):
         query="select `Id`, `Uin`, `SUin`, `ClientTime`, `Time`, `Source`, `InstID`, `ModID`, `BaseID` ,`Quality` from GearGot  where Uin=%s and Time>'%s' and Time<'%s' order by Time desc"%(uin,startTime,endTime)
-        print(query)
         res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)
 
@@ -124,7 +121,6 @@ class GearFortifyDB:
     @gen.coroutine
     def select_all(self,uin,startTime,endTime):
         query="select `Id`, `Uin`, `SUin`, `ClientTime`, `Time`, `Source`, `InstID`, `ModID`, `BaseID`,CurFortify,PreFortify,IsDeleted,IsBreak,IsProtected,IsSuccess ,`Quality` from GearFortify  where Uin=%s and Time>'%s' and Time<'%s' order by Time desc"%(uin,startTime,endTime)
-        print(query)
         res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)
 
@@ -163,7 +159,6 @@ class GearRefineDB:
     @gen.coroutine
     def select_all(self,uin,startTime,endTime):
         query="select `Id`, `Uin`, `SUin`, `ClientTime`, `Time`, `Source`, `InstID`, `ModID`, `BaseID`,`Quality`,CurRefineTimes,Operation from GearRefine  where Uin=%s and Time>'%s' and Time<'%s' order by Time desc"%(uin,startTime,endTime)
-        print(query)
         res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)
 
@@ -197,7 +192,6 @@ class LevelUpDB:
     @gen.coroutine
     def select_all(self,uin,startTime,endTime):
         query="select `Id`, `Uin`, `SUin`, `ClientTime`, `Time`, `Source`,CurLevel,PreLevel,PreExp,CurExp,Changed  from PlayerLevelUp  where Uin=%s and Time>'%s' and Time<'%s' order by Time desc"%(uin,startTime,endTime)
-        print(query)
         res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)
 
@@ -231,7 +225,6 @@ class PartnerDB:
     @gen.coroutine
     def select_all(self,uin,startTime,endTime):
         query="select `Id`, `Uin`, `SUin`, `ClientTime`, `Time`, PartnerID,FromPartnerID,Operation  from Partner  where Uin=%s and Time>'%s' and Time<'%s' order by Time desc"%(uin,startTime,endTime)
-        print(query)
         res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)
 
@@ -256,7 +249,6 @@ class GuideDB:
     @gen.coroutine
     def select_cnt_map(self,):
         query="select WordID,count(`Id`) as count  from GuideStepFinish group by WordID"
-        print(query)
         res=yield self.dbtemplate.query(query,self.mapRow)
         data={}
         for e in res:
@@ -266,7 +258,6 @@ class GuideDB:
     @gen.coroutine
     def select_cnt_2_map(self):
         query="select X,Y,count(`Id`) as count  from GuideActorDestroy group by x,y"
-        print(query)
         res=yield self.dbtemplate.query(query,self.mapRow)
         data={}
         for e in res:

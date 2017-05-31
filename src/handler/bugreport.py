@@ -40,6 +40,5 @@ class BugReportHandler(BaseHandler):
         timePK= self.get_argument('timePK','0')
 
         sql="update BugReport set status=1 where uin=%s and timePK=%s"%(uin,timePK)
-        print(sql)
         yield app.DBMgr.getProfileDB().execSql(sql)
         self.write('success')

@@ -58,7 +58,6 @@ class CodeMgr(BaseHandler):
                                 "award_list":json.loads(awardList),
                                 "sender":self.account}
                                ,ensure_ascii=False)
-        print(mailContent)
         data={}
         data['data']=[]
         data['result']=''

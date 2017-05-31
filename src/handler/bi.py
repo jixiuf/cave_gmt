@@ -344,13 +344,11 @@ class BIGuideHandle(BaseHandler):
             else:
                 e['count']=0
             list1.append(e)
-            print(e)
 
 
 
         # list2=yield app.DBMgr.getGuideDB().select_cnt_2()
         list1=sorted(list1,cmp=self.sortFunc,reverse=False)
-        print(list1)
         # list2=sorted(list2,cmp=self.sortFunc,reverse=True)
         self.render("bi_guide_list.html", title="新手引导打点分析",
                     list1=list1,

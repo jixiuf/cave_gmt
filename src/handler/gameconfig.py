@@ -42,7 +42,6 @@ class GameConfigHandler(BaseHandler):
         gameConfigValue=gameConfigValue.replace(";","")
 
         sql="update GameConfig set gameConfigValue='%s' where gameConfigKey=%s"%(gameConfigValue.strip(),gameConfigKey)
-        print(sql)
         yield app.DBMgr.getProfileDB().execSql(sql)
 
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_GAMECONFIG_RELOAD)

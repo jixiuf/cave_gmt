@@ -26,7 +26,6 @@ class PayOrderHandler(BaseHandler):
             if not channel in self.gmAccount.getChannelList():
                 channel= self.gmAccount.channel
 
-        print(self.gmAccount)
         if channel!='0':
             if where=='':
                 where="channel in (%s)"%(channel)
