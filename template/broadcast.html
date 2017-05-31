@@ -188,7 +188,7 @@
 
     $(".op-btn-delete").on('click', function(e) {
     var el = $(e.currentTarget);
-    var serverId = serverIdEl.val().replace(/(^\s*)|(\s*$)/g, ""),
+    var serverId = serverIdEl.val().replace(/(^\s*)|(\s*$)/g, "");
     if(serverId == '' ) {
     serverId="1";
     }
