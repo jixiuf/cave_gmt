@@ -56,13 +56,13 @@ class Broadcast(BaseHandler):
             # {144150688393216252 2 24 {"head_icon":1,"nickname":"游客00252","content_type":"normal","sex":1}}
             chatInfo={'chat_type':3,'content':'%s'%content,'params':'{}'} # chat_type_broadcast
             # chatInfo={'chat_type':3,'content':'%s'%content,'params':'{"head_icon":0,"nickname":"系统广播","content_type":"normal","sex":1}'} # chat_type_broadcast
-            app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,serverIdStr), redis_notify.NOTIFY_TYPE_BROADCAST%(json.dumps(chatInfo)))
+            app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,serverIdStr), redis_notify.NOTIFY_TYPE_BROADCAST%(json.dumps(chatInfo,ensure_ascii=False,)))
         else:
             chatInfo={"chat_type":3,"content":"%s"%content,"params":"{}"} # chat_type_broadcast
             print(chatInfo)
             sql="insert into Marquee( server,id,content,startTime,endTime,`interval`,nextTime) value(%s,%s,'%s','%s','%s',%s,'%s') "% (
                 serverIdStr,utils.timestamp_now(),json.dumps(chatInfo,ensure_ascii=False,cls=utils.DateEncoder ),startTime,endTime,interval,startTime)
-            print(sql)
+            app.Logger.info(sql)
             yield app.DBMgr.getProfileDB().execSql(sql)
             app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,serverIdStr), redis_notify.NOTIFY_TYPE_MARQUEE)
 
