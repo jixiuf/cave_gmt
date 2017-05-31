@@ -13,7 +13,7 @@ import redis_notify
 import app
 import time
 
-class CurrencyChangeHandler(BaseHandler):
+class BICurrencyChangeHandler(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
@@ -30,7 +30,7 @@ class CurrencyChangeHandler(BaseHandler):
         uin = self.get_argument('uin','')
 
         currencyChangeList=yield app.DBMgr.getCurrencyChangeDB().select_all(uin,startTime,endTime)
-        self.render("currency_change_list.html", title="货币变化日志",
+        self.render("bi_currency_change_list.html", title="货币变化日志",
                     currencyChangeList=currencyChangeList,
                     time=tStr,
                     Account=self.gmAccount,
