@@ -12,8 +12,8 @@ class CurrencyChangeDB:
         data['Id']           =row[ 0  ]
         data['Uin']          =row[ 1  ]
         data['SUin']         =row[ 2  ]
-        data['Time']         =row[ 3  ]
-        data['ClientTime']   =row[ 4  ]
+        data['ClientTime']         =row[ 3  ]
+        data['Time']   =row[ 4  ]
         data['Source']       =row[ 5  ]
         data['CurrencyType'] =row[ 6  ]
         data['CurAmount']    =row[ 7  ]
@@ -44,8 +44,8 @@ class ItemChangeDB:
         data['Id']         =row[ 0 ]
         data['Uin']        =row[ 1 ]
         data['SUin']       =row[ 2 ]
-        data['Time']       =row[ 3 ]
-        data['ClientTime'] =row[ 4 ]
+        data['ClientTime']       =row[ 3 ]
+        data['Time'] =row[ 4 ]
         data['Source']     =row[ 5 ]
         data['ItemID']     =row[ 6 ]
         data['PreCount']   =row[ 7 ]
@@ -71,8 +71,8 @@ class GearGotDB:
         data['Id']         =row[ 0 ]
         data['Uin']        =row[ 1 ]
         data['SUin']       =row[ 2 ]
-        data['Time']       =row[ 3 ]
-        data['ClientTime'] =row[ 4 ]
+        data['ClientTime']       =row[ 3 ]
+        data['Time'] =row[ 4 ]
         data['Source']     =row[ 5 ]
         data['InstID']     =row[ 6 ]
         data['ModID']      =row[ 7 ]
@@ -87,4 +87,45 @@ class GearGotDB:
         print(query)
         res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)
+
+
+
+class GearFortifyDB:
+    def __init__(self,dbtemplate):
+        self.dbtemplate=dbtemplate
+    def bool(self,d):
+        if d==1:
+            return "是"
+        return "否"
+
+
+    def mapRow(self,row):
+        data               ={}
+        data['Id']          =row[ 0 ]
+        data['Uin']         =row[ 1 ]
+        data['SUin']        =row[ 2 ]
+        data['Time']        =row[ 3 ]
+        data['ClientTime']  =row[ 4 ]
+        data['Source']      =row[ 5 ]
+        data['InstID']      =row[ 6 ]
+        data['ModID']       =row[ 7 ]
+        data['BaseID']      =row[ 8 ]
+        data['CurFortify']  =row[ 9 ]
+        data['PreFortify']  =row[10 ]
+        data['IsDeleted']   =self.bool(row[11 ])
+        data['IsBreak']     =self.bool(row[12 ])
+        data['IsProtected'] =self.bool(row[13 ])
+        data['IsSuccess']   =self.bool(row[14 ])
+        data['Quality']     =row[15 ]
+
+        return data
+
+
+    @gen.coroutine
+    def select_all(self,uin,startTime,endTime):
+        query="select `Id`, `Uin`, `SUin`, `ClientTime`, `Time`, `Source`, `InstID`, `ModID`, `BaseID`,CurFortify,PreFortify,IsDeleted,IsBreak,IsProtected,IsSuccess ,`Quality` from GearFortify  where Uin=%s and Time>'%s' and Time<'%s' order by Time desc"%(uin,startTime,endTime)
+        print(query)
+        res=yield self.dbtemplate.query(query,self.mapRow)
+        raise gen.Return(res)
+
 

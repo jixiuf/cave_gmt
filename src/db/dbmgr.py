@@ -170,6 +170,9 @@ class DBMgr:
         return ItemChangeDB(self.getGMToolDB())
     def getGearGotDB(self):
         return GearGotDB(self.getGMToolDB())
+    def getGearFortifyDB(self):
+        return GearFortifyDB(self.getGMToolDB())
+
 
 
 
