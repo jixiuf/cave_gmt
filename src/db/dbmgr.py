@@ -172,6 +172,9 @@ class DBMgr:
         return GearGotDB(self.getGMToolDB())
     def getGearFortifyDB(self):
         return GearFortifyDB(self.getGMToolDB())
+    def getGearRefineDB(self):
+        return GearRefineDB(self.getGMToolDB())
+
 
 
 
