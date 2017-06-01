@@ -326,3 +326,18 @@ class CharacterDeadDB:
             return data
         res=yield self.dbtemplate.query(query,mapRow)
         raise gen.Return(res)
+
+class SkillDB:
+    def __init__(self,dbtemplate):
+        self.dbtemplate=dbtemplate
+
+    @gen.coroutine
+    def select_cnt(self):
+        query="select SkillID,count(Id) as cnt from `CastSkill` group by `SkillID` order by cnt desc"
+        def mapRow(row):
+            data              ={}
+            data['SkillID'] =row[ 0 ]
+            data['cnt']       =row[ 1 ]
+            return data
+        res=yield self.dbtemplate.query(query,mapRow)
+        raise gen.Return(res)

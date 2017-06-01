@@ -447,3 +447,12 @@ class BIDeadHandler(BaseHandler):
                     list=list,
                     Account=self.gmAccount,
                     channelMap=conf.getChannelNameMap())
+class BISkillHandler(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_get(self):
+        list=yield app.DBMgr.getSkillDB().select_cnt()
+        self.render("bi_skill.html", title="技能使用分析",
+                    list=list,
+                    Account=self.gmAccount,
+                    channelMap=conf.getChannelNameMap())
