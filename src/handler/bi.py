@@ -383,3 +383,37 @@ class BIGuideHandle(BaseHandler):
 
 
 
+class BIStageHandler(BaseHandler):
+    def sortFunc(self,e1 ,e2 ):
+            if e1.get("StageID",None)==None:
+                return -1
+            elif e2.get("StageID",None)==None:
+                return 1
+
+            diff=e1.get("StageID",0)-e2.get("StageID",0)
+            return  diff
+    @asynchronous
+    @gen.coroutine
+    def self_get(self):
+
+        stageMap=yield app.DBMgr.getStageDB().select_enter_cnt_as_map()
+        stageCompleteMap=yield app.DBMgr.getStageDB().select_complete_cnt_as_map()
+        list=[]
+        for key in stageMap:
+            stage=stageMap.get(key)
+            stageComplete=stageCompleteMap.get(key)
+            if stageComplete!=None:
+                print(stageComplete)
+                stage['completeCnt']=stageComplete.get('completeCnt')
+            else:
+                stage['completeCnt']=0
+            stage['completeRatio']="%.2f"%(100*float(stage['completeCnt'])/float(stage['enterCount']))
+            list.append(stage)
+
+
+        list=sorted(list,cmp=self.sortFunc,reverse=False)
+
+        self.render("bi_stage_list.html", title="通关日志分析",
+                    list=list,
+                    Account=self.gmAccount,
+                    channelMap=conf.getChannelNameMap())

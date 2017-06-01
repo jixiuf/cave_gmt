@@ -180,13 +180,8 @@ class DBMgr:
         return PartnerDB(self.getGMToolDB())
     def getGuideDB(self):
         return GuideDB(self.getGMToolDB())
-
-
-
-
-
-
-
+    def getStageDB(self):
+        return StageDB(self.getGMToolDB())
 
     def getMailDB(self,server=1):
         return MailDB(self.getGameDB(server))

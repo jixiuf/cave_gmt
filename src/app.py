@@ -80,6 +80,7 @@ class Application(tornado.web.Application):
             (r'/levelup/list' ,BILevelUpHandler),
             (r'/partner_got/list' ,BIPartnerGotHandler),
             (r'/bi/GuideActorDestroy' ,BIGuideHandle),
+            (r'/bi/stage' ,BIStageHandler),
 
 
 

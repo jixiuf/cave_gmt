@@ -267,9 +267,38 @@ class GuideDB:
         raise gen.Return(data)
 
 
+class StageDB:
+    def __init__(self,dbtemplate):
+        self.dbtemplate=dbtemplate
 
+    @gen.coroutine
+    def select_enter_cnt_as_map(self):
+        query="select `StageID`,`StageName`,count(distinct Uin) as userEnterCnt,count(Id) as enterCount from `StageComplete` where `Source`='EnterStage' group by `StageID`,StageName"
+        def mapRow(row):
+            data              ={}
+            data['StageID']    =row[ 0 ]
+            data['StageName']  =row[ 1 ]
+            data['userCount']  =row[ 2 ]
+            data['enterCount'] =row[ 3 ]
+            return data
+        res=yield self.dbtemplate.query(query,mapRow)
+        data={}
+        for e in res:
+            data[str(e['StageID'])]=e
 
+        raise gen.Return(data)
+    @gen.coroutine
+    def select_complete_cnt_as_map(self):
+        query="select `StageID`,count(Id) as completeCnt from `StageComplete` where `Source`='Complete' group by `StageID`"
+        def mapRow(row):
+            data              ={}
+            data['StageID']    =row[ 0 ]
+            data['completeCnt']=row[ 1 ]
+            return data
 
-
-
+        res=yield self.dbtemplate.query(query,mapRow)
+        data={}
+        for e in res:
+            data[str(e['StageID'])]=e
+        raise gen.Return(data)
 

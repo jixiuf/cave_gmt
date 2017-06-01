@@ -1,0 +1,61 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/currency_change_list.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-currency-change-list-option">
+    <h2 class="form-signin-heading ui-currency-change-list-title">通关日志分析</h2>
+    <ul class="ui-currency-change-list-list op-currency-change-list-list">
+        <li class="ui-currency-change-list-item clearfix">
+            <div class="ui-currency-change-list-cell-id">
+                关卡ID
+            </div>
+            <div class="ui-currency-change-list-cell">
+                关卡名称
+            </div>
+            <div class="ui-currency-change-list-cell">
+                进入玩家数
+            </div>
+            <div class="ui-currency-change-list-cell">
+                进入次数
+            </div>
+            <div class="ui-currency-change-list-cell">
+                通关次数
+            </div>
+            <div class="ui-currency-change-list-cell">
+                通关率
+            </div>
+        </li>
+        {% for index,info in enumerate(list) %}
+        <li class="ui-currency-change-list-item clearfix">
+            <div class="ui-currency-change-list-cell-id">
+                {{ info.get("StageID")}}
+            </div>
+            <div class="ui-currency-change-list-cell">
+                {{ info.get("StageName")}}
+            </div>
+            <div class="ui-currency-change-list-cell">
+                {{ info.get("userCount")}}
+            </div>
+            <div class="ui-currency-change-list-cell">
+                {{ info.get("enterCount")}}
+            </div>
+            <div class="ui-currency-change-list-cell">
+                {{ info.get("completeCnt")}}
+            </div>
+            <div class="ui-currency-change-list-cell">
+                {{ info.get("completeRatio")}}%
+            </div>
+        </li>
+        {% end %}
+    </ul>
+</div>
+<script>
+ /* $('.op-query').click( function(e) {e.preventDefault();
+  *     e.target.href="currency_change/list?time="+$("#timeId").val();
+  *     window.location.href="/currency_change/list?time="+$("#timeId").val();
+  *     return true;
+  * } );*/
+
+</script>
+{% end %}
