@@ -200,6 +200,12 @@ class Application(tornado.web.Application):
         self.biTimer.start()
 
 
+    def stop(self):
+        self.keepRunning=False
+        self.biTimer.cancel()
+        sys.exit()
+        os._exit()
+
 
     def handlerSignal(self,signum, frame):
         self.keepRunning=False

@@ -7,6 +7,8 @@ import init
 import os
 import conf
 import os.path
+import sys
+import traceback
 
 import tornado.ioloop
 import tornado.httpserver
@@ -23,8 +25,16 @@ def main():
         conf.CONFIG_DIR=options.confdir
     print "python src/main.py -host=%s -port=%s -mode=%s -locale=%s -confdir=%s" % (options.host, options.port, options.mode,options.locale,options.confdir)
 
-    http_server = tornado.httpserver.HTTPServer(init.get_app())
-    http_server.listen(options.port)
+    App=init.get_app()
+    http_server = tornado.httpserver.HTTPServer(App)
+    try:
+        http_server.listen(options.port)
+    except Exception, error:
+        print('errormsg\t%s' % (str(error)))
+        print('errortrace\t%s' % (str(traceback.format_exc()),))
+        App.stop()
+        return
+
 
 
 
