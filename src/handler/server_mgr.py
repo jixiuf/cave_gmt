@@ -103,6 +103,7 @@ class ServerExec(BaseHandler):
                     pout = yield process.stdout.read_until("\n")
                     # , process.stderr.read_until("\n")
                     app.Logger.info(pout)
+                    pout=pout.replace(" ","&nbsp;")
                     self.write(pout)
                     # self.write(err)
                     self.write("<br/>")
