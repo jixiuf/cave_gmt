@@ -28,7 +28,7 @@ class CodeMgr(BaseHandler):
     @gen.coroutine
     def self_get(self):
         serverIdList=app.DBMgr.get_all_server_id()
-        self.render("code_mgr.html",title="礼包码管理（生成）",
+        self.render("code_mgr.html",title="礼包码生成",
                     Account=self.gmAccount,
                     serverIdList=serverIdList)
     @asynchronous
@@ -82,10 +82,19 @@ class CodeMgr(BaseHandler):
             if not code in codes:
                 codes.append(code)
 
+        sqlPrefix="INSERT INTO `CodeBase` (`server`,`code`,`channelCode`,`batchCode`,`startTime`,`endTime`,`limitCnt`,`useCnt`,`batchLimitCnt`,name,`content`,`desc`,`group`) VALUES "
+
+        i=0
+        sql=sqlPrefix
         for code in codes:
-            sql="INSERT INTO `CodeBase` (`server`,`code`,`channelCode`,`batchCode`,`startTime`,`endTime`,`limitCnt`,`useCnt`,`batchLimitCnt`,name,`content`,`desc`,`group`) VALUES (%s,'%s','%s','%s','%s','%s',%s,%s,%s,'%s','%s','%s','%s')"%(serverId,code,channelSDK,batchCode,startTime,endTime,limitCnt,0,batchLimitCnt,name,mailContent,desc,group)
-            yield app.DBMgr.getProfileDB().execSql(sql)
             data['data'].append(code)
+            i=i+1
+            sql+=" (%s,'%s','%s','%s','%s','%s',%s,%s,%s,'%s','%s','%s','%s')"%(serverId,code,channelSDK,batchCode,startTime,endTime,limitCnt,0,batchLimitCnt,name,mailContent,desc,group)
+            if i%300==0 or i==len(codes):
+                yield app.DBMgr.getProfileDB().execSql(sql)
+                sql=sqlPrefix
+            else:
+                sql+=","
         self.write(json.dumps(data,cls=utils.DateEncoder))
 
 
