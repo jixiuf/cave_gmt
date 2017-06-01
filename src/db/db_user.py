@@ -112,7 +112,6 @@ CREATE TABLE if not exists `user` (
     @gen.coroutine
     def select_by_uin(self,uin):
         query="select uin,autoIncrementId,accountId,password,accountType,platform,server,channel,uuid,ip,os,osVersion,deviceModel,createTime from user where uin=%s"%(uin)
-        print(query)
         res=yield self.dbtemplate.queryObject(query,self.mapRow)
         raise gen.Return(res)
     @gen.coroutine
@@ -173,7 +172,6 @@ CREATE TABLE if not exists `user` (
             mapRow=self.mapRowUinAsStr
 
         query="select uin from user where autoIncrementId in(%s)"%(suins)
-        print(query)
         res=yield self.dbtemplate.query(query,mapRow)
         raise gen.Return(res)
 
@@ -241,7 +239,6 @@ CREATE TABLE if not exists `user` (
     @gen.coroutine
     def updateAccountId(self,uin,accountId):
         query="update user set sessionInfo='' ,uuid='' ,accountId='%s' where uin=%s"%(str(accountId),str(uin))
-        print(query)
         yield self.dbtemplate.execSql(query)
     @gen.coroutine
     def isbanned(self,uin):

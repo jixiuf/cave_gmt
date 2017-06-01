@@ -68,7 +68,6 @@ class ServerVersionDB:
     @gen.coroutine
     def add(self,sv):
         query="insert ignore into server_version(platform,comments,max_version,mid_version,min_version,show_version) values(%d,'%s',%d,%d,%d,'%s')"%(sv.platform,sv.comments,sv.maxVesion,sv.midVersion,sv.minVersion,sv.showVersion)
-        print(query)
         result=yield self.dbtemplate.execSql(query)
         raise gen.Return(result)
 

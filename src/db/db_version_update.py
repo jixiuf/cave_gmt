@@ -51,7 +51,6 @@ class VersionUpdateDB:
     @gen.coroutine
     def add(self,vupdate):
         query="insert ignore into version_update(channel,os,comments,url) values(%d,%d,'%s','%s') on duplicate key update url='%s',comments='%s' "%(vupdate.channel,vupdate.os,vupdate.comments,vupdate.url,vupdate.url,vupdate.comments)
-        print(query)
         result=yield self.dbtemplate.execSql(query)
         raise gen.Return(result)
 

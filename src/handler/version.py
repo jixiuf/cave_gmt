@@ -96,7 +96,6 @@ class DynamicPackageGeneratorHandler(BaseHandler):
         self.finish()
 
         # pout, err = yield [process.stdout.read_until_close(), process.stderr.read_until_close()]
-        # print(pout)
         # pout=pout.replace("\n","<br/>")
         # self.write(pout)
 

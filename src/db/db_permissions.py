@@ -83,7 +83,6 @@ class PermissionDB:
     @gen.coroutine
     def add(self,account,channel,password):
         query="insert ignore into permission(account,channel,password,update_time) values('%s',%d,'%s',now())"%(account,int(channel),password)
-        print(query)
         result=yield self.dbtemplate.execSql(query)
         raise gen.Return(result)
 

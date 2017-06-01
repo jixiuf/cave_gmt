@@ -104,6 +104,7 @@ class ServerExec(BaseHandler):
                     # , process.stderr.read_until("\n")
                     app.Logger.info(pout)
                     pout=pout.replace(" ","&nbsp;")
+                    pout=pout.replace("\t","&nbsp;&nbsp;&nbsp;&nbsp;")
                     self.write(pout)
                     # self.write(err)
                     self.write("<br/>")

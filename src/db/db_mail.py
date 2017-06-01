@@ -40,7 +40,6 @@ class MailDB:
     @gen.coroutine
     def get(self,mailId,uin):
         query="select mailId,uin,FromUin,MailType,StartTime,EndTime,AwardStr,Content,Reason from  MailSystem  where mailId=%s"%(mailId)
-        print(query)
         res=yield self.dbtemplate.queryObject(query,self.mapRow,db.dbtemplate.dbtemplate.Uint64Sum(uin))
         raise gen.Return(res)
 
