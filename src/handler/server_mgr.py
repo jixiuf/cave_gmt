@@ -44,6 +44,8 @@ class ServerMgr(BaseHandler):
         cmds.append("cat  /data/cave/bin/get-last-cave-zh.sh")
         cmds.append("sh  /data/cave/bin/get-last-cave-zh.sh")
         cmds.append("ll  ~/tmp/cave.zh.bin.tar.lzma ")
+        cmds.append("/data/supervisor/reload.sh   /data/supervisor/supervisord.conf")
+
 
 
 
