@@ -25,7 +25,7 @@ fi
 #     # 任何一个svn相关的命令执行失败，则退出整个脚本，退出状态为1即，exit 1
 #     exit 1
 # fi
-svn_diff_status=`svn $svnuser $svnpass --non-interactive --no-auth-cache diff -r $from:$to  --no-diff-deleted --summarize $svnpath>change_file_list.txt`
+svn_diff_status=`svn $svnuser $svnpass --non-interactive --no-auth-cache diff -r $from:$to  --no-diff-deleted --summarize $svnpath |grep -v "^D">change_file_list.txt`
 if [ $? -ne 0 ];then
     rm -rf change_file_list.txt
     # 任何一个svn相关的命令执行失败，则退出整个脚本，退出状态为1即，exit 1
