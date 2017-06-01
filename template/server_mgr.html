@@ -88,6 +88,7 @@
  var ajaxing = false,
      modalEl=$('.op-modal'),
      data = {};
+ var cmdSources={% raw cmds %};
  modalEl.delegate('.op-exec-cmd', 'click', function(e) {
      var el = $(e.currentTarget);
      var processId=el.data('process-id');
@@ -104,6 +105,7 @@
      data['serverId'] = serverId;
      data['processId'] = processId;
      data['cmd'] = cmd;
+     cmdSources.unshift(cmd);/* push at head */
 
      ajaxing = true;
      $.ajax({
@@ -276,11 +278,10 @@
      return false;
  });
 
-var cmdSources={% raw cmds %};
  $(".op-cmd").autocomplete({source: cmdSources, minLength:0,
                             select: function( event, ui ) {}});
  $(".op-ip-field").autocomplete({source: ["{{myPublicIP}}"], minLength:0,
-                                       select: function( event, ui ) {}});
+                                 select: function( event, ui ) {}});
 
 
 </script>

@@ -33,7 +33,7 @@ class ServerMgr(BaseHandler):
         cmds.append(r"echo 'get %s_cmd_output'|redis-cli -h %s -p %s"%(conf.AppName, redisAddrs['host'],redisAddrs['port']))
 
         profileDBConfig=conf.getProfileDBConfigMaster()
-        cmds.append(r'echo "select 1"|mysql -h %s -u%s -p"%s" %s'%(profileDBConfig.host,profileDBConfig.user,profileDBConfig.passwd,profileDBConfig.database))
+        cmds.append(r'echo "show tables"|mysql -h %s -u%s -p"%s" %s'%(profileDBConfig.host,profileDBConfig.user,profileDBConfig.passwd,profileDBConfig.database))
         cmds.append("ps -ef |grep ")
         cmds.append("tail  -n 100 data/server.log")
         cmds.append("tail  -n 100 data/gminfo.log")
@@ -86,6 +86,12 @@ class ServerExec(BaseHandler):
         serverIdStr=self.get_argument('serverId')
         processIdStr=self.get_argument('processId')
         cmd=self.get_argument('cmd','')
+        if cmd=="ll":
+            cmd="ls -l "
+        if cmd.startswith("ll "):
+            cmd=cmd.replace("ll ","ls -l ")
+
+
         if processIdStr=='-1':  # on gmt
             app.Logger.info(cmd)
             self.write("<span style='color:green'>$ %s </span>"%(cmd))
