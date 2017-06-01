@@ -20,7 +20,7 @@ import math
 
 
 class CodeMgr(BaseHandler):
-    chars='abcdefghjkmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ23456789' # 去除1l0oO等难以分辨的字符
+    chars='abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789' # 去除1l0oO等难以分辨的字符
     def mapRow1(self,row):
         return row[0]
 
