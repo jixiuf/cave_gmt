@@ -50,14 +50,13 @@ def fetch_data(dayStr,channelStr):
         biUser.money=yield app.DBMgr.getPayOrderDB().select_sum(startTime,endTime,channelStr)
 
     except Exception, error:
-        print('errormsg\t%s' % (str(error),))
-        print('errortrace\t%s' % (str(traceback.format_exc()),))
+        app.Logger.info('errormsg\t%s' % (str(error),))
+        app.Logger.info('errortrace\t%s' % (str(traceback.format_exc()),))
     raise gen.Return(biUser)
 
 @gen.coroutine
 def update_data():
     yestoday=datetime.now()+ timedelta(days=-1)
-    print("player_bi.update_date",yestoday)
     dayStr = "%d-%0.2d-%0.2d"%(yestoday.year,yestoday.month,yestoday.day)
 
     biUser=yield fetch_data(dayStr,'0')

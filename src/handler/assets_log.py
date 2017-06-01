@@ -18,7 +18,6 @@ class AssetsLogHandler(BaseHandler):
     @gen.coroutine
     def self_get(self):
         tStr = self.get_argument('time','')
-        print("tStr",tStr)
         if tStr=='':
             self.write(json.dumps({"result":"请选择日期"}))
             return

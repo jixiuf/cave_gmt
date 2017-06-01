@@ -403,7 +403,6 @@ class BIStageHandler(BaseHandler):
             stage=stageMap.get(key)
             stageComplete=stageCompleteMap.get(key)
             if stageComplete!=None:
-                print(stageComplete)
                 stage['completeCnt']=stageComplete.get('completeCnt')
             else:
                 stage['completeCnt']=0

@@ -31,8 +31,7 @@ class PayOrderHandler(BaseHandler):
                 where="channel in (%s)"%(channel)
             else:
                 where+=" and channel in (%s)"%(channel)
-        else:
-            print("channel",channel)
+        # else:
 
         if timeStart!='':
             if where=='':
