@@ -95,7 +95,7 @@ package:
 	@cp -rf . /tmp/cave_gmt
 	@rm -rf /tmp/cave_gmt/.git
 	@rm -rf /tmp/cave_gmt/data/*
-	@rm -rf /tmp/cave_gmt/virtual/*
+	@rm -rf /tmp/cave_gmt/virtual/
 	@rm -rf /tmp/cave_gmt/DynamicUpload/destTmp
 	@rm -rf /tmp/cave_gmt.tgz
 	@cd /tmp;tar -czf /tmp/cave_gmt.tgz cave_gmt
