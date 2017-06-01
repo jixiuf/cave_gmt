@@ -73,7 +73,7 @@ build-dep:
 
 clean:
 	find . -name "*.pyc" -exec rm {} \;
-package:
+package-full:
 	@rm -rf /tmp/cave_gmt
 	@mkdir -p /tmp/cave_gmt
 	@cp -rf . /tmp/cave_gmt
@@ -85,6 +85,24 @@ package:
 	if [ -d ~/www.najaplus.com/template_static  ]; then\
 		mv /tmp/cave_gmt.tgz ~/www.najaplus.com/template_static;\
 		echo "~/www.najaplus.com/template_static/cave_gmt.tgz";\
+		echo "`md5sum ~/www.najaplus.com/template_static/cave_gmt.tgz`";\
+		echo "http://www.najaplus.com/cave_gmt.tgz";\
+	fi
+	@echo "/tmp/cave_gmt.tgz"
+package:
+	@rm -rf /tmp/cave_gmt
+	@mkdir -p /tmp/cave_gmt
+	@cp -rf . /tmp/cave_gmt
+	@rm -rf /tmp/cave_gmt/.git
+	@rm -rf /tmp/cave_gmt/data/*
+	@rm -rf /tmp/cave_gmt/virtual/*
+	@rm -rf /tmp/cave_gmt/DynamicUpload/destTmp
+	@rm -rf /tmp/cave_gmt.tgz
+	@cd /tmp;tar -czf /tmp/cave_gmt.tgz cave_gmt
+	if [ -d ~/www.najaplus.com/template_static  ]; then\
+		mv /tmp/cave_gmt.tgz ~/www.najaplus.com/template_static;\
+		echo "~/www.najaplus.com/template_static/cave_gmt.tgz";\
+		echo "`md5sum ~/www.najaplus.com/template_static/cave_gmt.tgz`";\
 		echo "http://www.najaplus.com/cave_gmt.tgz";\
 	fi
 	@echo "/tmp/cave_gmt.tgz"
@@ -99,5 +117,5 @@ update:
 	cp -rf /tmp/tmp_cave_gmt/cave_gmt/static/* /data/cave_gmt/static/
 	cp -rf /tmp/tmp_cave_gmt/cave_gmt/template/* /data/cave_gmt/template/
 	cp -rf /tmp/tmp_cave_gmt/cave_gmt/src/* /data/cave_gmt/src/
-	cp -rf /tmp/tmp_cave_gmt/cave_gmt/virtual/* /data/cave_gmt/virtual/
 	cp -rf /tmp/tmp_cave_gmt/cave_gmt/Makefile /data/cave_gmt/
+	cp -rf /tmp/tmp_cave_gmt/cave_gmt/virtual/* /data/cave_gmt/virtual/
