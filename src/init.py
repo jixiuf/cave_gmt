@@ -23,7 +23,7 @@ def get_data_dir():
 def init():
     data_dir=get_data_dir()
     define("data_dir", default=data_dir, help="data_dir", type=str)
-    define("log_file_prefix", default=data_dir+"/tornado.log", help="logdir for tornado", type=str)
+    # define("log_file_prefix", default=data_dir+"/tornado.log", help="logdir for tornado", type=str)
 
 def get_app():
     init()
