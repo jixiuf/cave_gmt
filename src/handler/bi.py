@@ -416,3 +416,25 @@ class BIStageHandler(BaseHandler):
                     list=list,
                     Account=self.gmAccount,
                     channelMap=conf.getChannelNameMap())
+class BILevelHandler(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_get(self):
+
+        levelList=yield app.DBMgr.getLevelUpDB().select_level_group()
+        list=[]
+        i=0
+        for info in levelList:
+            if i!=0:
+                info['countLevel']=info['countLevel']-levelList[i-1].get("countLevel")
+                if info['countLevel']<0:
+                    info['countLevel']=0
+
+            list.append(info)
+
+
+
+        self.render("bi_level.html", title="玩家等级分析",
+                    list=list,
+                    Account=self.gmAccount,
+                    channelMap=conf.getChannelNameMap())

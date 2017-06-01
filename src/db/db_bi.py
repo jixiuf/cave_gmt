@@ -194,6 +194,16 @@ class LevelUpDB:
         query="select `Id`, `Uin`, `SUin`, `ClientTime`, `Time`, `Source`,CurLevel,PreLevel,PreExp,CurExp,Changed  from PlayerLevelUp  where Uin=%s and Time>'%s' and Time<'%s' order by Time desc"%(uin,startTime,endTime)
         res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)
+    @gen.coroutine
+    def select_level_group(self,):
+        def mapRow(row):
+            data       ={}
+            data['CurLevel'] =row[ 0 ]
+            data['countLevel'] =row[ 1 ]
+            return data
+        query="select CurLevel,count(`Id`)  as countLevel from PlayerLevelUp  group by CurLevel order by CurLevel asc"
+        res=yield self.dbtemplate.query(query,mapRow)
+        raise gen.Return(res)
 
 
 
