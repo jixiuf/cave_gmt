@@ -38,7 +38,7 @@ rm  -rf dest
 mkdir -p dest
 for url in $changed_file ; do
     # 最后的sed 是为了去除目录最前面的/，以免变成绝对路径
-    if [ -z `svn ls $url --depth empty` ]; then
+    if [ -z `svn $svnuser $svnpass --non-interactive --no-auth-cache ls $url --depth empty` ]; then
         echo "$url is directory and is ignored for export"
         continue ;
     fi
