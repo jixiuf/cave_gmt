@@ -240,8 +240,10 @@ class GuideDB:
 
     def mapRow2(self,row):
         data           ={}
-        data['WordID'] =row[ 0 ]
-        data['count']  =row[ 1 ]
+        data['X'] =row[ 0 ]
+        data['Y'] =row[ 1]
+        data['count']  =row[ 2]
+        data['Key']  =str(data['X']*10000+data['Y'])
 
         return data
 
@@ -258,10 +260,10 @@ class GuideDB:
     @gen.coroutine
     def select_cnt_2_map(self):
         query="select X,Y,count(`Id`) as count  from GuideActorDestroy group by x,y"
-        res=yield self.dbtemplate.query(query,self.mapRow)
+        res=yield self.dbtemplate.query(query,self.mapRow2)
         data={}
         for e in res:
-            data[str(e['X']*10000+e['Y'])]=e
+            data[e['Key']]=e
         raise gen.Return(data)
 
 

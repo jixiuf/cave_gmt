@@ -57,7 +57,7 @@
                 描述
             </div>
         </li>
-        {% for index,info in enumerate(list1) %}
+        {% for index,info in enumerate(list2) %}
         <li class="ui-currency-change-list-item clearfix">
             <div class="ui-currency-change-list-cell">
                 {{ info.get("X")}}
@@ -69,10 +69,10 @@
                 {{ info.get("count")}}
             </div>
             <div class="ui-currency-change-list-cell">
-                {{ info.get("name")}}
+                {{ info.get("step")}}
             </div>
             <div class="ui-currency-change-list-cell">
-                {{ info.get("desc")}}
+                {{ info.get("name")}}
             </div>
         </li>
         {% end %}

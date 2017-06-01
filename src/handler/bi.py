@@ -290,43 +290,44 @@ class BIGuideHandle(BaseHandler):
 "2200066":{"WordID":"2200066","order":104     ,"name":"深渊引导",    "desc":"深渊模式主要产出高品质装备和稀有材料"},
 "2200067":{"WordID":"2200067","order":105     ,"name":"深渊引导",    "desc":"但是难度你懂的"}
 }
-    GuideStepFinish={"10003"  :{"name":"陶罐  ","step":"新手1"},
-"60008"  :{"name":"陶罐  ","step":"新手1"},
-"100008" :{"name":"陶罐  ","step":"新手1"},
-"130003" :{"name":"陶罐  ","step":"新手1"},
-"140008" :{"name":"陶罐  ","step":"新手1"},
-"150008" :{"name":"陶罐  ","step":"新手1"},
-"190003" :{"name":"陶罐  ","step":"新手1"},
-"190007" :{"name":"陶罐  ","step":"新手1"},
-"170006" :{"name":"小红  ","step":"新手1"},
-"130004" :{"name":"史莱姆","step":"新手1"},
-"130007" :{"name":"史莱姆","step":"新手1"},
-"140003" :{"name":"史莱姆","step":"新手1"},
-"150005" :{"name":"史莱姆","step":"新手1"},
-"150007" :{"name":"史莱姆","step":"新手1"},
-"160006" :{"name":"史莱姆","step":"新手1"},
-"160008" :{"name":"史莱姆","step":"新手1"},
-"170004" :{"name":"史莱姆","step":"新手1"},
-"170005" :{"name":"史莱姆","step":"新手1"},
-"60002"  :{"name":"陶罐  ","step":"新手2"},
-"80001"  :{"name":"陶罐  ","step":"新手2"},
-"100002" :{"name":"陶罐  ","step":"新手2"},
-"110002" :{"name":"陶罐  ","step":"新手2"},
-"120003" :{"name":"陶罐  ","step":"新手2"},
-"120005" :{"name":"陶罐  ","step":"新手2"},
-"60006"  :{"name":"陶罐  ","step":"新手2"},
-"70006"  :{"name":"陶罐  ","step":"新手2"},
-"100006" :{"name":"陶罐  ","step":"新手2"},
-"70002"  :{"name":"史莱姆","step":"新手2"},
-"90002"  :{"name":"史莱姆","step":"新手2"},
-"70003"  :{"name":"史莱姆","step":"新手2"},
-"100003" :{"name":"史莱姆","step":"新手2"},
-"110003" :{"name":"史莱姆","step":"新手2"},
-"60005"  :{"name":"史莱姆","step":"新手2"},
-"70005"  :{"name":"史莱姆","step":"新手2"},
-"110005" :{"name":"史莱姆","step":"新手2"},
-"80006"  :{"name":"史莱姆","step":"新手2"},
-"110006" :{"name":"史莱姆","step":"新手2"},
+    GuideStepFinish= {
+"10003"  :{"X":1 ,"Y":3,"name":"陶罐  ","step":"新手1","order": 1 },
+"60008"  :{"X":6 ,"Y":8,"name":"陶罐  ","step":"新手1","order": 2 },
+"100008" :{"X":10,"Y":8,"name":"陶罐  ","step":"新手1","order": 3 },
+"130003" :{"X":13,"Y":3,"name":"陶罐  ","step":"新手1","order": 4 },
+"140008" :{"X":14,"Y":8,"name":"陶罐  ","step":"新手1","order": 5 },
+"150008" :{"X":15,"Y":8,"name":"陶罐  ","step":"新手1","order": 6 },
+"190003" :{"X":19,"Y":3,"name":"陶罐  ","step":"新手1","order": 7 },
+"190007" :{"X":19,"Y":7,"name":"陶罐  ","step":"新手1","order": 8 },
+"170006" :{"X":17,"Y":6,"name":"小红  ","step":"新手1","order": 9 },
+"130004" :{"X":13,"Y":4,"name":"史莱姆","step":"新手1","order":10 },
+"130007" :{"X":13,"Y":7,"name":"史莱姆","step":"新手1","order":11 },
+"140003" :{"X":14,"Y":3,"name":"史莱姆","step":"新手1","order":12 },
+"150005" :{"X":15,"Y":5,"name":"史莱姆","step":"新手1","order":13 },
+"150007" :{"X":15,"Y":7,"name":"史莱姆","step":"新手1","order":14 },
+"160006" :{"X":16,"Y":6,"name":"史莱姆","step":"新手1","order":15 },
+"160008" :{"X":16,"Y":8,"name":"史莱姆","step":"新手1","order":16 },
+"170004" :{"X":17,"Y":4,"name":"史莱姆","step":"新手1","order":17 },
+"170005" :{"X":17,"Y":5,"name":"史莱姆","step":"新手1","order":18 },
+"60002"  :{"X":6 ,"Y":2,"name":"陶罐  ","step":"新手2","order":19 },
+"80001"  :{"X":8 ,"Y":1,"name":"陶罐  ","step":"新手2","order":20 },
+"100002" :{"X":10,"Y":2,"name":"陶罐  ","step":"新手2","order":21 },
+"110002" :{"X":11,"Y":2,"name":"陶罐  ","step":"新手2","order":22 },
+"120003" :{"X":12,"Y":3,"name":"陶罐  ","step":"新手2","order":23 },
+"120005" :{"X":12,"Y":5,"name":"陶罐  ","step":"新手2","order":24 },
+"60006"  :{"X":6 ,"Y":6,"name":"陶罐  ","step":"新手2","order":25 },
+"70006"  :{"X":7 ,"Y":6,"name":"陶罐  ","step":"新手2","order":26 },
+"100006" :{"X":10,"Y":6,"name":"陶罐  ","step":"新手2","order":27 },
+"70002"  :{"X":7 ,"Y":2,"name":"史莱姆","step":"新手2","order":28 },
+"90002"  :{"X":9 ,"Y":2,"name":"史莱姆","step":"新手2","order":29 },
+"70003"  :{"X":7 ,"Y":3,"name":"史莱姆","step":"新手2","order":30 },
+"100003" :{"X":10,"Y":3,"name":"史莱姆","step":"新手2","order":31 },
+"110003" :{"X":11,"Y":3,"name":"史莱姆","step":"新手2","order":32 },
+"60005"  :{"X":6 ,"Y":5,"name":"史莱姆","step":"新手2","order":33 },
+"70005"  :{"X":7 ,"Y":5,"name":"史莱姆","step":"新手2","order":34 },
+"110005" :{"X":11,"Y":5,"name":"史莱姆","step":"新手2","order":35 },
+"80006"  :{"X":8 ,"Y":6,"name":"史莱姆","step":"新手2","order":36 },
+"110006" :{"X":11,"Y":6,"name":"史莱姆","step":"新手2","order":37 },
 }
 
     @asynchronous
@@ -345,14 +346,29 @@ class BIGuideHandle(BaseHandler):
                 e['count']=0
             list1.append(e)
 
+        list2=[]
+        map2=yield app.DBMgr.getGuideDB().select_cnt_2_map()
+        for key in BIGuideHandle.GuideStepFinish:
+            e=BIGuideHandle.GuideStepFinish.get(key)
+            countInfo=map2.get(key)
+            if  countInfo!=None :
+                e['count']=countInfo['count']
+                e['X']=countInfo['X']
+                e['Y']=countInfo['Y']
+                e['Key']=countInfo['Key']
+            else:
+                e['count']=0
+                e['Key']="Unknown"
+            list2.append(e)
+
 
 
         # list2=yield app.DBMgr.getGuideDB().select_cnt_2()
         list1=sorted(list1,cmp=self.sortFunc,reverse=False)
-        # list2=sorted(list2,cmp=self.sortFunc,reverse=True)
+        list2=sorted(list2,cmp=self.sortFunc,reverse=False)
         self.render("bi_guide_list.html", title="新手引导打点分析",
                     list1=list1,
-                    # list2=list2,
+                    list2=list2,
                     Account=self.gmAccount,
                     channelMap=conf.getChannelNameMap())
 
