@@ -438,3 +438,12 @@ class BILevelHandler(BaseHandler):
                     list=list,
                     Account=self.gmAccount,
                     channelMap=conf.getChannelNameMap())
+class BIDeadHandler(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_get(self):
+        list=yield app.DBMgr.getCharacterDeadDB().select_cnt()
+        self.render("bi_dead.html", title="玩家死亡地图分析",
+                    list=list,
+                    Account=self.gmAccount,
+                    channelMap=conf.getChannelNameMap())

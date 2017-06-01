@@ -312,3 +312,17 @@ class StageDB:
             data[str(e['StageID'])]=e
         raise gen.Return(data)
 
+class CharacterDeadDB:
+    def __init__(self,dbtemplate):
+        self.dbtemplate=dbtemplate
+
+    @gen.coroutine
+    def select_cnt(self):
+        query="select MapInfoID,count(Id) as cnt from `CharacterDead` group by `MapInfoID` order by cnt desc"
+        def mapRow(row):
+            data              ={}
+            data['MapInfoID'] =row[ 0 ]
+            data['cnt']       =row[ 1 ]
+            return data
+        res=yield self.dbtemplate.query(query,mapRow)
+        raise gen.Return(res)

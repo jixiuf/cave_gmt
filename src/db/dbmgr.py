@@ -182,6 +182,8 @@ class DBMgr:
         return GuideDB(self.getGMToolDB())
     def getStageDB(self):
         return StageDB(self.getGMToolDB())
+    def getCharacterDeadDB(self):
+        return CharacterDeadDB(self.getGMToolDB())
 
     def getMailDB(self,server=1):
         return MailDB(self.getGameDB(server))
