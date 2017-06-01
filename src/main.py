@@ -17,8 +17,6 @@ from tornado.options import options
 def main():
     """entry point for process"""
 
-
-    App=init.get_app()
     tornado.options.parse_command_line()
     # if not os.path.exists(conf.LOCAL_UPLOAD_DIR):
     #     os.mkdir(conf.LOCAL_UPLOAD_DIR)
@@ -27,6 +25,7 @@ def main():
         conf.CONFIG_DIR=options.confdir
     print "python src/main.py -host=%s -port=%s -mode=%s -locale=%s -confdir=%s" % (options.host, options.port, options.mode,options.locale,options.confdir)
 
+    App=init.get_app()
     http_server = tornado.httpserver.HTTPServer(App)
     try:
         http_server.listen(options.port)
