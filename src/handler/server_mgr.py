@@ -37,6 +37,12 @@ class ServerMgr(BaseHandler):
         cmds.append("ps -ef |grep ")
         cmds.append("tail  -n 100 data/server.log")
         cmds.append("tail  -n 100 data/gminfo.log")
+        cmds.append("tail  -n 100 data/tornado.log")
+        cmds.append("ls -lh /tmp/tmp_cave_gmt/")
+        cmds.append("md5sum /tmp/tmp_cave_gmt/cave_gmt.tgz ")
+        cmds.append("md5sum /data/cave/bin/cave")
+
+
 
 
 
