@@ -118,4 +118,7 @@ update:
 	cp -rf /tmp/tmp_cave_gmt/cave_gmt/template/* /data/cave_gmt/template/
 	cp -rf /tmp/tmp_cave_gmt/cave_gmt/src/* /data/cave_gmt/src/
 	cp -rf /tmp/tmp_cave_gmt/cave_gmt/Makefile /data/cave_gmt/
-	cp -rf /tmp/tmp_cave_gmt/cave_gmt/virtual/* /data/cave_gmt/virtual/
+	@if [ -d /tmp/tmp_cave_gmt/cave_gmt/virtual/ ]; then  \
+		cp -rf /tmp/tmp_cave_gmt/cave_gmt/virtual/* /data/cave_gmt/virtual/;\
+	fi
+
