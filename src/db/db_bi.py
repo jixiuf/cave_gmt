@@ -260,7 +260,7 @@ class GuideDB:
 
     @gen.coroutine
     def select_cnt_map(self,):
-        query="select WordID,count(`Id`) as count  from GuideStepFinish group by WordID"
+        query="select WordID,count(distinct `Uin`) as count  from GuideStepFinish group by WordID"
         res=yield self.dbtemplate.query(query,self.mapRow)
         data={}
         for e in res:
