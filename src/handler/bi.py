@@ -429,6 +429,7 @@ class BILevelHandler(BaseHandler):
                 info['countLevel']=info['countLevel']-levelList[i-1].get("countLevel")
                 if info['countLevel']<0:
                     info['countLevel']=0
+            i=i+1
 
             list.append(info)
 
