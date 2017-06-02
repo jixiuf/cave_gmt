@@ -425,8 +425,8 @@ class BILevelHandler(BaseHandler):
         list=[]
         i=0
         for info in levelList:
-            if i!=0:
-                info['countLevel']=info['countLevel']-levelList[i-1].get("countLevel")
+            if i!=len(levelList)-1:
+                info['countLevel']=info['countLevel']-levelList[i+1].get("countLevel")
                 if info['countLevel']<0:
                     info['countLevel']=0
             i=i+1
