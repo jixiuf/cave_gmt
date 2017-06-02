@@ -201,7 +201,7 @@ class LevelUpDB:
             data['CurLevel'] =row[ 0 ]
             data['countLevel'] =row[ 1 ]
             return data
-        query="select CurLevel,count(`Id`)  as countLevel from PlayerLevelUp  group by CurLevel order by CurLevel asc"
+        query="select CurLevel,count(distinct `Uin`)  as countLevel from PlayerLevelUp  group by CurLevel order by CurLevel asc"
         res=yield self.dbtemplate.query(query,mapRow)
         raise gen.Return(res)
 
