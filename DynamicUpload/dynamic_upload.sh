@@ -24,7 +24,7 @@ svnPassword=u3gZa2fWKM
 gmt_notify_url="$gmt_url""/api/game/dynamic"
 gmt_update_version_url="$gmt_url""/game/server_version_update"
 # 压缩zip包
-./svndiffzip.sh $from $to $svnpath dest.zip $svnUser $svnPassword
+./svndiffzip.sh $from $to $svnpath dest.zip $version $svnUser $svnPassword
 filesize=`wc -c <dest.zip|xargs` # use xargs to trim space
 
 # 把上层目录加入到path下

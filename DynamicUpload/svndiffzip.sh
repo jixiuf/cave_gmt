@@ -9,15 +9,16 @@ from=$1
 to=$2
 svnpath=$3
 saveZipFileTo=$4
-if [ -z $5 ];then
+version=$5
+if [ -z $6 ];then
     svnuser=""
  else
-    svnuser="--username $5"
+    svnuser="--username $6"
 fi
-if [ -z $6 ];then
+if [ -z $7 ];then
     svnpass=""
  else
-    svnpass="--password $6"
+    svnpass="--password $7"
 fi
 
 # svnurl=`svn info --no-newline --show-item url $svnpath`
@@ -51,7 +52,7 @@ for url in $changed_file ; do
     fi
 
 done
-
+find . -name "config.json" -exec awk '{sub(/"innner_version": *".*"/,"\"innner_version\": \"$version\"");print>"/tmp/config.json"}' {} \; -exec mv  /tmp/config.json {} \;
 rm -rf dest.zip
 
 # 加密lua
