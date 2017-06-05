@@ -133,6 +133,7 @@ class Application(tornado.web.Application):
             (r'/server_mgr/server_exec', ServerExec),
             (r'/server_mgr/whiteip_delete', WhiteIPDelete),
             (r'/server_mgr/whiteip_add', WhiteIPAdd),
+            (r'/server_mgr/prof', ProfHandler),
 
 
             (r'/maintain/mgr', Maintain),

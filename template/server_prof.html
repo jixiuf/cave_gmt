@@ -1,0 +1,101 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/maintain.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-login-form">
+    <h2 class="form-signin-heading ui-login-title">server prof</h2>
+    本页面主要用于对服务器进行调试分析其内存/cpu的使用情况,慎用
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">服务器类型</label>
+
+            <div class="col-sm-6">
+                <select class="form-control op-server-type col-sm-2" >
+                    <option value='logic'>logic</option>
+                    <option value='auth'>auth</option>
+                    <option value='center'>center</option>
+                </select>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">服务器编号</label>
+
+            <div class="col-sm-6">
+                <select class="form-control op-serverid col-sm-2" >
+                    <option value='1'>下拉选择serverId(default 1)</option>
+                    {% for serverId in serverIdList %}
+                    <option value='{{serverId}}'>{{ serverId }}</option>
+                    {% end %}
+                </select>
+
+            </div>
+        </div>
+
+        <div class="form-group">
+             <label class="col-sm-2 control-label">进程编号</label>
+             <div class="col-sm-6">
+                 <input class="form-control op-process" min="1" type="number" value="1" id="op-process">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">分析类型</label>
+
+            <div class="col-sm-6">
+                <select class="form-control op-prof-type col-sm-2" >
+                    <option selected value='3'>内存</option>
+                    <option value='4'>CPU</option>
+                    <option value='5'>Block</option>
+                    <option value='2'>Stack</option>
+                </select>
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default op-login-submit">提交</button>
+            </div>
+        </div>
+    </form>
+        </div>
+
+
+        <script type="text/javascript">
+         var ajaxing = false,
+             serverTypeEl = $('.op-server-type'),
+             serverIdEl = $('.op-serverid'),
+             submitEl = $('.op-login-submit'),
+             data = {};
+
+         submitEl.on('click', function() {
+             if(ajaxing) return false;
+             var serverId = serverIdEl.val().replace(/(^\s*)|(\s*$)/g, "");
+             if(serverId == '' ) {
+                 serverId="1";
+             }
+             data['serverId'] = serverId;
+             data['process'] = $('.op-process').val();
+             data['server-type'] = serverTypeEl.val();
+             data['profType'] = $(".op-prof-type").val();
+             ajaxing = true;
+             $.ajax({
+                 url: '/server_mgr/prof',
+                 type: 'post',
+                 data: data
+             })
+              .done(function(data) {
+                  ajaxing = false;
+                  if(data == 'success') {
+                      location.href = '/server_mgr/prof';
+                  } else {
+                      alert('无权限'+data);
+                  }
+              });
+             return false;
+         });
+
+        </script>
+
+{% end %}

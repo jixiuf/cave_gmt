@@ -30,6 +30,8 @@ class ServerMgr(BaseHandler):
         cmds=[]
         redisAddrs=conf.getRedisAddr()
         cmds.append(r"echo 'keys *'|redis-cli -h %s -p %s"%(redisAddrs['host'],redisAddrs['port']))
+        cmds.append(r"echo 'PUBLISH cave_notify_channel_1_1_1 %s '|redis-cli -h %s -p %s"%( "{\"type\":3}", redisAddrs['host'],redisAddrs['port']))
+
         cmds.append(r"echo 'get %s_cmd_output'|redis-cli -h %s -p %s"%(conf.AppName, redisAddrs['host'],redisAddrs['port']))
 
         profileDBConfig=conf.getProfileDBConfigMaster()
@@ -237,5 +239,29 @@ class WhiteIPAdd(BaseHandler):
         yield app.DBMgr.getProfileDB().execSql("insert into ban (Type,Content,EndBanTime) value (5,'%s','%s')"%(ip,year5FromNow))
         time.sleep(0.13)
         app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_BAN)
+
+        self.write('success')
+
+class ProfHandler(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_get(self):
+        serverIdList= app.DBMgr.get_all_server_id()
+        self.render("server_prof.html",
+                Account=self.gmAccount,
+                title="服务器Prof",serverIdList=serverIdList)
+
+
+    @asynchronous
+    @gen.coroutine
+    def self_post(self):
+        server= self.get_argument('serverId','')
+        process= self.get_argument('process','')
+        serverType= self.get_argument('server-type','')
+        profType= self.get_argument('profType','')
+
+        print(redis_notify.get_process_redis_notify_channel(conf.PLATFORM,server,process))
+        print( '{"type":%s,"accept_type":"%s"}'%(profType,serverType))
+        app.Redis.publish(redis_notify.get_process_redis_notify_channel(conf.PLATFORM,server,process), '{"type":%s,"accept_type":"%s"}'%(profType,serverType))
 
         self.write('success')
