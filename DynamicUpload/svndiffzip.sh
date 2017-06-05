@@ -52,7 +52,7 @@ for url in $changed_file ; do
     fi
 
 done
-find . -name "config.json" -exec awk "{sub(/\"innner_version\": *\".*\"/,'\"innner_version\": \"$version\"');print>'/tmp/config.json'}" {} \; -exec mv  /tmp/config.json {} \;
+# find . -name "config.json" -exec awk "{sub(/\"innner_version\": *\".*\"/,/\"innner_version\": \"$version\"/);print>\"/tmp/config.json\"}" {} \; -exec mv  /tmp/config.json {} \;
 rm -rf dest.zip
 
 # 加密lua

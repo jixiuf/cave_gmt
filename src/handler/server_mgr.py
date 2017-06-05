@@ -35,6 +35,8 @@ class ServerMgr(BaseHandler):
         profileDBConfig=conf.getProfileDBConfigMaster()
         cmds.append(r'echo "show tables"|mysql -h %s -u%s -p"%s" %s'%(profileDBConfig.host,profileDBConfig.user,profileDBConfig.passwd,profileDBConfig.database))
         cmds.append("ps -ef |grep ")
+        cmds.append("ps -auxw --sort=rss")
+        cmds.append("ps -auxw --sort=%cpu")
         cmds.append("tail  -n 100 data/server.log")
         cmds.append("tail  -n 100 data/gminfo.log")
         cmds.append("tail  -n 100 data/tornado.log")
