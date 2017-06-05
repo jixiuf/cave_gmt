@@ -50,6 +50,8 @@ class ServerMgr(BaseHandler):
         cmds.append("ll  ~/tmp/cave.zh.bin.tar.lzma ")
         cmds.append("/data/supervisor/reload.sh   /data/supervisor/supervisord.conf")
         cmds.append("python -m SimpleHTTPServer 3009")
+        cmds.append("echo 'svg >a.svg'|go tool pprof ~/go/bin/cave heap-28978-1.pprof")
+
 
 
         maintainList=yield app.DBMgr.maintainDB.select_all()
