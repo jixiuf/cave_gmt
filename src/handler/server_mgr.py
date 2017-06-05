@@ -37,8 +37,8 @@ class ServerMgr(BaseHandler):
         profileDBConfig=conf.getProfileDBConfigMaster()
         cmds.append(r'echo "show tables"|mysql -h %s -u%s -p"%s" %s'%(profileDBConfig.host,profileDBConfig.user,profileDBConfig.passwd,profileDBConfig.database))
         cmds.append("ps -ef |grep ")
-        cmds.append("ps -auxw --sort=rss")
-        cmds.append("ps -auxw --sort=%cpu")
+        cmds.append("ps -auxw --sort=rss|tac")
+        cmds.append("ps -auxw --sort=%cpu|tac")
         cmds.append("tail  -n 100 data/server.log")
         cmds.append("tail  -n 100 data/gminfo.log")
         cmds.append("tail  -n 100 data/tornado.log")
@@ -47,10 +47,15 @@ class ServerMgr(BaseHandler):
         cmds.append("md5sum /data/cave/bin/cave")
         cmds.append("cat  /data/cave/bin/get-last-cave-zh.sh")
         cmds.append("sh  /data/cave/bin/get-last-cave-zh.sh")
+        cmds.append("llh /data/cave/config/logs/cave_logic")
         cmds.append("ll  ~/tmp/cave.zh.bin.tar.lzma ")
         cmds.append("/data/supervisor/reload.sh   /data/supervisor/supervisord.conf")
         cmds.append("python -m SimpleHTTPServer 3009")
-        cmds.append("echo 'svg >a.svg'|go tool pprof ~/go/bin/cave heap-28978-1.pprof")
+        cmds.append("echo 'svg >a.svg'|go tool pprof ./cave heap-28978-1.pprof")
+        now=datetime.now()
+        cmds.append(now.strftime("llh /data/cave/config/logs/cave_logic |grep %m.%d"))
+        cmds.append(now.strftime("llh /data/cave/config/logs/cave_auth |grep %m.%d"))
+
 
 
 
