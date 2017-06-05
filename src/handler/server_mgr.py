@@ -47,10 +47,15 @@ class ServerMgr(BaseHandler):
         cmds.append("md5sum /data/cave/bin/cave")
         cmds.append("cat  /data/cave/bin/get-last-cave-zh.sh")
         cmds.append("sh  /data/cave/bin/get-last-cave-zh.sh")
+        cmds.append("llh /data/cave/config/logs/cave_logic")
         cmds.append("ll  ~/tmp/cave.zh.bin.tar.lzma ")
         cmds.append("/data/supervisor/reload.sh   /data/supervisor/supervisord.conf")
         cmds.append("python -m SimpleHTTPServer 3009")
         cmds.append("echo 'svg >a.svg'|go tool pprof ~/go/bin/cave heap-28978-1.pprof")
+        now=datetime.now()
+        cmds.append(now.strftime("llh /data/cave/config/logs/cave_logic |grep %m.%d"))
+        cmds.append(now.strftime("llh /data/cave/config/logs/cave_auth |grep %m.%d"))
+
 
 
 
