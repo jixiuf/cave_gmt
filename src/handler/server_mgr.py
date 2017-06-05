@@ -49,13 +49,7 @@ class ServerMgr(BaseHandler):
         cmds.append("sh  /data/cave/bin/get-last-cave-zh.sh")
         cmds.append("ll  ~/tmp/cave.zh.bin.tar.lzma ")
         cmds.append("/data/supervisor/reload.sh   /data/supervisor/supervisord.conf")
-
-
-
-
-
-
-
+        cmds.append("python -m SimpleHTTPServer 3009")
 
 
         maintainList=yield app.DBMgr.maintainDB.select_all()
@@ -105,8 +99,12 @@ class ServerExec(BaseHandler):
         cmd=self.get_argument('cmd','')
         if cmd=="ll":
             cmd="ls -l "
+        if cmd=="llh":
+            cmd="ls -hl "
         if cmd.startswith("ll "):
             cmd=cmd.replace("ll ","ls -l ")
+        if cmd.startswith("llh "):
+            cmd=cmd.replace("llh ","ls -lh ")
 
 
         if processIdStr=='-1':  # on gmt
