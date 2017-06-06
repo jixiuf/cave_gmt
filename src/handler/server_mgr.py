@@ -267,6 +267,11 @@ class ProfHandler(BaseHandler):
 
         print(redis_notify.get_process_redis_notify_channel(conf.PLATFORM,server,process))
         print( '{"type":%s,"accept_type":"%s"}'%(profType,serverType))
-        app.Redis.publish(redis_notify.get_process_redis_notify_channel(conf.PLATFORM,server,process), '{"type":%s,"accept_type":"%s"}'%(profType,serverType))
+        if process!='0':
+            app.Redis.publish(redis_notify.get_process_redis_notify_channel(conf.PLATFORM,server,process), '{"type":%s,"accept_type":"%s"}'%(profType,serverType))
+        else:
+            app.Redis.publish(redis_notify.get_server_redis_notify_channel(conf.PLATFORM,server), '{"type":%s,"accept_type":"%s"}'%(profType,serverType))
+
+
 
         self.write('success')
