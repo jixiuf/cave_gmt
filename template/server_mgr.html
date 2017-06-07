@@ -132,6 +132,9 @@
      if(serverId == '' ) {
          serverId="1";
      }
+    if(!confirm("你想好了吗，真的要这样做吗?")) {
+        return false;
+    }
      data['serverId'] = serverId;
      data['processId'] = processId;
      ajaxing = true;
@@ -158,6 +161,9 @@
      if(serverId == '' ) {
          serverId="1";
      }
+    if(!confirm("你想好了吗，真的要这样做吗?")) {
+        return false;
+    }
      data['serverId'] = serverId;
      data['processId'] = processId;
      ajaxing = true;
@@ -188,6 +194,9 @@
      data['serverId'] = serverId;
      data['processId'] = processId;
      ajaxing = true;
+    if(!confirm("你想好了吗，真的要这样做吗?")) {
+        return false;
+    }
      $.ajax({
          url: '/server_mgr/server_switch',
          type: 'post',
@@ -218,6 +227,9 @@
      data['processId'] = processId;
      data['uin'] = '0';/* 踢所有人 */
      ajaxing = true;
+    if(!confirm("你想好了吗，真的要这样做吗?")) {
+        return false;
+    }
      $.ajax({
          url: '/player/kick',
          type: 'post',
