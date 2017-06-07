@@ -55,6 +55,8 @@ class ServerMgr(BaseHandler):
         now=datetime.now()
         cmds.append(now.strftime("llh /data/cave/config/logs/cave_logic |grep %m.%d"))
         cmds.append(now.strftime("llh /data/cave/config/logs/cave_auth |grep %m.%d"))
+        cmds.append(now.strftime("supervisorctl -c /data/supervisor/supervisord.conf start cave:cave_zh_4 2>&1"))
+
 
 
 
