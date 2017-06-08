@@ -1,8 +1,8 @@
 #!/bin/bash
 # 需要用到的命令 ，确保svn  zip,curl,python 以安装
-#用法举例比如 ./dynamic_upload.sh gamename 版本号  svnVersionFrom svnVersionTo svn_resource_url gmt_notify_url channel1 channel2 ....channelN
-#用法举例比如 ./dynamic_upload.sh goldflower 1100083  1005 1139 svn://svn.najaplus.com/game1/dev/Data http://dev.najaplus.com:8000  6 7
-# ./dynamic_upload.sh cave 1001005  10174 10888 svn://svn.najaplus.com/game2/dev/client/cocos2d-x-2.2.6/projects/client/Resources http://cavegmt.zh.najaplus.com  10
+#用法举例比如 ./dynamic_upload.sh gamename 版本号  svnVersionFrom svnVersionTo svn_resource_url gmt_notify_url show_version channel1 channel2 ....channelN
+#用法举例比如 ./dynamic_upload.sh goldflower 1100083  1005 1139 svn://svn.najaplus.com/game1/dev/Data http://dev.najaplus.com:8000 v1.2.3 6 7
+# ./dynamic_upload.sh cave 1001005  10174 10888 svn://svn.najaplus.com/game2/dev/client/cocos2d-x-2.2.6/projects/client/Resources http://cavegmt.zh.najaplus.com  v1.2.3 10
 dir=`pwd`
 cd `dirname $0`
 # qiniu accesskey secretkey
@@ -17,14 +17,17 @@ from=$3
 to=$4
 svnpath=$5
 gmt_url=$6
-channel_begin_param=6
+show_version=$7
+
+channel_begin_param=8           # 加参数时要改此值
+
 svnUser=version
 svnPassword=u3gZa2fWKM
 
 gmt_notify_url="$gmt_url""/api/game/dynamic"
 gmt_update_version_url="$gmt_url""/game/server_version_update"
 # 压缩zip包
-./svndiffzip.sh $from $to $svnpath dest.zip $version $svnUser $svnPassword
+./svndiffzip.sh $from $to $svnpath dest.zip $version $show_version $svnUser $svnPassword
 filesize=`wc -c <dest.zip|xargs` # use xargs to trim space
 
 # 把上层目录加入到path下

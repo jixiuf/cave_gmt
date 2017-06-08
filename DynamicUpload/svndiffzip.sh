@@ -1,6 +1,7 @@
 #!/bin/sh
 # 将两个版本之间变化的文件导出成一个zip
 #用法举例比如 ./svndiffzip.sh 1005 1139 svn://svn.najaplus.com/game1/dev/Data dest.zip [svnusername,svnpassword]
+# ./svndiffzip.sh 11124 11127 svn://svn.najaplus.com/game2/dev/client/cocos2d-x-2.2.6/projects/client/Resources d.zip
  # ./svndiffzip.sh 1005 1139 svn://svn.najaplus.com/game1/dev/Data dest.zip svnuser svnpass
  # ./svndiffzip.sh 1005 1139 svn://svn.najaplus.com/game1/dev/Data dest.zip
 # 其中svnusername svnpassword 可省略,省略则用系统缓存的
@@ -9,16 +10,17 @@ from=$1
 to=$2
 svnpath=$3
 saveZipFileTo=$4
-version=$5
-if [ -z $6 ];then
+innner_version=$5
+show_version=$6
+if [ -z $7 ];then
     svnuser=""
  else
-    svnuser="--username $6"
+    svnuser="--username $7"
 fi
-if [ -z $7 ];then
+if [ -z $8 ];then
     svnpass=""
  else
-    svnpass="--password $7"
+    svnpass="--password $8"
 fi
 
 # svnurl=`svn info --no-newline --show-item url $svnpath`
@@ -52,7 +54,18 @@ for url in $changed_file ; do
     fi
 
 done
-# find . -name "config.json" -exec awk "{sub(/\"innner_version\": *\".*\"/,/\"innner_version\": \"$version\"/);print>\"/tmp/config.json\"}" {} \; -exec mv  /tmp/config.json {} \;
+svn $svnuser $svnpass --no-auth-cache --non-interactive export --force -r $to $svnpath/config.json dest/config.json
+if [ -n "$innner_version" ] && [ "default" != "$innner_version" ]; then
+    echo "change innner_version to $innner_version of $resourceDirDest/config.json"
+    sed -i  .bak "s|\"innner_version\": *\".*\"|\"innner_version\": \"$innner_version\"|g"  dest/config.json
+fi
+if [ -n "$show_version" ] && [ "default" != "$show_version" ]; then
+    echo "change show_version to $show_version of $resourceDirDest/config.json"
+    sed -i  .bak  "s|\"show_version\": *\".*\"|\"show_version\": \"$show_version\"|g" dest/config.json
+fi
+rm -f dest/config.json.bak
+head dest/config.json
+
 rm -rf dest.zip
 
 # 加密lua
