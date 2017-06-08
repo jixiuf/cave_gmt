@@ -9,7 +9,6 @@ import traceback
 
 
 import redis
-import etcd
 import tornado.web
 import conf
 from tornado.options import  options
@@ -42,7 +41,6 @@ from tornado.ioloop import IOLoop
 
 DBMgr=db.dbmgr.DBMgr()
 Redis=redis.Redis()
-Etcd=etcd.Client(port=4001,host="127.0.0.1")
 Logger=None
 
 class Application(tornado.web.Application):
@@ -186,14 +184,15 @@ class Application(tornado.web.Application):
 
         # self.channel_logger = get_logger('channel',os.path.join(options.data_dir,'channel.log'))
         self.gm_logger = get_logger('gminfo',os.path.join(options.data_dir,'gminfo.log'))
+        conf.initEtcd()
         global DBMgr
         DBMgr.init(options.mode,options.locale)
         DBMgr.load()
         global Redis
         Redis =initRedisConfig(options.mode)
-        global Etcd
-        etcdConfig=conf.getEtcdAddr()
-        Etcd=etcd.client.Client(port=etcdConfig["port"],host=etcdConfig["ip"], allow_reconnect=True)
+        # global Etcd
+        # etcdConfig=conf.getEtcdAddr()
+        # Etcd=etcd.client.Client(port=etcdConfig["port"],host=etcdConfig["ip"], allow_reconnect=True)
 
         signal.signal(signal.SIGINT, self.handlerSignal)
         signal.signal(signal.SIGTERM, self.handlerSignal)
@@ -271,49 +270,5 @@ class Application(tornado.web.Application):
 
 
 def initRedisConfig(mode):
-    with open(conf.getConfigFile()) as data_file:
-        value = json.load(data_file)
-        if value==None:
-            return None
-        redis_host = value["redis"]['addr'].split(':')[0]
-        redis_port = value["redis"]['addr'].split(':')[1]
-        return redis.Redis(host=redis_host, port=redis_port, db=0)
-
-# [{u'processId': 1, u'startServerTime': 1465809520, u'ip': u'192.168.1.100', u'st': u'stopping', u'serverId': 1, u'port': u'2234', u'maxClientCount': 1000}
-# , {u'processId': 2, u'startServerTime': 1465814775, u'ip': u'192.168.1.100', u'currentTcpCount': 250, u'st': u'running', u'serverId': 1, u'port': u'2235', u'maxClientCount': 1000}]
-def getEtcdServerList(platform=1,server=1):
-    list=[]
-    global Etcd
-    try:
-        d =Etcd.read("/%s/logicmgr/%d/%d"%(conf.AppName,int(platform),int(server)),recursive=True)
-        for c in d.children:
-            if c!=None and c.value!=None:
-                list.append(json.loads(c.value))
-
-
-        list.sort()
-        return list
-    except etcd.EtcdKeyNotFound:
-        return list
-def getEtcdServerProcess(platform=1,server=1,process=1):
-    global Etcd
-    try:
-        v =Etcd.get("/%s/logicmgr/%d/%d/%d"%(conf.AppName,int(platform),int(server),int(process)))
-        return json.loads(v.value)
-    except etcd.EtcdKeyNotFound:
-        return None
-def putEtcdServerProcess(platform=1,server=1,process=1,value={}):
-    global Etcd
-    Etcd.set("/%s/logicmgr/%d/%d/%d"%(conf.AppName,int(platform),int(server),int(process)),json.dumps(value))
-
-
-def isServerRunning(platform=1,server=1):
-    servers=getEtcdServerList()
-    running =False
-    for server in servers:
-        if server["st"]=="running":
-            running=True
-            break
-    return running
-
-
+    addr=conf.getRedisAddr()
+    return redis.Redis(host=addr['host'], port=addr['port'], db=0)

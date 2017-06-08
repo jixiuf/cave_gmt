@@ -11,6 +11,7 @@ define("host", default="127.0.0.1", help="host or ip", type=str)
 define("mode", default="dev", help="mode (dev or pro)", type=str)
 define("locale", default="zh", help="locale (default chi)", type=str)
 define("confdir", default=conf.CONFIG_DIR, help="config file directory", type=str)
+define("etcd", default="http://127.0.0.1:2379", help="demo http://127.0.0.1:2379", type=str)
 
 
 

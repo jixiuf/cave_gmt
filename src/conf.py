@@ -6,9 +6,25 @@ import db.db_permissions
 import db.dbmgr
 from tornado.options import  options
 import os.path
+import etcd
 
 AppName="cave"
 CONFIG_DIR="/data/%s/config/"%(AppName)
+etcdConfigJson=None
+Etcd=etcd.Client(port=4001,host="127.0.0.1")
+def getConfigJson():
+    global Etcd
+    global AppName
+    global etcdConfigJson
+    if etcdConfigJson==None:
+        try:
+            v =Etcd.get("/%s/config/%s_%s"%(AppName,str(options.mode),str(options.locale)))
+            etcdConfigJson=json.loads(v.value)
+            return etcdConfigJson
+        except etcd.EtcdKeyNotFound:
+            return None
+    return etcdConfigJson
+
 def getConfigFile():
     filename="%s%s_%s.json"%(CONFIG_DIR,options.mode,options.locale)
     if not os.path.exists(filename)   :
@@ -50,34 +66,31 @@ PLATFORM_NAME="默认平台"
 
 def getChannelList():
     channels = []
-    with open(getConfigFile()) as data_file:
-        value = json.load(data_file)
-        if value==None:
-            return channels
-        for k in value["channel"]:
-            channels.append(int(k))
-            channels.sort()
+    value=getConfigJson()
+    if value==None:
+        return channels
+    for k in value["channel"]:
+        channels.append(int(k))
+        channels.sort()
     return channels
 
 def getChannelStrList():
     channels = []
-    with open(getConfigFile()) as data_file:
-        value = json.load(data_file)
-        if value==None:
-            return channels
-        for k in value["channel"]:
-            channels.append(k)
-            channels.sort()
+    value=getConfigJson()
+    if value==None:
+        return channels
+    for k in value["channel"]:
+        channels.append(k)
+        channels.sort()
     return channels
 
 
 # key=渠道号，value =渠道名
 def getChannelNameMap():
-    with open(getConfigFile()) as data_file:
-        value = json.load(data_file)
-        if value==None:
-            return {}
-        return value["channel"]
+    value=getConfigJson()
+    if value==None:
+        return {}
+    return value["channel"]
 
 #key=channelid value=platformid
 def getChannelPlatformMap():
@@ -90,56 +103,116 @@ def getChannelPlatformMap():
 
 def getSupervisorAddrList(server="1"):
     addrs=[]
-    with open(getConfigFile()) as data_file:
-        value = json.load(data_file)
-        if value==None:
-            return addrs
-        addrs.append(value["supervisor"][str(server)])
+    value=getConfigJson()
+    if value==None:
+        return addrs
+    addrs.append(value["supervisor"][str(server)])
     return addrs
 
 def getAllSupervisorAddrList(): # key=server ,value =["addr"]
     addrs=[]
-    with open(getConfigFile()) as data_file:
-        value = json.load(data_file)
-        if value==None:
-            return addrs
-        return value["supervisor"]
-def getEtcdAddr():
-    addrs={}                    # "ip":"ip","port":"port"
-    with open(getConfigFile()) as data_file:
-        value = json.load(data_file)
-        if value==None:
-            return addrs
-        if len(value["etcd"])==0:
-            return addrs
-        value["etcd"][0]=value["etcd"][0].replace("https://","")
-        value["etcd"][0]=value["etcd"][0].replace("http://","")
-        token=value["etcd"][0].split(":")
-        addrs["ip"]=token[0]
-        addrs["port"]=int(token[1])
+    value=getConfigJson()
+    if value==None:
         return addrs
+    return value["supervisor"]
+
+    # addrs={}                    # "ip":"ip","port":"port"
+    # with open(getConfigFile()) as data_file:
+    #     value = json.load(data_file)
+    #     if value==None:
+    #         return addrs
+    #     if len(value["etcd"])==0:
+    #         return addrs
+    #     value["etcd"][0]=value["etcd"][0].replace("https://","")
+    #     value["etcd"][0]=value["etcd"][0].replace("http://","")
+    #     token=value["etcd"][0].split(":")
+    #     addrs["ip"]=token[0]
+    #     addrs["port"]=int(token[1])
+    #     return addrs
 def getRedisAddr():
     addrs={}                    # "ip":"ip","port":"port"
-    with open(getConfigFile()) as data_file:
-        value = json.load(data_file)
-        if value==None:
-            return None
-        addrs['host']= value["redis"]['addr'].split(':')[0]
-        addrs['port'] = value["redis"]['addr'].split(':')[1]
+    value=getConfigJson()
+    if value==None:
+        return None
+    addrs['host']= value["redis"]['addr'].split(':')[0]
+    addrs['port'] = value["redis"]['addr'].split(':')[1]
     return addrs
 
 
 def getProfileDBConfigMaster():
-    with open(getConfigFile()) as data_file:
-        value = json.load(data_file)
-        jsonData=value["profile_db_config"]
-        user=jsonData["master"]['user']
-        passwd=jsonData["master"]['passwd']
-        host=jsonData["master"]['host']
-        database=jsonData["master"]['database']
-        port=jsonData["master"].get('port','')
-        if port=="":
-            port=3306
-        if type(port)==str or type(port)==unicode :
-            port=int(port)
-        return db.dbmgr.DBConfig(user,passwd,host,database,port)
+    value=getConfigJson()
+    jsonData=value["profile_db_config"]
+    user=jsonData["master"]['user']
+    passwd=jsonData["master"]['passwd']
+    host=jsonData["master"]['host']
+    database=jsonData["master"]['database']
+    port=jsonData["master"].get('port','')
+    if port=="":
+        port=3306
+    if type(port)==str or type(port)==unicode :
+        port=int(port)
+    return db.dbmgr.DBConfig(user,passwd,host,database,port)
+
+def getEtcdAddr():
+    addr=options.etcd.replace("https://","")
+    addr=addr.replace("http://","")
+    addr=addr.split(",")[0]
+    addrs={}                    # "ip":"ip","port":"port"
+    token=addr.split(":")
+    addrs["ip"]=token[0]
+    addrs["port"]=int(token[1])
+    return addrs
+def initEtcd():
+    global Etcd
+    etcdConfig=getEtcdAddr()
+    Etcd=etcd.client.Client(port=etcdConfig["port"],host=etcdConfig["ip"], allow_reconnect=True)
+    return Etcd
+
+def getEtcd():
+    global Etcd
+    return Etcd
+
+
+
+
+# [{u'processId': 1, u'startServerTime': 1465809520, u'ip': u'192.168.1.100', u'st': u'stopping', u'serverId': 1, u'port': u'2234', u'maxClientCount': 1000}
+# , {u'processId': 2, u'startServerTime': 1465814775, u'ip': u'192.168.1.100', u'currentTcpCount': 250, u'st': u'running', u'serverId': 1, u'port': u'2235', u'maxClientCount': 1000}]
+def getEtcdServerList(platform=1,server=1):
+    list=[]
+    global Etcd
+    global AppName
+    try:
+        d =Etcd.read("/%s/logicmgr/%d/%d"%(AppName,int(platform),int(server)),recursive=True)
+        for c in d.children:
+            if c!=None and c.value!=None:
+                list.append(json.loads(c.value))
+
+
+        list.sort()
+        return list
+    except etcd.EtcdKeyNotFound:
+        return list
+def getEtcdServerProcess(platform=1,server=1,process=1):
+    global Etcd
+    global AppName
+    try:
+        v =Etcd.get("/%s/logicmgr/%d/%d/%d"%(AppName,int(platform),int(server),int(process)))
+        return json.loads(v.value)
+    except etcd.EtcdKeyNotFound:
+        return None
+def putEtcdServerProcess(platform=1,server=1,process=1,value={}):
+    global Etcd
+    global AppName
+    Etcd.set("/%s/logicmgr/%d/%d/%d"%(AppName,int(platform),int(server),int(process)),json.dumps(value))
+
+
+def isServerRunning(platform=1,server=1):
+    servers=getEtcdServerList()
+    running =False
+    for server in servers:
+        if server["st"]=="running":
+            running=True
+            break
+    return running
+
+

@@ -66,7 +66,7 @@ class ServerMgr(BaseHandler):
         supervisorAddrJson=conf.getAllSupervisorAddrList()
         etcdServerListMap={}
         for serverId in serverIdList:
-            etcdServerListMap[str(serverId)]=app.getEtcdServerList(conf.PLATFORM,serverId)
+            etcdServerListMap[str(serverId)]=conf.getEtcdServerList(conf.PLATFORM,serverId)
         self.render("server_mgr.html",
                     Account=self.gmAccount,
                     myPublicIP=self.request.remote_ip,
@@ -162,7 +162,7 @@ class ServerSwitch(BaseHandler):
         if processIdStr=='' or processIdStr=="0" or serverIdStr=='' or serverIdStr=='0':
             self.write('params wrong')
             return
-        serverInfo=app.getEtcdServerProcess(conf.PLATFORM,serverIdStr,processIdStr)
+        serverInfo=conf.getEtcdServerProcess(conf.PLATFORM,serverIdStr,processIdStr)
         if serverInfo==None:
             self.write('server not running')
             return
@@ -172,7 +172,7 @@ class ServerSwitch(BaseHandler):
             serverInfo['st']='stopping'
 
 
-        app.putEtcdServerProcess(conf.PLATFORM,serverIdStr,processIdStr,serverInfo)
+        conf.putEtcdServerProcess(conf.PLATFORM,serverIdStr,processIdStr,serverInfo)
         time.sleep(0.1)
         self.write('success')
 

@@ -83,12 +83,11 @@ class DBMgr:
 
     def get_all_server_id(self):
         list=[]
-        with open(conf.getConfigFile()) as data_file:
-            value = json.load(data_file)
-            if value==None:
-                return
-            for k in value["game_db_config"]:
-                list.append(int(k))
+        value=conf.getConfigJson()
+        if value==None:
+            return
+        for k in value["game_db_config"]:
+            list.append(int(k))
 
 
         # reC=re.compile(r'.*%s_0_([0-9]+)\.json'%(self.mode))
@@ -227,35 +226,31 @@ class DBMgr:
 
 
     def _getDesignConfig(self):
-        with open(conf.getConfigFile()) as data_file:
-            value = json.load(data_file)
-            if value==None:
-                return None
-            return self._getDBConfigMaster(value["design_db_config"])
+        value=conf.getConfigJson()
+        if value==None:
+            return None
+        return self._getDBConfigMaster(value["design_db_config"])
 
 
     def _getProfileConfig(self):
-        with open(conf.getConfigFile()) as data_file:
-            value = json.load(data_file)
-            if value==None:
-                return None
-            return self._getDBConfigMaster(value["profile_db_config"])
+        value=conf.getConfigJson()
+        if value==None:
+            return None
+        return self._getDBConfigMaster(value["profile_db_config"])
     def _getGMToolConfig(self):
-        with open(conf.getConfigFile()) as data_file:
-            value = json.load(data_file)
-            if value==None:
-                return None
-            return self._getDBConfigMaster(value["gmtool_db_config"])
+        value=conf.getConfigJson()
+        if value==None:
+            return None
+        return self._getDBConfigMaster(value["gmtool_db_config"])
 
     def _getGameDBConfig(self,server):
-        with open(conf.getConfigFile()) as data_file:
-            value = json.load(data_file)
-            if value==None:
-                return None
-            masterConfigList=[]
-            for masterSlaveJson in value["game_db_config"][str(server)]['sharding']:
-                masterConfigList.append(self._getDBConfigMaster(masterSlaveJson))
-            return DBConfigList(masterConfigList)
+        value=conf.getConfigJson()
+        if value==None:
+            return None
+        masterConfigList=[]
+        for masterSlaveJson in value["game_db_config"][str(server)]['sharding']:
+            masterConfigList.append(self._getDBConfigMaster(masterSlaveJson))
+        return DBConfigList(masterConfigList)
 
 @gen.coroutine
 def test_dbmgr_main():
