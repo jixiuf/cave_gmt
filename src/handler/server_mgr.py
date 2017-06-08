@@ -57,6 +57,11 @@ class ServerMgr(BaseHandler):
         cmds.append(now.strftime("llh /data/cave/config/logs/cave_logic |grep %m.%d"))
         cmds.append(now.strftime("llh /data/cave/config/logs/cave_auth |grep %m.%d"))
         cmds.append(now.strftime("supervisorctl -c /data/supervisor/supervisord.conf start cave:cave_zh_4 2>&1"))
+        cmds.append("etcdctl ls / --recursive")
+        cmds.append("etcdctl get")
+        cmds.append("etcdctl member list")
+
+
 
 
 
