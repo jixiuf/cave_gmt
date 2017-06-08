@@ -107,9 +107,9 @@ class ServerExec(BaseHandler):
         processIdStr=self.get_argument('processId')
         cmd=self.get_argument('cmd','')
         if cmd=="ll":
-            cmd="ls -l "
+            cmd="ls -lthGvr"
         if cmd=="llh":
-            cmd="ls -hl "
+            cmd="ls -lthGvrh"
         if cmd.startswith("ll "):
             cmd=cmd.replace("ll ","ls -l ")
         if cmd.startswith("llh "):
@@ -266,6 +266,7 @@ class ProfHandler(BaseHandler):
         process= self.get_argument('process','')
         serverType= self.get_argument('server-type','')
         profType= self.get_argument('profType','')
+        print(profType)
 
         print(redis_notify.get_process_redis_notify_channel(conf.PLATFORM,server,process))
         print( '{"type":%s,"accept_type":"%s"}'%(profType,serverType))
