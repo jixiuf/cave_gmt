@@ -27,10 +27,13 @@ class GameUpdateRenderHandler(BaseHandler):
         serverVersionRec= yield app.DBMgr.serverVersionDB.select(conf.PLATFORM)
         if serverVersionRec==None:
             currentVersion=0
+            showVersion="default"
         else:
             currentVersion=serverVersionRec.toInnerVersion()
+            showVersion=serverVersionRec.showVersion
 
         result = {
+            'showVersion':showVersion,
             'channels': json.dumps(conf.getChannelList()),
             'defaultChannelName':json.dumps(conf.getChannelNameMap()),
             'ClientSVNResourcesURL':conf.ClientSVNResourcesURL,
@@ -51,6 +54,7 @@ class DynamicPackageGeneratorHandler(BaseHandler):
     def self_post(self):
         channel = self.get_argument('channel', "0")
         version = self.get_argument('version', "")
+        showversion = self.get_argument('show_version', "default")
         svnurl = self.get_argument('svnurl', "")
         svnFromVersion = self.get_argument('svnFromVersion', "")
         svnToVersion = self.get_argument('svnToVersion', "")
@@ -74,7 +78,7 @@ class DynamicPackageGeneratorHandler(BaseHandler):
         if channel=="0":
            channel= " ".join(conf.getChannelStrList())
 
-        cmd= "./DynamicUpload/dynamic_upload.sh %s_%s %s %s %s %s %s %s"%(conf.AppName,options.mode,version,svnFromVersion,svnToVersion,svnurl ,gmtURL,channel)
+        cmd= "./DynamicUpload/dynamic_upload.sh %s_%s %s %s %s %s %s %s %s"%(conf.AppName,options.mode,version,svnFromVersion,svnToVersion,svnurl ,gmtURL,showversion,channel)
         app.Logger.info(cmd)
         self.write(cmd)
 

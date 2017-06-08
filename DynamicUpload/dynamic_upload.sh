@@ -19,7 +19,7 @@ svnpath=$5
 gmt_url=$6
 show_version=$7
 
-channel_begin_param=8           # 加参数时要改此值
+channel_begin_param=7           # 加参数时要改此值
 
 svnUser=version
 svnPassword=u3gZa2fWKM

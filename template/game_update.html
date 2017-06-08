@@ -32,6 +32,12 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="col-sm-3 control-label">显示版本号*</label>
+            <div class="col-sm-4">
+                <input class="form-control" placeholder="当前版本号{% raw result['showVersion'] %}" name="show_version">
+            </div>
+        </div>
+        <div class="form-group">
             <label class="col-sm-3 control-label">svnResource地址*</label>
             <div class="col-sm-8">
                 <input class="form-control" value="{% raw result['ClientSVNResourcesURL'] %}" name="svnurl">
