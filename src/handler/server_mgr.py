@@ -52,7 +52,14 @@ class ServerMgr(BaseHandler):
         cmds.append("ll  ~/tmp/cave.zh.bin.tar.lzma ")
         cmds.append("/data/supervisor/reload.sh   /data/supervisor/supervisord.conf")
         cmds.append("python -m SimpleHTTPServer 3009")
-        cmds.append("echo 'svg >a.svg'|go tool pprof ./cave head.prof")
+        cmds.append("echo 'svg >a.svg'|go tool pprof ./cave heap.prof")
+        cmds.append("echo 'svg >a.svg'|go tool pprof -alloc_space ./cave heap.prof")
+        cmds.append("echo 'svg >a.svg'|go tool pprof -inuse_space ./cave heap.prof")
+        cmds.append("echo 'svg >a.svg'|go tool pprof -inuse_objects ./cave heap.prof")
+        cmds.append("echo 'svg >a.svg'|go tool pprof -alloc_objects ./cave heap.prof")
+
+
+
         now=datetime.now()
         cmds.append(now.strftime("llh /data/cave/config/logs/cave_logic |grep %m.%d"))
         cmds.append(now.strftime("llh /data/cave/config/logs/cave_auth |grep %m.%d"))
