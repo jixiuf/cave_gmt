@@ -12,11 +12,11 @@ AppName="cave"
 CONFIG_DIR="/data/%s/config/"%(AppName)
 etcdConfigJson=None
 Etcd=etcd.Client(port=4001,host="127.0.0.1")
-def getConfigJson():
+def getConfigJson(reload=False):
     global Etcd
     global AppName
     global etcdConfigJson
-    if etcdConfigJson==None:
+    if etcdConfigJson==None or reload:
         try:
             v =Etcd.get("/%s/config/%s_%s"%(AppName,str(options.mode),str(options.locale)))
             etcdConfigJson=json.loads(v.value)

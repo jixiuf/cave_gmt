@@ -223,6 +223,7 @@ class Application(tornado.web.Application):
     def doMidNight(self):
         global Redis
         self.logger.info("doMidNight")
+        conf.getConfigJson(True)
         handler.player_bi.update_data()
         Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_FREE_OS_MEM)
 

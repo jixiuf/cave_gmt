@@ -25,6 +25,7 @@ class ServerMgr(BaseHandler):
             whiteIP['ip']=row[1]
             return  whiteIP
 
+        conf.getConfigJson(True) # reload config json
         serverIdList= app.DBMgr.get_all_server_id()
 
         cmds=[]
@@ -266,7 +267,7 @@ class ProfHandler(BaseHandler):
         process= self.get_argument('process','')
         serverType= self.get_argument('server-type','')
         profType= self.get_argument('profType','')
-        print(profType)
+
 
         print(redis_notify.get_process_redis_notify_channel(conf.PLATFORM,server,process))
         print( '{"type":%s,"accept_type":"%s"}'%(profType,serverType))
