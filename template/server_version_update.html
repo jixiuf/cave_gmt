@@ -68,11 +68,10 @@
                    '<div class="ui-cell-channel-version op-channel-current-version" data-channel-current-version="'+data.data[i].channel_current_version +'">'
                  + data.data[i].channel_current_version+"("+data.data[i].channel_show_version+")" + '</div>' +
                    '<input   type="text" class="ui-cell-channel-version op-channel-version" value="'+version+'">' +
-                   '<button class="btn btn-default ui-update-btn op-channel-update-btn">更新</button>' +
+                   '<button class="btn btn-default ui-update-btn op-channel-update-btn" data-channel-id="'+i+'"  data-key="'+data.data[i].channel_key+'">更新</button>' +
                    '</div>' +
                    '<div class="ui-cell-channel-svn op-channel-svn">' + data.data[i].svnVersion+ '</div>' +
                    '<div class="ui-cell-channel-url op-channel-url">' + data.data[i].url + '</div>' +
-                   '<div class="hide ui-cell-channel-url op-channel-key">' + data.data[i].channel_key + '</div>' +
                    '</li>';
 
      platformEl.find('.op-info-list').append(htmlStr);
@@ -110,9 +109,9 @@
  });
  $('.op-channel-update-btn').on('click', function() {
      var groupEl = $(this).parent().parent().parent('.op-platform-group');
-     var channel=$(this).parent().parent().find(".op-channel-id").data("channel-id");
-     var version=$(this).parent().parent().find(".op-channel-version").val();
-     var channel_key=$(this).parent().parent().find(".op-channel-key").text();
+     var channel=$(this).data("channel-id");
+     var version=$(this).parent().find(".op-channel-version").val();
+     var channel_key=$(this).data("key");
 
      var showVersionEl = groupEl.find('.op-showVersion');
      var data = {

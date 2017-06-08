@@ -356,7 +356,7 @@ class ServerVersionHandler(BaseHandler):
         sv.minVersion=version%1000
         sv.showVersion=showVersion
         yield app.DBMgr.serverVersionDB.update(sv)
-        app.Redis.publish(redis_notify.get_platform_redis_notify_channel(sv.platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
+        # app.Redis.publish(redis_notify.get_platform_redis_notify_channel(sv.platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
 
         svList=yield app.DBMgr.serverVersionDB.select_all()
         for sv in svList:
@@ -368,7 +368,7 @@ class ServerVersionHandler(BaseHandler):
                 sv.showVersion=showVersion
                 yield app.DBMgr.serverVersionDB.update(sv)
 
-                app.Redis.publish(redis_notify.get_platform_redis_notify_channel(sv.platform), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
+        app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_SERVER_VERSION)
 
 
 #       for i in a:
