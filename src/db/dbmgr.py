@@ -7,7 +7,7 @@ sys.path.append(modulepath)
 from tornado_mysql import pools
 from tornado import ioloop, gen
 
-import dbtemplate.dbtemplate
+from dbtemplate import dbtemplate
 import utils
 import conf
 
@@ -30,50 +30,6 @@ from db_server_version import ServerVersionDB
 from db_dynamic_version_update import DynamicVersionUpdateDB
 from db_award_type import AwardDB
 
-class DBConfigList:
-    def __init__(self,dbConfigObjList):
-        self.dbConfigObjList=dbConfigObjList
-    def getDatabaseTemplate(self):  # sharding
-        dtList=[]
-        for dbConfigObj in self.dbConfigObjList:
-            dtList.append(dbConfigObj.getDatabaseTemplate())
-        return dbtemplate.dbtemplate.DatabaseTemplateSharding(dtList)
-    def getDBConfigList(self):
-        return self.dbConfigObjList
-
-class DBConfig:
-    def __init__(self,user,passwd,host,database,port):
-        self.user=user
-        self.passwd=passwd
-        self.host=host
-        self.database=database
-        self.port=port
-    def __str__(self):
-        return "user=%s,passwd=%s,host=%s,database=%s,port=%d"%(self.user,self.passwd,self.host,self.database,self.port)
-    def getUser(self):
-        return self.user
-    def getPasswd(self):
-        return self.passwd
-    def getHost(self):
-        return self.host
-    def getDatabase(self):
-        return self.database
-    def getPort(self):
-        return self.port
-    def conn(self):
-        return pools.Pool(
-            dict(host=self.getHost(),
-                 port=self.getPort(),
-                 user=self.getUser(),
-                 passwd=self.getPasswd(),
-                 db=self.getDatabase(),
-                 charset='utf8',
-            ),
-            max_idle_connections=1,
-            max_recycle_sec=3)
-    def getDatabaseTemplate(self) :
-        pool=self.conn()
-        return dbtemplate.dbtemplate.DatabaseTemplateSingle(pool)
 
 
 class DBMgr:
@@ -106,15 +62,15 @@ class DBMgr:
 
         designConfig=self._getDesignConfig()
         if designConfig!=None:
-            self._designDBDict[1]=designConfig.getDatabaseTemplate()
+            self._designDBDict[1]=dbtemplate.DatabaseTemplateSingle(designConfig)
 
         for i in self.get_all_server_id(): #
             gameDBConfig=self._getGameDBConfig(i)
             if gameDBConfig!=None:
-                self._gamedbDict[i]=gameDBConfig.getDatabaseTemplate()
+                self._gamedbDict[i]=dbtemplate.DatabaseTemplateSharding(gameDBConfig)
 
-        self._profileDB=self._getProfileConfig().getDatabaseTemplate()
-        self._gmtooldb=self._getGMToolConfig().getDatabaseTemplate()
+        self._profileDB=dbtemplate.DatabaseTemplateSingle(self._getProfileConfig())
+        self._gmtooldb=dbtemplate.DatabaseTemplateSingle(self._getGMToolConfig())
 
 
         self.permissionDB=PermissionDB(self.getGMToolDB())
@@ -220,7 +176,7 @@ class DBMgr:
             port=3306
         if type(port)==str or type(port)==unicode :
             port=int(port)
-        return DBConfig(user,passwd,host,database,port)
+        return dbtemplate.DBConfig(user,passwd,host,database,port)
 
 
 
@@ -250,7 +206,7 @@ class DBMgr:
         masterConfigList=[]
         for masterSlaveJson in value["game_db_config"][str(server)]['sharding']:
             masterConfigList.append(self._getDBConfigMaster(masterSlaveJson))
-        return DBConfigList(masterConfigList)
+        return masterConfigList
 
 @gen.coroutine
 def test_dbmgr_main():

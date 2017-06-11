@@ -1,6 +1,7 @@
 #  -*- coding:utf-8 -*-
 from tornado import ioloop, gen
 import tornado_mysql
+from tornado_mysql import pools
 
 class Sum(object):
     def to_sum(self):
@@ -32,10 +33,55 @@ class StringSum(Sum):
         return 1
     def get_sum_by_idx(self,idx):
         return self
+# class DBConfigList:
+#     def __init__(self,dbConfigObjList):
+#         self.dbConfigObjList=dbConfigObjList
+#     # def getDatabaseTemplate(self):  # sharding
+#     #     dtList=[]
+#     #     for dbConfigObj in self.dbConfigObjList:
+#     #         dtList.append(dbConfigObj.getDatabaseTemplate())
+#     #     return DatabaseTemplateSharding(dtList)
+#     def getDBConfigList(self):
+#         return self.dbConfigObjList
+
+class DBConfig:
+    def __init__(self,user,passwd,host,database,port):
+        self.user=user
+        self.passwd=passwd
+        self.host=host
+        self.database=database
+        self.port=port
+    def __str__(self):
+        return "user=%s,passwd=%s,host=%s,database=%s,port=%d"%(self.user,self.passwd,self.host,self.database,self.port)
+    def getUser(self):
+        return self.user
+    def getPasswd(self):
+        return self.passwd
+    def getHost(self):
+        return self.host
+    def getDatabase(self):
+        return self.database
+    def getPort(self):
+        return self.port
+    def conn(self):
+        return pools.Pool(
+            dict(host=self.getHost(),
+                 port=self.getPort(),
+                 user=self.getUser(),
+                 passwd=self.getPasswd(),
+                 db=self.getDatabase(),
+                 charset='utf8mb4',
+            ),
+            max_idle_connections=1,
+            max_recycle_sec=3)
+    # def getDatabaseTemplate(self) :
+    #     pool=self.conn()
+    #     return DatabaseTemplateSingle(pool)
 
 class DatabaseTemplateSingle():
-    def __init__(self,dbPool ):
-        self._dbPool=dbPool
+    def __init__(self,dbConfig ):
+        self.dbConfig=dbConfig
+        self._dbPool=self.dbConfig.conn()
     def	getDatabaseTemplateShardingBySum(self,sum ) :
         return self
     def getDatabaseTemplateShardingIdxBySum(self,sum):
@@ -48,18 +94,20 @@ class DatabaseTemplateSingle():
         return self
     def	getReadDatabaseTemplate(self) :
         return self
+    def	__exec(self,sql):
+        return self._dbPool.execute(sql)
     @gen.coroutine
     def execDDL(self,sql):
-        yield self._dbPool.execute(sql)
+        yield self.__exec(sql)
     @gen.coroutine
     def execSql(self,sql,sum=None):
-        cur = yield self._dbPool.execute(sql)
+        cur = yield self.__exec(sql)
         # cursor.lastrowid 如果有auto_increment 列， 此值返回新生成的id
         # cursor.rowcount 返回 影响的行数
         raise gen.Return(cur)
     @gen.coroutine
     def query(self,sql,mapRow=None,sum=None):
-        cur=yield self._dbPool.execute(sql)
+        cur=yield self.__exec(sql)
         result=cur.fetchall()
         yield cur.close()
         if mapRow!=None:
@@ -67,7 +115,7 @@ class DatabaseTemplateSingle():
         raise gen.Return(result)
     @gen.coroutine
     def queryObject(self,sql,mapRow=None,sum=None):
-        cur=yield self._dbPool.execute(sql)
+        cur=yield self.__exec(sql)
         result=cur.fetchone()
         yield cur.close()
         if mapRow!=None:
@@ -81,8 +129,12 @@ class DatabaseTemplateSingle():
 
 
 class DatabaseTemplateSharding():
-    def __init__(self,databaseTemplateList):
-        self._databaseTemplateList=databaseTemplateList
+    def __init__(self,dbConfigObjList):
+        dtList=[]
+        for dbConfigObj in dbConfigObjList:
+            dtList.append(DatabaseTemplateSingle(dbConfigObj))
+        # return DatabaseTemplateSharding(dtList)
+        self._databaseTemplateList=dtList
     def	getDatabaseTemplateShardingBySum(self,sum) :
         if len(self._databaseTemplateList)==0:
             return self
