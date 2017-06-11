@@ -1,7 +1,8 @@
 #  -*- coding:utf-8 -*-
 from tornado import ioloop, gen
 import tornado_mysql
-from tornado_mysql import pools
+import traceback
+from tornado_mysql import pools,OperationalError
 
 class Sum(object):
     def to_sum(self):
@@ -95,16 +96,23 @@ class DatabaseTemplateSingle():
     def	getReadDatabaseTemplate(self) :
         return self
     def	__exec(self,sql):
-        return self._dbPool.execute(sql)
+        try:
+            data=self._dbPool.execute(sql)
+            return data
+        # except OperationalError as error:
+        except Exception, error:
+            print('mmmmmmerrormsg\t%s' % (str(error),))
+            print('mmmmmmmmerrortrace\t%s' % (str(traceback.format_exc()),))
+            return None
     @gen.coroutine
     def execDDL(self,sql):
         yield self.__exec(sql)
     @gen.coroutine
     def execSql(self,sql,sum=None):
         cur = yield self.__exec(sql)
+        raise gen.Return(cur)
         # cursor.lastrowid 如果有auto_increment 列， 此值返回新生成的id
         # cursor.rowcount 返回 影响的行数
-        raise gen.Return(cur)
     @gen.coroutine
     def query(self,sql,mapRow=None,sum=None):
         cur=yield self.__exec(sql)
