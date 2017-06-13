@@ -147,10 +147,16 @@ getAwardDataFun=function() {
         awardJson["award_count"]=count;
         awardJson["award_param_list"]=[];
         if (param1!=''&&param1!=undefined) {
+            if(!isNaN(param1)){
+                param1=param1.toString();
+            }
             awardJson["award_param_list"].push(param1);
             awardStr=awardStr+ ":"+param1;
         }
         if (param2!=''&&param2!=undefined) {
+            if(!isNaN(param2)){
+                param2=param2.toString();
+            }
             awardStr=awardStr+ ":"+param2;
             awardJson["award_param_list"].push(param2);
         }
