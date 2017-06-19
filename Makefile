@@ -6,37 +6,37 @@ ROOT_DIR=$(shell pwd)
 
 run-pro:
 	@if [ -d "~/.cave/" ];then \
-		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro etcd=127.0.0.1:2379 -locale=zh -confdir=~/.cave/;\
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -etcd=127.0.0.1:2379 -locale=zh -confdir=~/.cave/;\
 	elif [ -d "/data/cave/config/" ];then \
-		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro etcd=127.0.0.1:2379 -locale=zh -confdir=/data/cave/config/;\
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -etcd=127.0.0.1:2379 -locale=zh -confdir=/data/cave/config/;\
 	elif [ -d "./config/" ]; then\
-		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro etcd=127.0.0.1:2379 -locale=zh -confdir=./config/;\
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -etcd=127.0.0.1:2379 -locale=zh -confdir=./config/;\
 	elif [ -d "../config/" ];then \
-		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro etcd=127.0.0.1:2379 -locale=zh -confdir=../config/;\
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -etcd=127.0.0.1:2379 -locale=zh -confdir=../config/;\
 	elif [ -d "cave/config/" ];then \
-		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro etcd=127.0.0.1:2379 -locale=zh -confdir=cave/config/;\
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -etcd=127.0.0.1:2379 -locale=zh -confdir=cave/config/;\
 	elif [ -d "../cave/config/" ];then \
-		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro etcd=127.0.0.1:2379 -locale=zh -confdir=../cave/config/;\
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -etcd=127.0.0.1:2379 -locale=zh -confdir=../cave/config/;\
 	else \
 		echo "no confdir,please give -confdir like";\
-		echo "./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro etcd=127.0.0.1:2379 -locale=zh -confdir=../config/";\
+		echo "./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -etcd=127.0.0.1:2379 -locale=zh -confdir=../config/";\
 	fi
 
 run:
 	./virtual/bin/python src/main.py
 run-pro-en:
 	@if [ -d "~/.cave/" ];then \
-		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro etcd=127.0.0.1:2379 -locale=en -confdir=~/.cave/;\
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -etcd=127.0.0.1:2379 -locale=en -confdir=~/.cave/;\
 	elif [ -d "/data/cave/config/" ];then \
-		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro etcd=127.0.0.1:2379 -locale=en -confdir=/data/cave/config/;\
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -etcd=127.0.0.1:2379 -locale=en -confdir=/data/cave/config/;\
 	elif [ -d "./config/" ]; then\
-		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro etcd=127.0.0.1:2379 -locale=en -confdir=./config/;\
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -etcd=127.0.0.1:2379 -locale=en -confdir=./config/;\
 	elif [ -d "../config/" ];then \
-		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro etcd=127.0.0.1:2379 -locale=en -confdir=../config/;\
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -etcd=127.0.0.1:2379 -locale=en -confdir=../config/;\
 	elif [ -d "cave/config/" ];then \
-		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro etcd=127.0.0.1:2379 -locale=zh -confdir=cave/config/;\
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -etcd=127.0.0.1:2379 -locale=zh -confdir=cave/config/;\
 	elif [ -d "../cave/config/" ];then \
-		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro etcd=127.0.0.1:2379 -locale=zh -confdir=../cave/config/;\
+		./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -etcd=127.0.0.1:2379 -locale=zh -confdir=../cave/config/;\
 	else \
 		echo "no confdir,please give -confdir like";\
 		echo "./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -locale=en -confdir=../config/";\
