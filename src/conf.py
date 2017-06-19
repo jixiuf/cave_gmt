@@ -4,6 +4,7 @@ __author__ = 'jixiufeng'
 import json
 import db.db_permissions
 import db.dbmgr
+from  db.dbtemplate import dbtemplate
 from tornado.options import  options
 import os.path
 import etcd
@@ -151,7 +152,7 @@ def getProfileDBConfigMaster():
         port=3306
     if type(port)==str or type(port)==unicode :
         port=int(port)
-    return db.dbmgr.DBConfig(user,passwd,host,database,port)
+    return dbtemplate.DBConfig(user,passwd,host,database,port)
 
 def getEtcdAddr():
     addr=options.etcd.replace("https://","")
