@@ -1,9 +1,7 @@
 #!/bin/sh
 # 将两个版本之间变化的文件导出成一个zip
 #用法举例比如 ./svndiffzip.sh 1005 1139 svn://svn.najaplus.com/game1/dev/Data dest.zip [svnusername,svnpassword]
-# ./svndiffzip.sh 11124 11127 svn://svn.najaplus.com/game2/dev/client/cocos2d-x-2.2.6/projects/client/Resources d.zip
- # ./svndiffzip.sh 1005 1139 svn://svn.najaplus.com/game1/dev/Data dest.zip svnuser svnpass
- # ./svndiffzip.sh 1005 1139 svn://svn.najaplus.com/game1/dev/Data dest.zip
+# ./svndiffzip.sh 11664 11667 svn://svn.najaplus.com/game2/dev/client/cocos2d-x-2.2.6/projects/client/Resources dest.zip 100301111 v.1.3.7 version u3gZa2fWKM
 # 其中svnusername svnpassword 可省略,省略则用系统缓存的
 # 需要用到的命令 ，确保svn  zip 以安装
 from=$1
@@ -45,13 +43,33 @@ for url in $changed_file ; do
         echo "$url is directory and is ignored for export"
         continue ;
     fi
-    relativePath=`echo $url|sed "s|$svnpath||g"|sed 's|^/||g'`
-    relativeDir=`echo $relativePath|sed 's|/|\\\\|g'`
+    relativePath=`echo $url|sed "s|$svnpath||g"|sed 's|^/||g'` # lua/Core/Engine/CocosEasy.lua
+    relativeDir=`echo $relativePath|sed 's|/|\\\\|g'` # "lua\Core\Engine\CocosEasy.lua" this is a file name  not dir
     svn $svnuser $svnpass --no-auth-cache --non-interactive export --force -r $to $url dest/$relativeDir
     if [ $? -ne 0 ];then
         # 任何一个svn相关的命令执行失败，则退出整个脚本，退出状态为1即，exit 1
         exit 3
     fi
+
+    # 处理特殊类型的 *.ExportJson 文件 ，因为此文件内会引用别的文件，当此文件变更时，需要同时把它引用的文件打包进来，故
+    #此得把它引用的文件找出来
+    ext="${url##*.}"             # 取后缀art_highrt\ui\ui_battle_profile.json -> json
+    filenamePrefix="${relativePath%/*}" # 去掉最后一个/ 及后面的内容 art_highrt/ui/ui_battle_profile.json -> art_highrt/ui
+    filenamePrefix="$filenamePrefix/"  # art_highrt/ui-->art_highrt/ui/
+    svnPrefix="${url%/*}" #svn://svn.najaplus.com/game2/dev/client/cocos2d-x-2.2.6/projects/client/Resources/art_high/art/model/trap/a.file--> svn://svn.najaplus.com/game2/dev/client/cocos2d-x-2.2.6/projects/client/Resources/art_high/art/model/trap
+    if [ "ExportJson" = "$ext" ]; then
+        relatedFiles=`python get_exportjson_related_files.py dest/$relativeDir`
+        for relatedFile in $relatedFiles; do # a.plist
+            relatedFileDir=`echo $filenamePrefix$relatedFile|sed 's|/|\\\\|g'` # "lua\Core\Engine\CocosEasy.lua" this is a file name  not dir
+            relativeFileSvnUrl="${svnPrefix}/$relatedFile"
+            svn $svnuser $svnpass --no-auth-cache --non-interactive export --force -r $to $relativeFileSvnUrl dest/$relatedFileDir
+            if [ $? -ne 0 ];then
+                # 任何一个svn相关的命令执行失败，则退出整个脚本，退出状态为1即，exit 1
+                exit 3
+            fi
+        done
+    fi
+
 
 done
 svn $svnuser $svnpass --no-auth-cache --non-interactive export --force -r $to $svnpath/config.json dest/config.json
