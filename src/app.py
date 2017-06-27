@@ -197,8 +197,10 @@ class Application(tornado.web.Application):
         signal.signal(signal.SIGINT, self.handlerSignal)
         signal.signal(signal.SIGTERM, self.handlerSignal)
         self.keepRunning =True
-        t=threading.Thread(target=self.keepReadFromRedis)
-        t.start()
+
+        # t=threading.Thread(target=self.keepReadFromRedis)
+        # t.start()
+
         # t.join()
         delay=utils.secondDiff("3:10:0") # 每天3:10执行
         self.biTimer=utils.RepeatTimer(delay,60*60*24,self.doMidNight)
