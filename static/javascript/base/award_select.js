@@ -1,12 +1,12 @@
 var goodsAddEl = $('#op-award-goods-add'),
-    listEl = $('#op-award-content-list'),
-    typeEl = $('#op-award-goods-type'),
-    numEl = $('#op-award-goods-num'),
-    goodsIdEl = $('#op-award-goods-id'),
-    goodsIdNameEl = $('#op-award-goods_id_name'),
-    goodsParam1El = $('#op-award-goods-param1'),
-    goodsParam2El = $('#op-award-goods-param2'),
-    idData,
+    awardlistEl = $('#op-award-content-list'),
+    awardtypeEl = $('#op-award-goods-type'),
+    awardnumEl = $('#op-award-goods-num'),
+    awardgoodsIdEl = $('#op-award-goods-id'),
+    awardgoodsIdNameEl = $('#op-award-goods_id_name'),
+    awardgoodsParam1El = $('#op-award-goods-param1'),
+    awardgoodsParam2El = $('#op-award-goods-param2'),
+    awardIdData,
     getAwardSubIdFun,
     getAwardDataFun;
 
@@ -18,14 +18,14 @@ goodsAddEl.on('click', function() {
         count = '',
         htmlStr = '';
 
-    tokens=typeEl.val().split(":");
+    tokens=awardtypeEl.val().split(":");
     typeId = tokens[0];
     /*             hasId  = tokens[1]; */
-    goodsId = goodsIdEl.val();
-    goodsParam1=goodsParam1El.val();
-    goodsParam2=goodsParam2El.val();
-    goodsIdName=goodsIdNameEl.val();
-    count = numEl.val();
+    goodsId = awardgoodsIdEl.val();
+    goodsParam1=awardgoodsParam1El.val();
+    goodsParam2=awardgoodsParam2El.val();
+    goodsIdName=awardgoodsIdNameEl.val();
+    count = awardnumEl.val();
     if(isNaN(goodsId)){
         alert("物品id格式不对 不是数字");
         return false;
@@ -35,7 +35,7 @@ goodsAddEl.on('click', function() {
         return false;
     }
     if(typeId != '0' && count != ''&&count!='0') {
-        typeName = typeEl.find("option:selected").text();
+        typeName = awardtypeEl.find("option:selected").text();
         if(goodsId==""){
             htmlStr += '<li class="ui-award-item clearfix op-goods-item" data-id="' + typeId + '"'+' data-goods-desc="'+ typeName + 'x' + count+ '"'+' data-goodsid="0" data-count="' + count + '">' +
                 '<span>' + typeName + 'x' + count + '</span>' +
@@ -49,21 +49,21 @@ goodsAddEl.on('click', function() {
                 '<button class="btn btn-default ui-item-delete op-award-delete">删除</button>' +
                 '</li>';
         }
-        listEl.append(htmlStr);
-        // typeEl.children().eq(0).attr('selected', 'true');
-        goodsIdEl.val('');
-        goodsParam1El.val('');
-        goodsParam2El.val('');
-        numEl.val('');
-        // goodsIdEl.addClass('hide');
-        // goodsParam1El.addClass('hide');
-        // goodsParam2El.addClass('hide');
+        awardlistEl.append(htmlStr);
+        // awardtypeEl.children().eq(0).attr('selected', 'true');
+        awardgoodsIdEl.val('');
+        awardgoodsParam1El.val('');
+        awardgoodsParam2El.val('');
+        awardnumEl.val('');
+        // awardgoodsIdEl.addClass('hide');
+        // awardgoodsParam1El.addClass('hide');
+        // awardgoodsParam2El.addClass('hide');
     } else {
         return false;
     }
 });
 
-listEl.delegate('.op-award-delete', 'click', function(e) {
+awardlistEl.delegate('.op-award-delete', 'click', function(e) {
     $(e.currentTarget).parent().remove();
     return false;
 });
@@ -82,32 +82,32 @@ getAwardSubIdFun = function(type) {
         .done(function(data) {
             if(data['action'] == 'success') {
                 ajaxing = false;
-                idData=JSON.parse(data['result']);
-                goodsIdEl.autocomplete({source: idData, minLength:0,
-                                        select: function( event, ui ) {goodsIdNameEl.val(ui.item.label);}});
-                goodsIdEl.autocomplete( "search", goodsIdEl.val());
+                awardIdData=JSON.parse(data['result']);
+                awardgoodsIdEl.autocomplete({source: awardIdData, minLength:0,
+                                        select: function( event, ui ) {awardgoodsIdNameEl.val(ui.item.label);}});
+                awardgoodsIdEl.autocomplete( "search", awardgoodsIdEl.val());
             }
         });
 }
 
 
-typeEl.on('change', function(e) {
+awardtypeEl.on('change', function(e) {
     var val = e.currentTarget.value;
-    goodsIdEl.val('');
+    awardgoodsIdEl.val('');
     if(val.indexOf(":true")!= -1 ) {
-        goodsIdEl.removeClass('hide');
-        goodsParam1El.removeClass('hide');
-        goodsParam2El.removeClass('hide');
+        awardgoodsIdEl.removeClass('hide');
+        awardgoodsParam1El.removeClass('hide');
+        awardgoodsParam2El.removeClass('hide');
     } else {
-        goodsIdEl.addClass('hide');
-        goodsParam1El.addClass('hide');
-        goodsParam2El.addClass('hide');
+        awardgoodsIdEl.addClass('hide');
+        awardgoodsParam1El.addClass('hide');
+        awardgoodsParam2El.addClass('hide');
 
     }
 });
 
-goodsIdEl.on('click', function() {
-    var type = typeEl.val(),
+awardgoodsIdEl.on('click', function() {
+    var type = awardtypeEl.val(),
         data;
     tokens=type.split(":");
     type=tokens[0];
@@ -184,10 +184,10 @@ getAwardIdFun = function() {
         .done(function(data) {
             if(data['action'] == 'success') {
                 ajaxing = false;
-                idData=JSON.parse(data['result']);
-                for(var key in idData){
-                    htmlStr ="<option value='"+key+":"+idData[key]["has_id"]+"'>"+idData[key]["name"]+"</option>"
-                    typeEl.append(htmlStr);
+                awardIdData=JSON.parse(data['result']);
+                for(var key in awardIdData){
+                    htmlStr ="<option value='"+key+":"+awardIdData[key]["has_id"]+"'>"+awardIdData[key]["name"]+"</option>"
+                    awardtypeEl.append(htmlStr);
                 }
             }
         });

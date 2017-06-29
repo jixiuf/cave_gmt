@@ -1,0 +1,139 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/day7config.css" rel="stylesheet" type="text/css"/>
+<link href="../static/dist/award_select.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-day7config-option">
+    <h2 class="form-signin-heading ui-day7config-title">7天登录活动奖励配置</h2>
+    <div>
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-sm-2 control-label">登录天数</label>
+                <div class="col-sm-4">
+                    <select class="form-control op-day" id='op-day'>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">名称</label>
+                <div class="col-sm-4">
+                    <input type="text" maxlength="16" class="form-control ui-mail-title op-name" id="op-name" placeholder="名称">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">描述</label>
+                <div class="col-sm-4">
+                    <input type="text" maxlength="16" class="form-control ui-mail-title op-desc" id="op-desc" placeholder="描述">
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label">奖励</label>
+                <div class="col-sm-10">
+                {% include award_select_template.html %}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-4">
+                    <button type="submit" class="btn btn-default op-submit-btn" data-type="send">保存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <ul class="ui-day7config-list op-day7config-list">
+        <li class="ui-day7config-item clearfix">
+            <div class="ui-day7config-cell ui-day7config-cell-uin">
+                登录天数
+            </div>
+            <div class="ui-day7config-cell-title">
+                名称
+            </div>
+            <div class="ui-day7config-cell-content">
+                描述
+            </div>
+            <div class="ui-day7config-cell">
+                奖励
+            </div>
+            <!-- <div class="ui-day7config-cell-operation">
+                 操作
+                 </div> -->
+        </li>
+        {% for e in day7configList %}
+        <li class="ui-day7config-item clearfix">
+            <div class="ui-day7config-cell">
+                {{ e['day']}}
+            </div>
+            <div class="ui-day7config-cell-title">
+                {% if e['name']=='' %}
+                空
+                {% else %}
+                {{ e['name']}}
+                {% end %}
+            </div>
+            <div class="ui-day7config-cell-content">
+                {% if e['desc']=='' %}
+                空
+                {% else %}
+                {{ e['desc']}}
+                {% end %}
+            </div>
+            <div class="ui-day7config-cell">
+                {% if e['note']=='' %}
+                空
+                {% else %}
+                {{ e['note']}}
+                {% end %}
+            </div>
+        </li>
+        {% end %}
+    </ul>
+
+</div>
+
+
+<script type="text/javascript" src='../static/javascript/base/award_select.js'>
+</script>
+<script type="text/javascript">
+ getAwardIdFun();
+
+ var submitEl = $('.op-submit-btn');
+ submitEl.on('click', function(){
+     var data=getAwardDataFun();
+     /*      data['type']=$(this).data('type');*/
+     /*      data['serverid']=serverIdEl.val();*/
+     data['day'] = $("#op-day").val();
+     data['name'] = $("#op-name").val();
+     data['desc'] =$("#op-desc").val();
+     if (data['award_list']==""||data['award_list']==undefined){
+         alert("请添加奖品");
+     }
+
+     ajaxing = true;
+     $(this).attr('disabled', 'true');
+     $.ajax({
+         url: '/day7config/put',
+         type: 'post',
+         data: data
+     })
+      .done(function(data) {
+          ajaxing = false;
+          submitEl.removeAttr("disabled");
+          /*           data = JSON.parse(data);*/
+          window.location.reload();
+      });
+     return false;
+
+ });
+</script>
+{% end %}

@@ -36,6 +36,7 @@ from handler.gameconfig import *
 from handler.rank import *
 from handler.code import *
 from handler.bi import *
+from handler.day7config import *
 
 from tornado.ioloop import IOLoop
 
@@ -121,6 +122,8 @@ class Application(tornado.web.Application):
             (r'/code/put', CodeMgr),
             (r'/code/list', CodeList),
             (r'/code/del', CodeDel),
+            (r'/day7config/list', Day7Config),
+            (r'/day7config/put', Day7Config),
 
 
 
