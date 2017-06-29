@@ -18,7 +18,7 @@ class GameConfigHandler(BaseHandler):
     @gen.coroutine
     def self_get(self):
 
-        sql="select gameConfigKey,gameConfigKeyType,gameConfigValue,gameConfigTitle ,gameConfigDesc from GameConfig order by gameConfigKey asc"
+        sql="select gameConfigKey,gameConfigKeyType,gameConfigValue,gameConfigTitle ,gameConfigDesc,gameConfigEditable from GameConfig order by gameConfigKey asc"
         def mapRow(row):
             data={}
             data['gameConfigKey']=row[0]
@@ -26,6 +26,7 @@ class GameConfigHandler(BaseHandler):
             data['gameConfigValue']=row[2]
             data['gameConfigTitle']=row[3]
             data['gameConfigDesc']=row[4]
+            data['gameConfigEditable']=row[5]
             return data
         list=yield app.DBMgr.getProfileDB().query(sql,mapRow)
 

@@ -1,0 +1,52 @@
+.ui-day7config-option {
+    max-width: 1024px;
+    margin: 0 auto;
+}
+.ui-day7config-title{
+    
+    margin-left: 100px;
+}
+.ui-day7config-option .ui-day7config-list {
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 20px;
+}
+.ui-day7config-option .ui-day7config-list .ui-day7config-item {
+    text-align:center;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 5px 0;
+}
+.ui-day7config-option .ui-day7config-list .ui-day7config-item .ui-day7config-cell {
+    text-align:center;
+    width: 17%;
+    float: left;
+    word-wrap: break-word;
+}
+.ui-day7config-option .ui-day7config-list .ui-day7config-item .ui-day7config-cell-title {
+    text-align:center;
+    width: 12%;
+    float: left;
+    word-wrap: break-word;
+}
+.ui-day7config-option .ui-day7config-list .ui-day7config-item .ui-day7config-cell-content {
+    text-align:center;
+    width: 16%;
+    float: left;
+    word-wrap: break-word;
+    padding-right:5px;
+}
+
+.ui-day7config-option .ui-day7config-list .ui-day7config-item .ui-day7config-cell-status {
+    text-align:center;
+    width: 6%;
+    float: left;
+}
+.ui-day7config-option .ui-day7config-list .ui-day7config-item .ui-day7config-cell .ui-item-btn {
+    float: left;
+    margin-right: 5px;
+}
+.ui-day7config-option .ui-modal-body {
+    background: #9c9c9c;
+}

@@ -30,7 +30,12 @@
                 {{ gameconfig.get('gameConfigTitle') }}({{ gameconfig.get('gameConfigKey') }})
             </div>
             <div class="ui-gameconfig-cell">
+                {% if gameconfig['gameConfigEditable']!=0 %}
                 <input class="form-control op-value"  value="{{ gameconfig.get('gameConfigValue') }}">
+                {% else %}
+                <input class="form-control op-value"  disabled value="{{ gameconfig.get('gameConfigValue') }}">
+                {% end %}
+
             </div>
             <div class="ui-gameconfig-cell-big">
                 {{ gameconfig.get('gameConfigDesc') }}
