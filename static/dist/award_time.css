@@ -24,23 +24,9 @@
     float: left;
     word-wrap: break-word;
 }
-.ui-award-time-option .ui-award-time-list .ui-award-time-item .ui-award-time-cell-title {
+.ui-award-time-option .ui-award-time-list .ui-award-time-item .ui-award-time-cell-time {
     text-align:center;
-    width: 12%;
-    float: left;
-    word-wrap: break-word;
-}
-.ui-award-time-option .ui-award-time-list .ui-award-time-item .ui-award-time-cell-content {
-    text-align:center;
-    width: 16%;
-    float: left;
-    word-wrap: break-word;
-    padding-right:5px;
-}
-
-.ui-award-time-option .ui-award-time-list .ui-award-time-item .ui-award-time-cell-status {
-    text-align:center;
-    width: 6%;
+    width: 30%;
     float: left;
 }
 .ui-award-time-option .ui-award-time-list .ui-award-time-item .ui-award-time-cell .ui-item-btn {

@@ -13,7 +13,9 @@
                 <label class="col-sm-2 control-label">限时礼包</label>
                 <div class="col-sm-4">
                     <select class="form-control op-id" id='op-id'>
-                        <option value="6">限时礼包</option>
+                        <option value="6">限时礼包1</option>
+                        <option value="7">限时礼包2</option>
+                        <option value="8">限时礼包3</option>
                     </select>
                 </div>
             </div>
@@ -61,25 +63,26 @@
             <div class="ui-award-time-cell">
                 奖励
             </div>
-            <div class="ui-award-time-cell">
+            <div class="ui-award-time-cell-time">
                 有效期
             </div>
         </li>
-        {% if data!=None %}
-            <li class="ui-award-time-item clearfix">
-                <div class="ui-award-time-cell">
-                    限时礼包
-                </div>
-                <div class="ui-award-time-cell">
-                    {{ data.get('name')}}
-                </div>
-                <div class="ui-award-time-cell">
-                    {{ data['gameConfigDesc']}}
-                </div>
-                <div class="ui-award-time-cell">
-                    [{{ data.get('startTime')}}]-[{{ data.get('endTime')}}]
-                </div>
-            </li>
+        {% for index,data in enumerate(list) %}
+
+        <li class="ui-award-time-item clearfix">
+            <div class="ui-award-time-cell">
+                限时礼包{{index+1}}
+            </div>
+            <div class="ui-award-time-cell">
+                {{ data.get('name')}}
+            </div>
+            <div class="ui-award-time-cell">
+                {{ data['gameConfigDesc']}}
+            </div>
+            <div class="ui-award-time-cell-time">
+                [{{ data.get('startTime')}}]-[{{ data.get('endTime')}}]
+            </div>
+        </li>
         {% end %}
 
     </ul>
@@ -92,7 +95,7 @@
 <script type="text/javascript">
  //time
  var oneDay = 24*60*60*1000;
- var rangeDemoFormat = "%Y-%m-%d";
+ var rangeDemoFormat = "%Y-%m-%d %H:%i:%S";
  var rangeDemoConv = new AnyTime.Converter({format:rangeDemoFormat});
  var  startTimeEl = $('#op-time-start');
  var  endTimeEl = $('#op-time-end');
@@ -107,7 +110,7 @@
      try {
          var fromDay = rangeDemoConv.parse($("#op-time-start").val()).getTime();
          var dayLater = new Date(fromDay+oneDay);
-         dayLater.setHours(0,0,0,0);
+         /*          dayLater.setHours(0,0,0,0);*/
          var ninetyDaysLater = new Date(fromDay+(90*oneDay));
          ninetyDaysLater.setHours(23,59,59,999);
          $("#op-time-end")

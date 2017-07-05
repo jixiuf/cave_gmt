@@ -28,24 +28,25 @@ class AwardTime(BaseHandler):
             data['gameConfigDesc']=row[3]
             data['gameConfigExtra']=row[4]
             return data
-        sql="select gameConfigKey,gameConfigValue,gameConfigTitle,gameConfigDesc,gameConfigExtra from GameConfig where gameConfigKey=6 order by gameConfigKey asc"
-        data=yield app.DBMgr.getProfileDB().queryObject(sql,mapRow)
-        if data!=None:
-            if data['gameConfigExtra']!='':
-                extra=json.loads(data['gameConfigExtra'])
-                data['startTime']=extra['startTime']
-                data['endTime']=extra['endTime']
-                data['name']=extra.get('name')
-            else:
-                data['startTime']=''
-                data['endTime']=''
-                data['name']=''
+        sql="select gameConfigKey,gameConfigValue,gameConfigTitle,gameConfigDesc,gameConfigExtra from GameConfig where gameConfigKey in (6,7,8) order by gameConfigKey asc"
+        list=yield app.DBMgr.getProfileDB().query(sql,mapRow)
+        for data in list:
+            if data!=None:
+                if data['gameConfigExtra']!='':
+                    extra=json.loads(data['gameConfigExtra'])
+                    data['startTime']=extra['startTime']
+                    data['endTime']=extra['endTime']
+                    data['name']=extra.get('name')
+                else:
+                    data['startTime']=''
+                    data['endTime']=''
+                    data['name']=''
 
 
 
         serverIdList=app.DBMgr.get_all_server_id()
         self.render("award_time.html",title="限时礼包",
-                    data=data,
+                    list=list,
                     Account=self.gmAccount,
                     serverIdList=serverIdList)
     @asynchronous
