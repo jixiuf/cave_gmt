@@ -1,0 +1,52 @@
+.ui-award-time-option {
+    max-width: 1024px;
+    margin: 0 auto;
+}
+.ui-award-time-title{
+    
+    margin-left: 100px;
+}
+.ui-award-time-option .ui-award-time-list {
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 20px;
+}
+.ui-award-time-option .ui-award-time-list .ui-award-time-item {
+    text-align:center;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 5px 0;
+}
+.ui-award-time-option .ui-award-time-list .ui-award-time-item .ui-award-time-cell {
+    text-align:center;
+    width: 17%;
+    float: left;
+    word-wrap: break-word;
+}
+.ui-award-time-option .ui-award-time-list .ui-award-time-item .ui-award-time-cell-title {
+    text-align:center;
+    width: 12%;
+    float: left;
+    word-wrap: break-word;
+}
+.ui-award-time-option .ui-award-time-list .ui-award-time-item .ui-award-time-cell-content {
+    text-align:center;
+    width: 16%;
+    float: left;
+    word-wrap: break-word;
+    padding-right:5px;
+}
+
+.ui-award-time-option .ui-award-time-list .ui-award-time-item .ui-award-time-cell-status {
+    text-align:center;
+    width: 6%;
+    float: left;
+}
+.ui-award-time-option .ui-award-time-list .ui-award-time-item .ui-award-time-cell .ui-item-btn {
+    float: left;
+    margin-right: 5px;
+}
+.ui-award-time-option .ui-modal-body {
+    background: #9c9c9c;
+}
