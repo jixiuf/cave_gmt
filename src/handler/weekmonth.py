@@ -62,18 +62,19 @@ class WeekMonth(BaseHandler):
         # serverId= self.get_argument('serverid','1')
         id= self.get_argument('id','0')
         name= self.get_argument('name','0')
+        # award= self.get_argument('awards')
+        awardList= self.get_argument('award_list' ,'[]')
+        awardsDesc= self.get_argument('awardsDesc','')
         title=''
         if id=='4':
             title=u'周卡首日奖励'
         else:
             title=u'月卡首日奖励'
-        extra=json.dumps({"name":name,}
+        extra=json.dumps({"name":name,
+                          "content":json.loads(awardList),}
                          ,ensure_ascii=False)
 
 
-        # award= self.get_argument('awards')
-        awardList= self.get_argument('award_list' ,'[]')
-        awardsDesc= self.get_argument('awardsDesc','')
         sql="insert into GameConfig(`gameConfigKey`,`gameConfigValue`,`gameConfigTitle`,`gameConfigDesc`,gameConfigType,gameConfigEditable,gameConfigExtra) values(%s,'%s','%s','%s',1,0,'%s') on duplicate key update gameConfigTitle=values(gameConfigTitle),gameConfigDesc=values(gameConfigDesc),gameConfigValue=values(gameConfigValue),gameConfigExtra=values(gameConfigExtra) "%(id,awardList,title,awardsDesc,extra)
         yield app.DBMgr.getProfileDB().execSql(sql)
 
