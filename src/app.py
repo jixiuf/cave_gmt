@@ -39,6 +39,8 @@ from handler.bi import *
 from handler.day7config import *
 from handler.weekmonth import *
 from handler.award_time import *
+from handler.award_festival import *
+
 from tornado.ioloop import IOLoop
 
 DBMgr=db.dbmgr.DBMgr()
@@ -129,6 +131,9 @@ class Application(tornado.web.Application):
             (r'/weekmonth/put', WeekMonth),
             (r'/award_time/list', AwardTime),
             (r'/award_time/put', AwardTime),
+
+            (r'/award_festival/list',AwardFestival),
+            (r'/award_festival/put', AwardFestival),
 
 
 
