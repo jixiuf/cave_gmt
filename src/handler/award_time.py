@@ -40,7 +40,7 @@ class AwardTime(BaseHandler):
                 else:
                     data['startTime']=''
                     data['endTime']=''
-                    data['name']=''
+                    data['name']='空'
 
 
 
@@ -53,11 +53,21 @@ class AwardTime(BaseHandler):
     @gen.coroutine
     def self_post(self):
         # serverId= self.get_argument('serverid','1')
+        type= self.get_argument('type','save')
         id= self.get_argument('id','6')
+        if type=='delete':
+            sql="delete from GameConfig where gameConfigKey=%s"%(id)
+            yield app.DBMgr.getProfileDB().execSql(sql)
+            app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_GAMECONFIG_RELOAD)
+            self.write(json.dumps({},cls=utils.DateEncoder))
+            return
+
+
         name= self.get_argument('name','限时礼包')
+        title= self.get_argument('title','限时礼包')
         awardList= self.get_argument('award_list' ,'[]')
         awardsDesc= self.get_argument('awardsDesc','')
-        title=u'限时礼包'
+        # title=u'限时礼包'
         startTime=self.get_argument('startTime','')
         endTime=self.get_argument('endTime','')
         extra=json.dumps({"startTime":startTime,
