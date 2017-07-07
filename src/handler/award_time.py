@@ -28,7 +28,7 @@ class AwardTime(BaseHandler):
             data['gameConfigDesc']=row[3]
             data['gameConfigExtra']=row[4]
             return data
-        sql="select gameConfigKey,gameConfigValue,gameConfigTitle,gameConfigDesc,gameConfigExtra from GameConfig where gameConfigKey in (6,7,8) order by gameConfigKey asc"
+        sql="select gameConfigKey,gameConfigValue,gameConfigTitle,gameConfigDesc,gameConfigExtra from GameConfig where gameConfigKey in (6,7,8,10,11,12,13,14) order by gameConfigKey asc"
         list=yield app.DBMgr.getProfileDB().query(sql,mapRow)
         for data in list:
             if data!=None:
