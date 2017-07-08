@@ -72,7 +72,7 @@ class AwardTime(BaseHandler):
         endTime=self.get_argument('endTime','')
         extra=json.dumps({"startTime":startTime,
                           "name":name,
-                          "content":json.loads(awardList),
+                          # "content":json.loads(awardList),
                           "endTime":endTime}
                          ,ensure_ascii=False)
 
