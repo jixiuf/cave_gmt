@@ -85,6 +85,9 @@
             <div class="ui-award-time-cell">
                 原价(显示用)
             </div>
+            <div class="ui-award-time-cell">
+                超值额度
+            </div>
             <div class="ui-award-time-cell-time">
                 有效期
             </div>
@@ -103,6 +106,9 @@
             </div>
             <div class="ui-award-time-cell">
                 {{ data.get("originPrice")}}
+            </div>
+            <div class="ui-award-time-cell">
+                {{ data.get("percent")}}
             </div>
             <div class="ui-award-time-cell-time">
                 [{{ data.get('startTime')}}]-[{{ data.get('endTime')}}]
