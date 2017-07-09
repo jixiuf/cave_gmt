@@ -71,6 +71,8 @@ class AwardTime(BaseHandler):
         name= self.get_argument('name','限时礼包')
         title= self.get_argument('title','限时礼包')
         originPrice= int(self.get_argument('originPrice','0'))
+        percent= int(self.get_argument('percent','0'))
+
 
         awardList= self.get_argument('award_list' ,'[]')
         awardsDesc= self.get_argument('awardsDesc','')
@@ -79,6 +81,7 @@ class AwardTime(BaseHandler):
         endTime=self.get_argument('endTime','')
         extra=json.dumps({"startTime":startTime,
                           "name":name,
+                          "percent":percent,
                           "originPrice":originPrice,
                           # "content":json.loads(awardList),
                           "endTime":endTime}
