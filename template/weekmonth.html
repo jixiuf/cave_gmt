@@ -24,6 +24,13 @@
                 </div>
             </div>
 
+            <div class="form-group">
+                <label class="col-sm-2 control-label">原价</label>
+                <div class="col-sm-4">
+                    <input type="numger" class="form-control ui-name op-name" id="op-origin-price" placeholder="原价（显示用）">
+                </div>
+            </div>
+
 
             <div class="form-group">
                 <label class="col-sm-2 control-label">首日奖励</label>
@@ -50,6 +57,9 @@
             <div class="ui-day7config-cell">
                 奖励
             </div>
+            <div class="ui-day7config-cell">
+                原价(显示用)
+            </div>
         </li>
         <li class="ui-day7config-item clearfix">
             <div class="ui-day7config-cell">
@@ -61,6 +71,9 @@
             <div class="ui-day7config-cell">
                 {{ weekInfo['gameConfigDesc']}}
             </div>
+            <div class="ui-day7config-cell">
+                {{ weekInfo.get("originPrice")}}
+            </div>
         </li>
         <li class="ui-day7config-item clearfix">
             <div class="ui-day7config-cell">
@@ -71,6 +84,9 @@
             </div>
             <div class="ui-day7config-cell">
                 {{ monthInfo['gameConfigDesc']}}
+            </div>
+            <div class="ui-day7config-cell">
+                {{ monthInfo.get("originPrice")}}
             </div>
         </li>
 
@@ -93,6 +109,7 @@
      /*      data['type']=$(this).data('type');*/
      /*      data['serverid']=serverIdEl.val();*/
      data['id'] = $("#op-id").val();
+     data['originPrice'] = $("#op-origin-price").val();
      data['name'] = $("#op-name").val();
      if (data['award_list']==""||data['award_list']==undefined){
          alert("请添加奖品");

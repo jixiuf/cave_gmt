@@ -36,6 +36,7 @@ class AwardTime(BaseHandler):
                     extra=json.loads(data['gameConfigExtra'])
                     data['startTime']=extra['startTime']
                     data['endTime']=extra['endTime']
+                    data['originPrice']=extra.get('originPrice')
                     data['name']=extra.get('name')
                     if data['name']=='':
                         data['name']='空'
@@ -69,6 +70,8 @@ class AwardTime(BaseHandler):
 
         name= self.get_argument('name','限时礼包')
         title= self.get_argument('title','限时礼包')
+        originPrice= int(self.get_argument('originPrice','0'))
+
         awardList= self.get_argument('award_list' ,'[]')
         awardsDesc= self.get_argument('awardsDesc','')
         # title=u'限时礼包'
@@ -76,6 +79,7 @@ class AwardTime(BaseHandler):
         endTime=self.get_argument('endTime','')
         extra=json.dumps({"startTime":startTime,
                           "name":name,
+                          "originPrice":originPrice,
                           # "content":json.loads(awardList),
                           "endTime":endTime}
                          ,ensure_ascii=False)

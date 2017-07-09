@@ -37,16 +37,20 @@ class WeekMonth(BaseHandler):
             if weekInfo['gameConfigExtra']!='':
                 extra=json.loads(weekInfo['gameConfigExtra'])
                 weekInfo['name']=extra.get('name')
+                weekInfo['originPrice']=extra.get('originPrice')
             else:
                 weekInfo['name']=''
+                weekInfo['originPrice']=extra.get('0')
 
         if len(list)>1:
             monthInfo=list[1]
             if monthInfo['gameConfigExtra']!='':
                 extra=json.loads(monthInfo['gameConfigExtra'])
                 monthInfo['name']=extra.get('name')
+                monthInfo['originPrice']=extra.get('originPrice')
             else:
                 monthInfo['name']=''
+                monthInfo['originPrice']=extra.get('0')
 
 
 
@@ -62,6 +66,7 @@ class WeekMonth(BaseHandler):
         # serverId= self.get_argument('serverid','1')
         id= self.get_argument('id','0')
         name= self.get_argument('name','0')
+        originPrice= int(self.get_argument('originPrice','0'))
         # award= self.get_argument('awards')
         awardList= self.get_argument('award_list' ,'[]')
         awardsDesc= self.get_argument('awardsDesc','')
@@ -71,6 +76,7 @@ class WeekMonth(BaseHandler):
         else:
             title=u'月卡首日奖励'
         extra=json.dumps({"name":name,
+                          "originPrice":originPrice,
                           "content":json.loads(awardList),
         }
                          ,ensure_ascii=False)
