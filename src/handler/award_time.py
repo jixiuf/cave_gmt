@@ -37,6 +37,10 @@ class AwardTime(BaseHandler):
                     data['startTime']=extra['startTime']
                     data['endTime']=extra['endTime']
                     data['name']=extra.get('name')
+                    if data['name']=='':
+                        data['name']='空'
+
+
                 else:
                     data['startTime']=''
                     data['endTime']=''

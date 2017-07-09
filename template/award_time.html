@@ -105,13 +105,12 @@
  var rangeDemoConv = new AnyTime.Converter({format:rangeDemoFormat});
  var  startTimeEl = $('#op-time-start');
  var  endTimeEl = $('#op-time-end');
- $("#rangeDemoToday").click(function(e) {
-     $("#op-time-start").val(rangeDemoConv.format(new Date())).change();
- });
- $("#rangeDemoClear").click(function(e) {
-     $("#op-time-start").val("").change();
- });
- $("#op-time-start").AnyTime_picker({format:rangeDemoFormat});
+ var today = new Date();
+ /*  today.setHours(0,0,0,0);*/
+ var dayLater = new Date(today.getTime()+oneDay);
+
+ $("#op-time-start").val(rangeDemoConv.format(today)).AnyTime_picker({format:rangeDemoFormat});
+ $("#op-time-end").val(rangeDemoConv.format(dayLater)).AnyTime_picker({format:rangeDemoFormat});
  $("#op-time-start").change(function(e) {
      try {
          var fromDay = rangeDemoConv.parse($("#op-time-start").val()).getTime();

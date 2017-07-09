@@ -71,7 +71,8 @@ class WeekMonth(BaseHandler):
         else:
             title=u'月卡首日奖励'
         extra=json.dumps({"name":name,
-                          "content":json.loads(awardList),}
+                          "content":json.loads(awardList),
+        }
                          ,ensure_ascii=False)
 
 

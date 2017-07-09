@@ -38,6 +38,8 @@ class AwardFestival(BaseHandler):
                     data['endTime']=extra['endTime']
                     data['name']=extra.get('name')
                     data['desc']=extra.get('desc')
+                    if data['name']=='':
+                        data['name']='空'
                 else:
                     data['startTime']=''
                     data['endTime']=''
