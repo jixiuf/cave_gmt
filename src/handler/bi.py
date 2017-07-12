@@ -34,7 +34,7 @@ class BICurrencyChangeHandler(BaseHandler):
         currencyChangeList=yield app.DBMgr.getCurrencyChangeDB().select_all(uin,startTime,endTime)
         wordIdMap=yield app.DBMgr.getWordIdMap(1)
         for index, item in enumerate(currencyChangeList):
-            source=item.get("Source")
+            source=item.get("Source",0)
             sourceStr=wordIdMap.get(int(source),source)
             item['Source']=sourceStr
             currencyChangeList[index]=item
@@ -67,7 +67,7 @@ class BIItemChangeHandler(BaseHandler):
         currencyChangeList=yield app.DBMgr.getItemChangeDB().select_all(uin,startTime,endTime)
         wordIdMap=yield app.DBMgr.getWordIdMap(1)
         for index, item in enumerate(currencyChangeList):
-            source=item.get("Source")
+            source=item.get("Source",0)
             sourceStr=wordIdMap.get(int(source),source)
             item['Source']=sourceStr
             currencyChangeList[index]=item
@@ -99,7 +99,7 @@ class BIGearGotHandler(BaseHandler):
         currencyChangeList=yield app.DBMgr.getGearGotDB().select_all(uin,startTime,endTime)
         wordIdMap=yield app.DBMgr.getWordIdMap(1)
         for index, item in enumerate(currencyChangeList):
-            source=item.get("Source")
+            source=item.get("Source",0)
             sourceStr=wordIdMap.get(int(source),source)
             item['Source']=sourceStr
             currencyChangeList[index]=item
@@ -132,7 +132,7 @@ class BIGearFortifyHandler(BaseHandler):
         currencyChangeList=yield app.DBMgr.getGearFortifyDB().select_all(uin,startTime,endTime)
         wordIdMap=yield app.DBMgr.getWordIdMap(1)
         for index, item in enumerate(currencyChangeList):
-            source=item.get("Source")
+            source=item.get("Source",0)
             sourceStr=wordIdMap.get(int(source),source)
             item['Source']=sourceStr
             currencyChangeList[index]=item
@@ -163,7 +163,7 @@ class BIGearRefineHandler(BaseHandler):
         currencyChangeList=yield app.DBMgr.getGearRefineDB().select_all(uin,startTime,endTime)
         wordIdMap=yield app.DBMgr.getWordIdMap(1)
         for index, item in enumerate(currencyChangeList):
-            source=item.get("Source")
+            source=item.get("Source",0)
             sourceStr=wordIdMap.get(int(source),source)
             item['Source']=sourceStr
             currencyChangeList[index]=item
@@ -216,12 +216,6 @@ class BIPartnerGotHandler(BaseHandler):
 
 
         currencyChangeList=yield app.DBMgr.getPartnerDB().select_all(uin,startTime,endTime)
-        wordIdMap=yield app.DBMgr.getWordIdMap(1)
-        for index, item in enumerate(currencyChangeList):
-            source=item.get("Source")
-            sourceStr=wordIdMap.get(int(source),source)
-            item['Source']=sourceStr
-            currencyChangeList[index]=item
 
         self.render("bi_partner_list.html", title="获得伙伴日志",
                     currencyChangeList=currencyChangeList,
