@@ -130,12 +130,12 @@ class BIGearFortifyHandler(BaseHandler):
 
 
         currencyChangeList=yield app.DBMgr.getGearFortifyDB().select_all(uin,startTime,endTime)
-        wordIdMap=yield app.DBMgr.getWordIdMap(1)
-        for index, item in enumerate(currencyChangeList):
-            source=item.get("Source",0)
-            sourceStr=wordIdMap.get(int(source),source)
-            item['Source']=sourceStr
-            currencyChangeList[index]=item
+        # wordIdMap=yield app.DBMgr.getWordIdMap(1)
+        # for index, item in enumerate(currencyChangeList):
+        #     source=item.get("Source",0)
+        #     sourceStr=wordIdMap.get(int(source),source)
+        #     item['Source']=sourceStr
+        #     currencyChangeList[index]=item
 
         self.render("bi_gear_fortify_list.html", title="装备强化日志",
                     currencyChangeList=currencyChangeList,
@@ -161,12 +161,12 @@ class BIGearRefineHandler(BaseHandler):
 
 
         currencyChangeList=yield app.DBMgr.getGearRefineDB().select_all(uin,startTime,endTime)
-        wordIdMap=yield app.DBMgr.getWordIdMap(1)
-        for index, item in enumerate(currencyChangeList):
-            source=item.get("Source",0)
-            sourceStr=wordIdMap.get(int(source),source)
-            item['Source']=sourceStr
-            currencyChangeList[index]=item
+        # wordIdMap=yield app.DBMgr.getWordIdMap(1)
+        # for index, item in enumerate(currencyChangeList):
+        #     source=item.get("Source",0)
+        #     sourceStr=wordIdMap.get(int(source),source)
+        #     item['Source']=sourceStr
+        #     currencyChangeList[index]=item
 
         self.render("bi_gear_refine_list.html", title="装备洗练日志",
                     currencyChangeList=currencyChangeList,
