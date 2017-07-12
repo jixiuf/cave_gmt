@@ -115,6 +115,21 @@ class DBMgr:
         print "after load application"
 
 
+    @gen.coroutine
+    def getWordIdMap(self,server=1):
+        def mapRow(row):
+            data={}
+            data['id']=row[0]
+            data['str']=row[1]
+            return data
+        list=yield self.getDesignDB(server).query("select wordID ,cnStr from b_wordid",mapRow)
+        data={}
+        for l in list:
+            data[l.get('id')]=l.get('str')
+        raise gen.Return(data)
+
+
+
     def getUserDB(self):
         return UserDB(self.getProfileDB())
     def getPayOrderDB(self):
