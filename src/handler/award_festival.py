@@ -15,69 +15,64 @@ import redis_notify
 from datetime import datetime, timedelta
 
 
-# 节日礼包
-class AwardFestival(BaseHandler):
+
+class FestivalConfig(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
         def mapRow(row):
             data={}
-            data['gameConfigKey']=row[0]
-            data['gameConfigValue']=row[1]
-            data['gameConfigTitle']=row[2]
-            data['gameConfigDesc']=row[3]
-            data['gameConfigExtra']=row[4]
+            data['day']=row[0]
+            data['name']=row[1]
+            data['content']=row[2]
+            data['desc']=row[3]
+            data['note']=row[4]
             return data
-        sql="select gameConfigKey,gameConfigValue,gameConfigTitle,gameConfigDesc,gameConfigExtra from GameConfig where gameConfigKey in (9) order by gameConfigKey asc"
-        list=yield app.DBMgr.getProfileDB().query(sql,mapRow)
-        for data in list:
-            if data!=None:
-                if data['gameConfigExtra']!='':
-                    extra=json.loads(data['gameConfigExtra'])
-                    data['startTime']=extra['startTime']
-                    data['endTime']=extra['endTime']
-                    data['name']=extra.get('name')
-                    data['desc']=extra.get('desc')
-                    if data['name']=='':
-                        data['name']='空'
-                else:
-                    data['startTime']=''
-                    data['endTime']=''
-                    data['name']='空'
-                    data['desc']='空'
-
-
-
+        sql="select `day`,`name`,`content`,`desc` ,`note` from FestivalConfig order by day asc "
+        festivalconfigList=yield app.DBMgr.getProfileDB().query(sql,mapRow)
         serverIdList=app.DBMgr.get_all_server_id()
-        self.render("award_festival.html",title="节日登录礼包",
-                    list=list,
+        self.render("award_festival.html",title="节日礼包活动",
+                    festivalconfigList=festivalconfigList,
                     Account=self.gmAccount,
                     serverIdList=serverIdList)
     @asynchronous
     @gen.coroutine
     def self_post(self):
         # serverId= self.get_argument('serverid','1')
-        id= self.get_argument('id','6')
-        name= self.get_argument('name','节日登录礼包')
-        desc= self.get_argument('desc','节日登录礼包')
+        day= self.get_argument('day','')
+        if day=='':
+            return
+        t=time.strptime(day,"%Y-%m-%d")
+        startTime=datetime(*t[:3])
+        yearday=utils.datetime2yearday(startTime)
+
+        opType= self.get_argument('type','send')
+        if opType=='delete':
+            sql="delete from FestivalConfig where day=%d"%(yearday)
+            print(sql)
+            yield app.DBMgr.getProfileDB().execSql(sql)
+
+            app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_FESTIVALCONFIG)
+            self.write(json.dumps({},cls=utils.DateEncoder))
+            return
+
+
+
+        # award= self.get_argument('awards')
         awardList= self.get_argument('award_list' ,'[]')
         awardsDesc= self.get_argument('awardsDesc','')
-        title=u'节日登录礼包'
-        startTime=self.get_argument('startTime','')
-        endTime=self.get_argument('endTime','')
-        extra=json.dumps({"startTime":startTime,
-                          "name":name,
-                          "content":json.loads(awardList),
-                          "desc":desc,
-                          "endTime":endTime}
-                         ,ensure_ascii=False)
+        # name=unicode(self.get_argument('name',''))
+        # name=name.replace("\"","")
+        # name=name.replace("'","")
+        name=day
 
+        desc=unicode(self.get_argument('desc','1'))
+        desc=desc.replace("\"","")
+        desc=desc.replace("'","")
 
-
-        sql="insert into GameConfig(`gameConfigKey`,`gameConfigValue`,`gameConfigTitle`,`gameConfigDesc`,gameConfigType,gameConfigEditable,gameConfigExtra) values(%s,'%s','%s','%s',1,0,'%s') on duplicate key update gameConfigTitle=values(gameConfigTitle),gameConfigDesc=values(gameConfigDesc),gameConfigValue=values(gameConfigValue),gameConfigExtra=values(gameConfigExtra) "%(id,awardList,title,awardsDesc,extra)
+        sql="insert into FestivalConfig(`day`,`name`,`content`,`desc` ,`note`) values(%s,'%s','%s','%s','%s') on duplicate key update name=values(name),content=values(content),`desc`=values(`desc`),note=values(note) "%(yearday,name,awardList,desc,awardsDesc)
         yield app.DBMgr.getProfileDB().execSql(sql)
 
 
-        app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_GAMECONFIG_RELOAD)
+        app.Redis.publish(redis_notify.get_platform_redis_notify_channel(conf.PLATFORM), redis_notify.NOTIFY_TYPE_RELOAD_FESTIVALCONFIG)
         self.write(json.dumps({},cls=utils.DateEncoder))
-

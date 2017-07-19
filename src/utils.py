@@ -17,6 +17,9 @@ def timestamp_now():
 def datetime2timestamp(dt):
      return int(time.mktime(dt.timetuple()))
 
+def datetime2yearday(dt):
+     return dt.timetuple().tm_yday
+
 def timestamp2datetime(timestamp, convert_to_local=True):
     ''' Converts UNIX timestamp to a datetime object. '''
     if isinstance(timestamp, (int, long, float)):

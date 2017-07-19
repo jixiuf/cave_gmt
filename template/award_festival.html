@@ -1,103 +1,87 @@
 {% extends base.html %}
 {% block css%}
-<link href="../static/dist/award_time.css" rel="stylesheet" type="text/css"/>
-<link href="../static/dist/award_select.css" rel="stylesheet" type="text/css"/>
 <link rel="stylesheet" href="../static/javascript/plugin/any_time/any_time.css">
+<link href="../static/dist/festivalconfig.css" rel="stylesheet" type="text/css"/>
+<link href="../static/dist/award_select.css" rel="stylesheet" type="text/css"/>
 {% end %}
 {% block body %}
-<div class="ui-award-time-option">
-    <h2 class="form-signin-heading ui-award-time-title">节日登录礼包</h2>
+<div class="ui-festivalconfig-option">
+    <h2 class="form-signin-heading ui-festivalconfig-title">节日礼包</h2>
     <div>
         <form class="form-horizontal" role="form">
             <div class="form-group">
-                <label class="col-sm-2 control-label">节日登录礼包</label>
+                <label class="col-sm-2 control-label">节日日期</label>
                 <div class="col-sm-4">
-                    <select class="form-control op-id" id='op-id'>
-                        <option value="9">节日登录礼包</option>
-                    </select>
+                    <input class="form-control op-day" type="text" id="op-day">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-2 control-label">礼包名称</label>
+                <label class="col-sm-2 control-label">描述</label>
                 <div class="col-sm-4">
-                    <input type="text" class="form-control ui-name op-name" id="op-name" placeholder="礼包名称">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">礼包描述</label>
-                <div class="col-sm-4">
-                    <textarea type="text"  max="400" class="form-control op-desc" id='op-desc' placeholder="礼包描述"></textarea>
+                    <input type="text" maxlength="16"  class="form-control ui-mail-title op-desc" id="op-desc" placeholder="描述">
                 </div>
             </div>
 
 
 
             <div class="form-group">
-                <label class="col-sm-2 control-label">有效期*</label>
-                <div class="col-sm-4">
-                    <span class="ui-time-txt">起始时间</span>
-                    <input class="form-control op-time-start" type="text" id="op-time-start">
-                    <span class="ui-time-txt">结束时间</span>
-                    <input class="form-control op-time-end" type="text" id="op-time-end">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-sm-2 control-label">礼包内容</label>
+                <label class="col-sm-2 control-label">奖励</label>
                 <div class="col-sm-10">
                     {% include award_select_template.html %}
                 </div>
             </div>
-
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-4">
                     <button type="submit" class="btn btn-default op-submit-btn" data-type="send">保存</button>
+                    <button type="submit" class="btn btn-default op-submit-btn" data-type="delete">删除</button>
                 </div>
             </div>
         </form>
     </div>
 
-    <ul class="ui-award-time-list op-award-time-list">
-        <li class="ui-award-time-item clearfix">
-            <div class="ui-award-time-cell ui-award-time-cell-uin">
-                类型
+    <ul class="ui-festivalconfig-list op-festivalconfig-list">
+        <li class="ui-festivalconfig-item clearfix">
+            <div class="ui-festivalconfig-cell ui-festivalconfig-cell-uin">
+                节日日期
             </div>
-            <div class="ui-award-time-cell">
-                名称
-            </div>
-            <div class="ui-award-time-cell">
-                奖励
-            </div>
-            <div class="ui-award-time-cell-time">
-                有效期
-            </div>
-            <div class="ui-award-time-cell">
+            <div class="ui-festivalconfig-cell-content">
                 描述
             </div>
+            <div class="ui-festivalconfig-cell">
+                奖励
+            </div>
+            <!-- <div class="ui-festivalconfig-cell-operation">
+                 操作
+                 </div> -->
         </li>
-        {% for index,data in enumerate(list) %}
+        {% for e in festivalconfigList %}
+        <li class="ui-festivalconfig-item clearfix">
+            <div class="ui-festivalconfig-cell">
+                {% if e['name']=='' %}
+                空
+                {% else %}
+                {{ e['name']}}
+                {% end %}
 
-        <li class="ui-award-time-item clearfix">
-            <div class="ui-award-time-cell">
-                节日礼包
             </div>
-            <div class="ui-award-time-cell">
-                {{ data.get('name')}}
+            <div class="ui-festivalconfig-cell-content">
+                {% if e['desc']=='' %}
+                空
+                {% else %}
+                {{ e['desc']}}
+                {% end %}
             </div>
-            <div class="ui-award-time-cell">
-                {{ data['gameConfigDesc']}}
+            <div class="ui-festivalconfig-cell">
+                {% if e['note']=='' %}
+                空
+                {% else %}
+                {{ e['note']}}
+                {% end %}
             </div>
-            <div class="ui-award-time-cell-time">
-                [{{ data.get('startTime')}}]-[{{ data.get('endTime')}}]
-            </div>
-            <div class="ui-award-time-cell">
-                {{ data.get('desc')}}
-            </div>
-
         </li>
         {% end %}
-
     </ul>
+
 </div>
 
 
@@ -107,61 +91,30 @@
 <script type="text/javascript">
  //time
  var oneDay = 24*60*60*1000;
- var rangeDemoFormat = "%Y-%m-%d %H:%i:%S";
+ var rangeDemoFormat = "%Y-%m-%d";
  var rangeDemoConv = new AnyTime.Converter({format:rangeDemoFormat});
- var  startTimeEl = $('#op-time-start');
- var  endTimeEl = $('#op-time-end');
+ var  startTimeEl = $('#op-day');
  var today = new Date();
- today.setHours(0,0,0,0);
- var dayLater = new Date(today.getTime()+oneDay);
- $("#op-time-start").val(rangeDemoConv.format(today)).AnyTime_picker({format:rangeDemoFormat});
- $("#op-time-end").val(rangeDemoConv.format(dayLater)).AnyTime_picker({format:rangeDemoFormat});
- $("#op-time-start").change(function(e) {
-     try {
-         var fromDay = rangeDemoConv.parse($("#op-time-start").val()).getTime();
-         var dayLater = new Date(fromDay+oneDay);
-         dayLater.setHours(0,0,0,0);
-         var ninetyDaysLater = new Date(fromDay+(90*oneDay));
-         ninetyDaysLater.setHours(23,59,59,999);
-         $("#op-time-end")
-             .AnyTime_noPicker()
-             .removeAttr("disabled")
-             .val(rangeDemoConv.format(dayLater))
-             .AnyTime_picker({
-                 earliest: dayLater,
-                 format: rangeDemoFormat,
-                 latest: ninetyDaysLater
-             });
-     } catch(e) {
-         $("#op-time-end").val("").attr("disabled","disabled");
-     }
- } );
+ /*  today.setHours(0,0,0,0);*/
 
-
+ $("#op-day").val(rangeDemoConv.format(today)).AnyTime_picker({format:rangeDemoFormat});
 
  getAwardIdFun();
 
  var submitEl = $('.op-submit-btn');
  submitEl.on('click', function(){
      var data=getAwardDataFun();
-     /*      data['type']=$(this).data('type');*/
+     data['type']=$(this).data('type');
      /*      data['serverid']=serverIdEl.val();*/
-     data['id'] = $("#op-id").val();
-     data['desc'] = $("#op-desc").val();
-     data['startTime']=startTimeEl.val();
-     data['endTime']=endTimeEl.val();
-     data['name']=$('#op-name').val();
-     if (startTimeEl.val()==""||endTimeEl.val()==""){
-         alert("有效期 不能为空");
-         return false;
+     data['day'] = $("#op-day").val();
+     /*      data['name'] = $("#op-name").val();*/
+     data['desc'] =$("#op-desc").val();
+     if (data['type']=='send'){
+         if (data['award_list']==""||data['award_list']==undefined){
+             alert("请添加奖品");
+         }
+
      }
-
-
-     if (data['award_list']==""||data['award_list']==undefined){
-         alert("请添加奖品");
-         return false;
-     }
-
      ajaxing = true;
      $(this).attr('disabled', 'true');
      $.ajax({

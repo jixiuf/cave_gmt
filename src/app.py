@@ -132,8 +132,8 @@ class Application(tornado.web.Application):
             (r'/award_time/list', AwardTime),
             (r'/award_time/put', AwardTime),
 
-            (r'/award_festival/list',AwardFestival),
-            (r'/award_festival/put', AwardFestival),
+            (r'/award_festival/list',FestivalConfig),
+            (r'/award_festival/put', FestivalConfig),
 
 
 

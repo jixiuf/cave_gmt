@@ -1,0 +1,52 @@
+.ui-festivalconfig-option {
+    max-width: 1024px;
+    margin: 0 auto;
+}
+.ui-festivalconfig-title{
+    margin-left: 200px;
+    
+}
+.ui-festivalconfig-option .ui-festivalconfig-list {
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 20px;
+}
+.ui-festivalconfig-option .ui-festivalconfig-list .ui-festivalconfig-item {
+    text-align:center;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 5px 0;
+}
+.ui-festivalconfig-option .ui-festivalconfig-list .ui-festivalconfig-item .ui-festivalconfig-cell {
+    text-align:center;
+    width: 17%;
+    float: left;
+    word-wrap: break-word;
+}
+.ui-festivalconfig-option .ui-festivalconfig-list .ui-festivalconfig-item .ui-festivalconfig-cell-title {
+    text-align:center;
+    width: 12%;
+    float: left;
+    word-wrap: break-word;
+}
+.ui-festivalconfig-option .ui-festivalconfig-list .ui-festivalconfig-item .ui-festivalconfig-cell-content {
+    text-align:center;
+    width: 16%;
+    float: left;
+    word-wrap: break-word;
+    padding-right:5px;
+}
+
+.ui-festivalconfig-option .ui-festivalconfig-list .ui-festivalconfig-item .ui-festivalconfig-cell-status {
+    text-align:center;
+    width: 6%;
+    float: left;
+}
+.ui-festivalconfig-option .ui-festivalconfig-list .ui-festivalconfig-item .ui-festivalconfig-cell .ui-item-btn {
+    float: left;
+    margin-right: 5px;
+}
+.ui-festivalconfig-option .ui-modal-body {
+    background: #9c9c9c;
+}
