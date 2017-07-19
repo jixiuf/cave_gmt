@@ -22,6 +22,8 @@ run-pro:
 		echo "./virtual/bin/python src/main.py -host=0.0.0.0 -mode=pro -etcd=127.0.0.1:2379 -locale=zh -confdir=../config/";\
 	fi
 
+run-stage:
+	./virtual/bin/python src/main.py -mode=stage
 run:
 	./virtual/bin/python src/main.py
 run-pro-en:
