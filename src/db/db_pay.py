@@ -49,6 +49,31 @@ class PayOrderDB:
     def truncate_table(self):
         query="truncate table pay_order "
         yield self.dbtemplate.execDDL(query)
+    @gen.coroutine
+    def select_group_uin(self):
+        query="select uin,count(order_id) as cnt, sum(money) as money_sum from pay_order group by uin"
+        def mapRow(row):
+            data={}
+            data['uin']=row[0]
+            data['cnt']=float(row[1])
+            data['sum']=row[2]/100
+            return data
+        res=yield self.dbtemplate.query(query,mapRow)
+        raise gen.Return(res)
+
+    @gen.coroutine
+    def select_group_product(self):
+        query="select product_id,channel,count(order_id) as cnt, sum(money) as money_sum from pay_order group by product_id,channel order by channel,product_id"
+        def mapRow(row):
+            data={}
+            data['product_id']=row[0]
+            data['channel']=row[1]
+            data['cnt']=float(row[2])
+            data['sum']=row[3]/100
+            return data
+        res=yield self.dbtemplate.query(query,mapRow)
+        raise gen.Return(res)
+
 
     @gen.coroutine
     def select_all(self,sort,where):

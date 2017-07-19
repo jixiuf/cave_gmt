@@ -92,6 +92,8 @@ class Application(tornado.web.Application):
 
 
             (r'/pay_order/list' ,PayOrderHandler),
+            (r'/pay_order/stat' ,PayOrderBIHandler),
+
 
             (r'/bugreport/get' ,BugReportHandler),
 

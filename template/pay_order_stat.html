@@ -1,0 +1,207 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/pay_order_stat.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-pay-order-list-option">
+    <h2 class="form-signin-heading ui-pay-order-list-title">充值统计</h2>
+    <ul class="ui-pay-order-list-list op-pay-order-list-list">
+        <li class="ui-pay-order-list-item clearfix">
+            <div class="ui-pay-order-list-cell-id">
+                充值范围
+            </div>
+            <div class="ui-pay-order-list-cell">
+                充值人数
+            </div>
+            <div class="ui-pay-order-list-cell">
+                充值次数
+            </div>
+            <div class="ui-pay-order-list-cell">
+                充值次数/总次数
+            </div>
+            <div class="ui-pay-order-list-cell">
+                充值金额
+            </div>
+            <div class="ui-pay-order-list-cell">
+                充值金额/总金额
+            </div>
+        </li>
+        <li class="ui-pay-order-list-item clearfix">
+            <div class="ui-pay-order-list-cell-id">
+                合计
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ data1.get('usercnt',0)+data2.get('usercnt',0)+data3.get('usercnt',0)+data4.get('usercnt',0)}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{int( data1.get('cnt',0)+data2.get('cnt',0)+data3.get('cnt',0)+data4.get('cnt',0))}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                空
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ int(data1.get('sum',0)+data2.get('sum',0)+data3.get('sum',0)+data4.get('sum',0))}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                空
+            </div>
+        </li>
+
+        <li class="ui-pay-order-list-item clearfix">
+            <div class="ui-pay-order-list-cell-id">
+                0~100
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ int(data1.get('usercnt',0))}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ int(data1.get('cnt',0))}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{  "{0:.2f}".format ((data1.get('cnt',0)*100)/ totalCnt) }}%
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ int(data1.get('sum',0))}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{  "{0:.2f}".format((data1.get('sum',0)*100) / totalMoney)}}%
+            </div>
+        </li>
+        <li class="ui-pay-order-list-item clearfix">
+            <div class="ui-pay-order-list-cell-id">
+                100~500
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ int(data2.get('usercnt',0))}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ int(data2.get('cnt',0))}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{  "{0:.2f}".format( (data2.get('cnt',0)*100)/ totalCnt) }}%
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ int(data2.get('sum',0))}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{  "{0:.2f}".format((data2.get('sum',0)*100) / totalMoney)}}%
+            </div>
+        </li>
+        <li class="ui-pay-order-list-item clearfix">
+            <div class="ui-pay-order-list-cell-id">
+                500~1000
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ int(data3.get('usercnt',0))}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ int(data3.get('cnt',0))}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{  "{0:.2f}".format ((data3.get('cnt',0)*100)/ totalCnt) }}%
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ int(data3.get('sum',0))}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{  "{0:.2f}".format((data3.get('sum',0)*100) / totalMoney)}}%
+            </div>
+        </li>
+        <li class="ui-pay-order-list-item clearfix">
+            <div class="ui-pay-order-list-cell-id">
+                1000~
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ int(data4.get('usercnt',0))}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ int(data4.get('cnt',0))}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{  "{0:.2f}".format ((data4.get('cnt',0)*100)/ totalCnt) }}%
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ int(data4.get('sum',0))}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{  "{0:.2f}".format((data4.get('sum',0)*100) / totalMoney)}}%
+            </div>
+        </li>
+    </ul>
+    <br/>
+    <br/>
+    <br/>
+
+
+
+
+    <ul class="ui-pay-order-list-list op-pay-order-list-list">
+        <li class="ui-pay-order-list-item clearfix">
+            <div class="ui-pay-order-list-cell-id">
+                产品ID
+            </div>
+            <div class="ui-pay-order-list-cell">
+                渠道号
+            </div>
+            <div class="ui-pay-order-list-cell">
+                充值次数
+            </div>
+            <div class="ui-pay-order-list-cell">
+                充值次数/总次数
+            </div>
+            <div class="ui-pay-order-list-cell">
+                充值金额
+            </div>
+            <div class="ui-pay-order-list-cell">
+                充值金额/总金额
+            </div>
+        </li>
+        <li class="ui-pay-order-list-item clearfix">
+            <div class="ui-pay-order-list-cell-id">
+                合计
+            </div>
+            <div class="ui-pay-order-list-cell">
+                空
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ int(totalCnt) }}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                100%
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ int(totalMoney) }}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                100%
+            </div>
+        </li>
+
+        {% for index,info in enumerate(list) %}
+        <li class="ui-pay-order-list-item clearfix">
+            <div class="ui-pay-order-list-cell-id">
+                {{ info.get('product_id')}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ info.get('channel')}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ int(info.get('cnt',0))}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ "{0:.2f}".format ((info.get('cnt',0)*100)/ totalCnt) }}%
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ int(info.get('sum',0))}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{  "{0:.2f}".format((info.get('sum',0)*100) / totalMoney)}}%
+            </div>
+        </li>
+        {% end %}
+    </ul>
+</div>
+<script>
+
+    </script>
+{% end %}
