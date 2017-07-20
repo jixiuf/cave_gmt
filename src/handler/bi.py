@@ -524,8 +524,10 @@ class BICurrencyHandler(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
-        timeStart = self.get_argument('op-time-start','')
-        timeEnd= self.get_argument('op-time-end','')
+        today=datetime.now()
+        tomorrow=today+timedelta(days=1)
+        timeStart = self.get_argument('op-time-start',today.strftime("%Y-%m-%d 00:00:00"))
+        timeEnd= self.get_argument('op-time-end',tomorrow.strftime("%Y-%m-%d 00:00:00"))
         channel= self.get_argument('channel','0')
         if self.gmAccount.channel!='0':
             if not channel in self.gmAccount.getChannelList():
