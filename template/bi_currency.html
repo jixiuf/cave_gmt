@@ -1,43 +1,99 @@
 {% extends base.html %}
 {% block css%}
 <link href="../static/dist/pay_order_stat.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" href="../static/javascript/plugin/any_time/any_time.css">
 {% end %}
 {% block body %}
 <div class="ui-pay-order-list-option">
     <h2 class="form-signin-heading ui-pay-order-list-title">货币产出消耗统计</h2>
+    <form class="form-horizontal" role="form" action="/bi/bi_currency">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">渠道</label>
+            <div class="col-sm-3">
+
+                <select class="form-control op-channel" name="channel" id="channel"  placeholder="渠道">
+                    {% if Account!=None and Account.channel=='0' %}
+                    <option value='0'>下拉选择渠道(默认全渠道)</option>
+                    {% for channel in channelMap %}
+                       {% if defaultChannel==channel %}
+                      <option  selected value='{{ escape(channel) }}'>{{ escape(channelMap.get(channel)) }}:{{ channel}}</option>
+                        {%else %}
+                      <option  value='{{ escape(channel) }}'>{{ escape(channelMap.get(channel)) }}:{{ channel}}</option>
+                      {%end%}
+                      {% end %}
+                      {%else%}
+                      {% for channel in Account.getChannelList() %}
+                      {% if defaultChannel==channel %}
+                      <option  selected value='{{ escape(channel) }}'>{{ escape(channelMap.get(channel)) }}:{{ channel}}</option>
+                      {%else %}
+                      <option  value='{{ escape(channel) }}'>{{ escape(channelMap.get(channel)) }}:{{ channel}}</option>
+                      {%end%}
+                    {% end %}
+
+                    {%end%}
+                </select>
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">开始时间</label>
+            <div class="col-sm-3">
+                <input class="form-control op-time-start" type="text" name="op-time-start" id="op-time-start" value="{{timeStart}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">结束时间</label>
+            <div class="col-sm-3">
+                <input class="form-control op-time-end" type="text" id="op-time-end" name="op-time-end" value="{{timeEnd}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label"></label>
+            <div class="col-sm-3">
+                <button type="submit" class="btn btn-default op-submit">查询</button>
+            </div>
+        </div>
+
+    </form>
+
+
 
     <ul class="ui-pay-order-list-list op-pay-order-list-list">
         {% for index,info in enumerate(obtainList) %}
-        {% if (index>0 and info.get('CurrencyType')!= obtainList[index-1].get('CurrencyType')) or index==0%}
-        <h3 class="form-signin-heading ui-pay-order-list-title">{{info.get('CurrencyType')}} 产出分析</h3>
-        <li class="ui-pay-order-list-item clearfix">
-            <div class="ui-pay-order-list-cell-id">
-                货币类型
-            </div>
-            <div class="ui-pay-order-list-cell">
-                产出来源
-            </div>
-            <div class="ui-pay-order-list-cell">
-                参与人数
-            </div>
-            <div class="ui-pay-order-list-cell">
-                总人数
-            </div>
-            <div class="ui-pay-order-list-cell">
-                参与人数占比
-            </div>
-            <div class="ui-pay-order-list-cell">
-                金额
-            </div>
-            <div class="ui-pay-order-list-cell">
-                总金额
-            </div>
-            <div class="ui-pay-order-list-cell">
-                金额/总金额
-            </div>
-        </li>
+            {% if info.get('CurrencyType')==u"体力" %}
+            {% continue %}
+            {%end %}
+            {% if (index>0 and info.get('CurrencyType')!= obtainList[index-1].get('CurrencyType')) or index==0%}
+            <h3 class="form-signin-heading ui-pay-order-list-title">{{info.get('CurrencyType')}} 产出分析</h3>
+            <li class="ui-pay-order-list-item clearfix">
+                <div class="ui-pay-order-list-cell-id">
+                    货币类型
+                </div>
+                <div class="ui-pay-order-list-cell">
+                    产出来源
+                </div>
+                <div class="ui-pay-order-list-cell">
+                    参与人数
+                </div>
+                <div class="ui-pay-order-list-cell">
+                    总人数
+                </div>
+                <div class="ui-pay-order-list-cell">
+                    参与人数占比
+                </div>
+                <div class="ui-pay-order-list-cell">
+                    金额
+                </div>
+                <div class="ui-pay-order-list-cell">
+                    总金额
+                </div>
+                <div class="ui-pay-order-list-cell">
+                    金额/总金额
+                </div>
+            </li>
 
-        {%end %}
+            {%end %}
         <li class="ui-pay-order-list-item clearfix">
             <div class="ui-pay-order-list-cell-id">
                 {{ info.get('CurrencyType')}}
@@ -70,6 +126,10 @@
 
     <ul class="ui-pay-order-list-list op-pay-order-list-list">
         {% for index,info in enumerate(consumeList) %}
+        {% if info.get('CurrencyType')==u"体力" %}
+        {% continue %}
+        {%end %}
+
         {% if (index>0 and info.get('CurrencyType')!= consumeList[index-1].get('CurrencyType')) or index==0%}
         <h3 class="form-signin-heading ui-pay-order-list-title">{{info.get('CurrencyType')}} 消耗分析</h3>
         <li class="ui-pay-order-list-item clearfix">
@@ -130,7 +190,47 @@
     </ul>
 
 </div>
+<script type="text/javascript" src="../static/javascript/plugin/any_time/any_time.js"></script>
 <script>
+ var oneDay = 24*60*60*1000;
+ var rangeDemoFormat = "%Y-%m-%d %H:%i:%S";
+ var rangeDemoConv = new AnyTime.Converter({format:rangeDemoFormat});
+ var today = new Date();
+ today.setHours(0,0,0,0);
 
-    </script>
+ if($("#op-time-start").val()==''){
+     $("#op-time-start").val(rangeDemoConv.format(today)).AnyTime_picker({format:rangeDemoFormat});
+ }
+ var dayLater = new Date(today.getTime()+oneDay);
+ if($("#op-time-end").val()==''){
+     $("#op-time-end").val(rangeDemoConv.format(dayLater)).AnyTime_picker({format:rangeDemoFormat});
+ }
+
+ $("#op-time-start").AnyTime_picker({format:rangeDemoFormat});
+ $("#op-time-end").AnyTime_picker({format:rangeDemoFormat});
+ $("#op-time-start").change(function(e) {
+     try {
+         if($("#op-time-end").val()==''){
+             var fromDay = rangeDemoConv.parse($("#op-time-start").val()).getTime();
+             var dayLater = new Date(fromDay+oneDay);
+             dayLater.setHours(0,0,0,0);
+             var ninetyDaysLater = new Date(fromDay+(90*oneDay));
+             ninetyDaysLater.setHours(23,59,59,999);
+             $("#op-time-end")
+                 .AnyTime_noPicker()
+                 .removeAttr("disabled")
+                 .val(rangeDemoConv.format(dayLater))
+                 .AnyTime_picker({
+                     earliest: dayLater,
+                     format: rangeDemoFormat,
+                     latest: ninetyDaysLater
+                 });
+         }
+     } catch(e) {
+         $("#op-time-end").val("").attr("disabled","disabled");
+     }
+ } );
+
+
+</script>
 {% end %}

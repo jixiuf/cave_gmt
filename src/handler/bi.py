@@ -524,8 +524,16 @@ class BICurrencyHandler(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
-        obtainList=yield app.DBMgr.getCurrencyChangeDB().select_stat_obtain()
-        consumeList=yield app.DBMgr.getCurrencyChangeDB().select_stat_consume()
+        timeStart = self.get_argument('op-time-start','')
+        timeEnd= self.get_argument('op-time-end','')
+        channel= self.get_argument('channel','0')
+        if self.gmAccount.channel!='0':
+            if not channel in self.gmAccount.getChannelList():
+                channel= self.gmAccount.channel
+
+
+        obtainList=yield app.DBMgr.getCurrencyChangeDB().select_stat_obtain(timeStart,timeEnd,channel)
+        consumeList=yield app.DBMgr.getCurrencyChangeDB().select_stat_consume(timeStart,timeEnd,channel)
         usercnt=yield app.DBMgr.getUserDB().select_cnt()
         currencyObtainMap={}
         currencyConsumeMap={}
@@ -578,5 +586,8 @@ class BICurrencyHandler(BaseHandler):
         self.render("bi_currency.html", title="货币消耗与产出分析",
                     obtainList=obtainList,
                     consumeList=consumeList,
+                    timeStart =timeStart,
+                    timeEnd=timeEnd,
+                    defaultChannel=channel,
                     Account=self.gmAccount,
                     channelMap=conf.getChannelNameMap())

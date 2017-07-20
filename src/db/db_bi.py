@@ -31,7 +31,7 @@ class CurrencyChangeDB:
         res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)
     @gen.coroutine
-    def select_stat_obtain(self):
+    def select_stat_obtain(self,startTime=None ,endTime=None,channel=None):
         def mapRow(row):
             data={}
             data['CurrencyType']=row[0]
@@ -39,12 +39,23 @@ class CurrencyChangeDB:
             data['usercnt']=row[2]
             data['totalSum']=row[3]
             return data
-        query=" select  `CurrencyType`,`Source`,count(DISTINCT uin) usercnt, sum(CHANGED) totalSum from `CurrencyChange` where CHANGED>0 group by `CurrencyType`,`Source` order by `CurrencyType`,Source"
+        where =" "
+        if startTime!=None and startTime!='':
+            where += "and time >'%s' "%(startTime)
+        if endTime!=None and endTime!='':
+            where += "and time <'%s' "%(endTime)
+        if channel!='0' and channel!=0 and channel!=None:
+            where += "and Channel=%d"%(int(channel))
+
+
+        query=" select  `CurrencyType`,`Source`,count(DISTINCT uin) usercnt, sum(CHANGED) totalSum from `CurrencyChange` where CHANGED>0 %s group by `CurrencyType`,`Source` order by `CurrencyType`,Source"%(where)
+        print(query)
+
         res=yield self.dbtemplate.query(query,mapRow)
         raise gen.Return(res)
 
     @gen.coroutine
-    def select_stat_consume(self):
+    def select_stat_consume(self,startTime=None ,endTime=None,channel=None):
         def mapRow(row):
             data={}
             data['CurrencyType']=row[0]
@@ -52,7 +63,15 @@ class CurrencyChangeDB:
             data['usercnt']=row[2]
             data['totalSum']=row[3]
             return data
-        query=" select  `CurrencyType`,`Source`,count(DISTINCT uin) usercnt, -sum(CHANGED) totalSum from `CurrencyChange` where CHANGED<0 group by `CurrencyType`,`Source` order by `CurrencyType`,Source"
+        where =" "
+        if startTime!=None and startTime!='':
+            where += "and time >'%s' "%(startTime)
+        if endTime!=None and endTime!='':
+            where += "and time <'%s' "%(endTime)
+        if channel!='0' and channel!=0 and channel!=None:
+            where += "and Channel=%d"%(int(channel))
+        query=" select  `CurrencyType`,`Source`,count(DISTINCT uin) usercnt, -sum(CHANGED) totalSum from `CurrencyChange` where CHANGED<0 %s group by `CurrencyType`,`Source` order by `CurrencyType`,Source"%(where)
+        print(query)
         res=yield self.dbtemplate.query(query,mapRow)
         raise gen.Return(res)
 #
