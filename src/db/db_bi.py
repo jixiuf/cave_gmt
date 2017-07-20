@@ -30,7 +30,32 @@ class CurrencyChangeDB:
         query="select `Id`, `Uin`, `SUin`, `ClientTime`, `Time`, `Source`, `CurrencyType`, `CurAmount`, `Changed` from CurrencyChange  where Uin=%s and Time>'%s' and Time<'%s' order by Time desc"%(uin,startTime,endTime)
         res=yield self.dbtemplate.query(query,self.mapRow)
         raise gen.Return(res)
+    @gen.coroutine
+    def select_stat_obtain(self):
+        def mapRow(row):
+            data={}
+            data['CurrencyType']=row[0]
+            data['Source']=row[1]
+            data['usercnt']=row[2]
+            data['totalSum']=row[3]
+            return data
+        query=" select  `CurrencyType`,`Source`,count(DISTINCT uin) usercnt, sum(CHANGED) totalSum from `CurrencyChange` where CHANGED>0 group by `CurrencyType`,`Source` order by `CurrencyType`,Source"
+        res=yield self.dbtemplate.query(query,mapRow)
+        raise gen.Return(res)
 
+    @gen.coroutine
+    def select_stat_consume(self):
+        def mapRow(row):
+            data={}
+            data['CurrencyType']=row[0]
+            data['Source']=row[1]
+            data['usercnt']=row[2]
+            data['totalSum']=row[3]
+            return data
+        query=" select  `CurrencyType`,`Source`,count(DISTINCT uin) usercnt, -sum(CHANGED) totalSum from `CurrencyChange` where CHANGED<0 group by `CurrencyType`,`Source` order by `CurrencyType`,Source"
+        res=yield self.dbtemplate.query(query,mapRow)
+        raise gen.Return(res)
+#
 
 
 class ItemChangeDB:

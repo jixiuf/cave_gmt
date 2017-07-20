@@ -2,6 +2,9 @@
     /* max-width: 1024px; */
     margin: 0 auto;
 }
+.ui-pay-order-list-title{
+    margin-left:250px;
+}
 .ui-pay-order-list-option .ui-pay-order-list-list {
     width: 100%;
     list-style: none;

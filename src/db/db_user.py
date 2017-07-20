@@ -96,6 +96,15 @@ CREATE TABLE if not exists `user` (
     def add(self,uin):
         query="insert into user (uin) values(%d)"%(uin)
         yield self.dbtemplate.execSql(query)
+    @gen.coroutine
+    def select_cnt(self):
+        query="select count(uin) cnt from user "
+        def mapRow(row):
+            return row[0]
+        res=yield self.dbtemplate.queryObject(query,mapRow)
+        raise gen.Return(res)
+
+
 
     @gen.coroutine
     def select_all_channel(self):

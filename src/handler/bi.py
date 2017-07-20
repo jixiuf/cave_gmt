@@ -519,3 +519,64 @@ class BISkillHandler(BaseHandler):
                     list=list,
                     Account=self.gmAccount,
                     channelMap=conf.getChannelNameMap())
+
+class BICurrencyHandler(BaseHandler):
+    @asynchronous
+    @gen.coroutine
+    def self_get(self):
+        obtainList=yield app.DBMgr.getCurrencyChangeDB().select_stat_obtain()
+        consumeList=yield app.DBMgr.getCurrencyChangeDB().select_stat_consume()
+        usercnt=yield app.DBMgr.getUserDB().select_cnt()
+        currencyObtainMap={}
+        currencyConsumeMap={}
+        wordIdMap=yield app.DBMgr.getWordIdMap(1)
+        for index, item in enumerate(obtainList):
+            source=item.get("Source",0)
+            sourceStr=wordIdMap.get(int(source),source)
+            item['Source']=sourceStr
+            obtainList[index]=item
+        for index, item in enumerate(consumeList):
+            source=item.get("Source",0)
+            sourceStr=wordIdMap.get(int(source),source)
+            item['Source']=sourceStr
+            consumeList[index]=item
+
+
+        for e in obtainList:
+            currencyType=e.get('CurrencyType')
+            currencyInfo=currencyObtainMap.get(currencyType,{})
+            currencyInfo['usercnt']=usercnt
+            currencyInfo['totalSum']=currencyInfo.get('totalSum',0)+e.get('totalSum')
+            currencyObtainMap[currencyType]=currencyInfo
+        for index, e in enumerate(obtainList):
+            currencyType=e.get('CurrencyType')
+            currencyInfo=currencyObtainMap.get(currencyType,{})
+            e['usercntTotal']=usercnt
+            e['totalSumAll']=currencyInfo.get('totalSum',0)
+            e['usercntPercent']="%.2f"%(100*float(e.get('usercnt',0))/float(usercnt)) +"%"
+            e['sumPercent']="%.2f"%(100*float(e.get('totalSum',0))/float(currencyInfo.get('totalSum',0))) +"%"
+            obtainList[index]=e
+
+        for e in consumeList:
+            currencyType=e.get('CurrencyType')
+            currencyInfo=currencyConsumeMap.get(currencyType,{})
+            currencyInfo['usercnt']=usercnt
+            currencyInfo['totalSum']=currencyInfo.get('totalSum',0)+e.get('totalSum')
+            currencyConsumeMap[currencyType]=currencyInfo
+        for index, e in enumerate(consumeList):
+            currencyType=e.get('CurrencyType')
+            currencyInfo=currencyConsumeMap.get(currencyType,{})
+            e['usercntTotal']=usercnt
+            e['totalSumAll']=currencyInfo.get('totalSum',0)
+            e['usercntPercent']="%.2f"%(100*float(e.get('usercnt',0))/float(usercnt)) +"%"
+            e['sumPercent']="%.2f"%(100*float(e.get('totalSum',0))/float(currencyInfo.get('totalSum',0))) +"%"
+            consumeList[index]=e
+
+
+
+        currencyConsumeMap={}
+        self.render("bi_currency.html", title="货币消耗与产出分析",
+                    obtainList=obtainList,
+                    consumeList=consumeList,
+                    Account=self.gmAccount,
+                    channelMap=conf.getChannelNameMap())

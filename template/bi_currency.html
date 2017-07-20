@@ -1,0 +1,136 @@
+{% extends base.html %}
+{% block css%}
+<link href="../static/dist/pay_order_stat.css" rel="stylesheet" type="text/css"/>
+{% end %}
+{% block body %}
+<div class="ui-pay-order-list-option">
+    <h2 class="form-signin-heading ui-pay-order-list-title">货币产出消耗统计</h2>
+
+    <ul class="ui-pay-order-list-list op-pay-order-list-list">
+        {% for index,info in enumerate(obtainList) %}
+        {% if (index>0 and info.get('CurrencyType')!= obtainList[index-1].get('CurrencyType')) or index==0%}
+        <h3 class="form-signin-heading ui-pay-order-list-title">{{info.get('CurrencyType')}} 产出分析</h3>
+        <li class="ui-pay-order-list-item clearfix">
+            <div class="ui-pay-order-list-cell-id">
+                货币类型
+            </div>
+            <div class="ui-pay-order-list-cell">
+                产出来源
+            </div>
+            <div class="ui-pay-order-list-cell">
+                参与人数
+            </div>
+            <div class="ui-pay-order-list-cell">
+                总人数
+            </div>
+            <div class="ui-pay-order-list-cell">
+                参与人数占比
+            </div>
+            <div class="ui-pay-order-list-cell">
+                金额
+            </div>
+            <div class="ui-pay-order-list-cell">
+                总金额
+            </div>
+            <div class="ui-pay-order-list-cell">
+                金额/总金额
+            </div>
+        </li>
+
+        {%end %}
+        <li class="ui-pay-order-list-item clearfix">
+            <div class="ui-pay-order-list-cell-id">
+                {{ info.get('CurrencyType')}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ info.get('Source')}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ info.get('usercnt')}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ info.get('usercntTotal')}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ info.get('usercntPercent')}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ info.get('totalSum')}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ info.get('totalSumAll')}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ info.get('sumPercent')}}
+            </div>
+        </li>
+        {% end %}
+    </ul>
+
+
+    <ul class="ui-pay-order-list-list op-pay-order-list-list">
+        {% for index,info in enumerate(consumeList) %}
+        {% if (index>0 and info.get('CurrencyType')!= consumeList[index-1].get('CurrencyType')) or index==0%}
+        <h3 class="form-signin-heading ui-pay-order-list-title">{{info.get('CurrencyType')}} 消耗分析</h3>
+        <li class="ui-pay-order-list-item clearfix">
+            <div class="ui-pay-order-list-cell-id">
+                货币类型
+            </div>
+            <div class="ui-pay-order-list-cell">
+                产出来源
+            </div>
+            <div class="ui-pay-order-list-cell">
+                参与人数
+            </div>
+            <div class="ui-pay-order-list-cell">
+                总人数
+            </div>
+            <div class="ui-pay-order-list-cell">
+                参与人数占比
+            </div>
+            <div class="ui-pay-order-list-cell">
+                金额
+            </div>
+            <div class="ui-pay-order-list-cell">
+                总金额
+            </div>
+            <div class="ui-pay-order-list-cell">
+                金额/总金额
+            </div>
+        </li>
+
+        {%end %}
+        <li class="ui-pay-order-list-item clearfix">
+            <div class="ui-pay-order-list-cell-id">
+                {{ info.get('CurrencyType')}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ info.get('Source')}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ info.get('usercnt')}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ info.get('usercntTotal')}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ info.get('usercntPercent')}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ info.get('totalSum')}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ info.get('totalSumAll')}}
+            </div>
+            <div class="ui-pay-order-list-cell">
+                {{ info.get('sumPercent')}}
+            </div>
+        </li>
+        {% end %}
+    </ul>
+
+</div>
+<script>
+
+    </script>
+{% end %}

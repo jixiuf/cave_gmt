@@ -86,6 +86,8 @@ class Application(tornado.web.Application):
             (r'/bi/level' ,BILevelHandler),
             (r'/bi/dead' ,BIDeadHandler),
             (r'/bi/skill' ,BISkillHandler),
+            (r'/bi/bi_currency' ,BICurrencyHandler),
+
 
 
 
