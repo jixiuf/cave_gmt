@@ -6,7 +6,7 @@
 dir=`pwd`
 cd `dirname $0`
 # qiniu accesskey secretkey
-qiniu_bucket=najaplus
+qiniu_bucket=najaplus_test
 qiniu_accesskey=AYwnALpeN5pT5c--NG2sjbnUNP1ey9px4SZAFD-3
 qiniu_secretkey=jLLvul-joXk6ALMCNkJVnxexsi7yMa7U--dJjwnU
 qiniu_base_url=http://qiniu.najaplus.com/
@@ -22,7 +22,7 @@ show_version=$7
 channel_begin_param=7           # 加参数时要改此值
 
 svnUser=version
-svnPassword=u3gZa2fWKM
+svnPassword=version_test
 
 gmt_notify_url="$gmt_url""/api/game/dynamic"
 gmt_update_version_url="$gmt_url""/game/server_version_update"
