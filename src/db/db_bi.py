@@ -318,6 +318,7 @@ class GuideDB:
         data={}
         for e in res:
             data[e['Key']]=e
+            print(e['Key'])
         raise gen.Return(data)
 
 

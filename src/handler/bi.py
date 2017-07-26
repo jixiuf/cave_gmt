@@ -223,7 +223,7 @@ class BIPartnerGotHandler(BaseHandler):
                     channelMap=conf.getChannelNameMap())
 
 class BIGuideHandle(BaseHandler):
-    GuideActorDestroyOrder ={
+    GuideStepFinish ={
 '2200001':{'WordID':'2200001','order':1,'name':'新手进入','desc':'一般开始都会有一个奇怪的老头来做新手引导吧？'},
 '2200002':{'WordID':'2200002','order':2,'name':'新手进入','desc':'没错！就是村长我！咳...我将指引你离开这里。'},
 '2200003':{'WordID':'2200003','order':3,'name':'新手进入','desc':'传送门？可是我是跳下来的啊！'},
@@ -362,7 +362,7 @@ class BIGuideHandle(BaseHandler):
 '2210080':{'WordID':'2210080','order':136,'name':'深渊关卡开启引导','desc':'深渊模式主要产出高品质装备和稀有材料'},
 '2210081':{'WordID':'2210081','order':137,'name':'深渊关卡开启引导','desc':'但是难度你懂的'},
 }
-    GuideStepFinish= {
+    GuideActorDestroyOrder= {
 '20004':{'X':2,'Y':4,'name':'普通怪物','step':'新手地图1','order':1},
 '20006':{'X':2,'Y':6,'name':'高级怪物','step':'新手地图1','order':2},
 '10008':{'X':1,'Y':8,'name':'普通怪物','step':'新手地图1','order':3},
@@ -397,11 +397,10 @@ class BIGuideHandle(BaseHandler):
     def self_get(self):
 
 
-        map2=yield app.DBMgr.getGuideDB().select_cnt_map()
-        map1=yield app.DBMgr.getGuideDB().select_cnt_2_map()
+        map1=yield app.DBMgr.getGuideDB().select_cnt_map()
         list1=[]
-        for key in BIGuideHandle.GuideActorDestroyOrder:
-            e=BIGuideHandle.GuideActorDestroyOrder.get(key)
+        for key in BIGuideHandle.GuideStepFinish:
+            e=BIGuideHandle.GuideStepFinish.get(key)
             countInfo=map1.get(key)
             if  countInfo!=None :
                 e['count']=countInfo['count']
@@ -410,8 +409,9 @@ class BIGuideHandle(BaseHandler):
             list1.append(e)
 
         list2=[]
-        for key in BIGuideHandle.GuideStepFinish:
-            e=BIGuideHandle.GuideStepFinish.get(key)
+        map2=yield app.DBMgr.getGuideDB().select_cnt_2_map()
+        for key in BIGuideHandle.GuideActorDestroyOrder:
+            e=BIGuideHandle.GuideActorDestroyOrder.get(key)
             countInfo=map2.get(key)
             if  countInfo!=None :
                 e['count']=countInfo['count']
