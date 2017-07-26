@@ -397,7 +397,8 @@ class BIGuideHandle(BaseHandler):
     def self_get(self):
 
 
-        map1=yield app.DBMgr.getGuideDB().select_cnt_map()
+        map2=yield app.DBMgr.getGuideDB().select_cnt_map()
+        map1=yield app.DBMgr.getGuideDB().select_cnt_2_map()
         list1=[]
         for key in BIGuideHandle.GuideActorDestroyOrder:
             e=BIGuideHandle.GuideActorDestroyOrder.get(key)
@@ -409,7 +410,6 @@ class BIGuideHandle(BaseHandler):
             list1.append(e)
 
         list2=[]
-        map2=yield app.DBMgr.getGuideDB().select_cnt_2_map()
         for key in BIGuideHandle.GuideStepFinish:
             e=BIGuideHandle.GuideStepFinish.get(key)
             countInfo=map2.get(key)
