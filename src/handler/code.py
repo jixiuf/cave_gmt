@@ -27,8 +27,10 @@ class CodeMgr(BaseHandler):
     @asynchronous
     @gen.coroutine
     def self_get(self):
+        hidden= self.get_argument('hidden','')
         serverIdList=app.DBMgr.get_all_server_id()
         self.render("code_mgr.html",title="礼包码生成",
+                    hidden=hidden,
                     Account=self.gmAccount,
                     serverIdList=serverIdList)
     @asynchronous
@@ -47,6 +49,7 @@ class CodeMgr(BaseHandler):
         startTime=self.get_argument('startTime','')
         endTime=self.get_argument('endTime','')
         channelSDK=self.get_argument('channelSDK','') # prefix
+        hidden=self.get_argument('hidden','')
         if awardList=='[]':
             self.write(json.dumps({'result':"奖品为空"}))
             return
@@ -61,9 +64,20 @@ class CodeMgr(BaseHandler):
         data={}
         data['data']=[]
         data['result']=''
-        sql="select ifnull(max(batchCode),0) as max_batch_code from CodeBase " # 获取当前最大批号
-        maxBatchCode=yield app.DBMgr.getProfileDB().queryObject(sql,self.mapRow1)
-        batchCode=1+maxBatchCode
+        batchCode=1
+        if hidden!='':
+            sql="select ifnull(min(batchCode),0) as max_batch_code from CodeBase " # 获取当前最大批号
+            maxBatchCode=yield app.DBMgr.getProfileDB().queryObject(sql,self.mapRow1)
+            batchCode=maxBatchCode-1
+        else:
+            sql="select ifnull(max(batchCode),0) as max_batch_code from CodeBase " # 获取当前最大批号
+            maxBatchCode=yield app.DBMgr.getProfileDB().queryObject(sql,self.mapRow1)
+            batchCode=1+maxBatchCode
+            if batchCode<1:
+                batchCode=1
+
+
+
         data['batchCode']=batchCode
         codes=[]
         codePrefix=channelSDK+str(batchCode) # 前缀加批号
